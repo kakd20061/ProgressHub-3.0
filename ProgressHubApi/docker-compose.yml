@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  progresshubapi:
-    image: ${DOCKER_REGISTRY-}progresshubapi
-    build:
-      context: .
-      dockerfile: ./Dockerfile
