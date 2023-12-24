@@ -1,0 +1,220 @@
+<main class="bg-grass w-screen h-screen bg-no-repeat bg-cover max-lg:bg-none">
+  <div class="backdrop-blur-sm w-full h-full bg-primary bg-opacity-25">
+    <div
+      class="h-full w-sidepanelwide overflow-y-auto max-lg:w-full bg-white pt-3 ps-8 float-right"
+    >
+      <div class="w-sidepanel mb-20">
+        <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
+        <h2 class="text-primary text-header font-lobster mt-9">
+          Create your account
+        </h2>
+        <p class="text-normal font-outfit font-semibold mt-3">
+          Have an account?
+          <a [routerLink]="'/login'" class="text-secondary font-bold">
+            Log in now</a
+          >
+        </p>
+        <form method="post" class="pe-8 mt-10" [formGroup]="signUpForm">
+          <app-google-signin (loginWithGoogle)="googleSignIn($event)" [isValid]="isExternalLoginValid"></app-google-signin>
+
+          <div class="flex flex-row mt-10">
+            <div
+              class="flex-1 h-0.5 border-b w-max border-button mr-2 my-2"
+            ></div>
+            <span class="text-tertiary text-sm font-outfit font-medium">
+              Or with email and password
+            </span>
+            <div
+              class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
+            ></div>
+          </div>
+
+          <div class="mt-12 relative">
+            <label
+              for="email"
+              id="emailLabel"
+              class="block font-outfit font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValid[0] ? 'text-tertiary' : 'text-invalid']"
+              >Email Address</label
+            >
+            <input
+              type="text"
+              id="email"
+              class="border-solid border w-full p-3 rounded-xl font-outfit"
+              formControlName="email"
+              (ngModelChange)="valueChanged()"
+              [ngClass]="[isValid[0] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2 absolute -bottom-6"
+              *ngIf="!isValid[0]"
+              id="emailMessage"
+              >{{ errorContent[0] }}</span
+            >
+          </div>
+
+          <div class="mt-12 relative">
+            <label
+              for="name"
+              id="nameLabel"
+              class="block font-outfit font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValid[1] ? 'text-tertiary' : 'text-invalid']"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
+              formControlName="name"
+              (ngModelChange)="valueChanged()"
+              [ngClass]="[isValid[1] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2 absolute -bottom-6"
+              *ngIf="!isValid[1]"
+              id="nameMessage"
+              >Please enter valid name</span
+            >
+          </div>
+          <div class="mt-12 relative">
+            <label
+              for="lastName"
+              id="lastNameLabel"
+              class="block font-outfit font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValid[2] ? 'text-tertiary' : 'text-invalid']"
+              >Last Name</label
+            >
+            <input
+              type="text"
+              id="lastName"
+              class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
+              formControlName="lastName"
+              (ngModelChange)="valueChanged()"
+              [ngClass]="[isValid[2] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2 absolute -bottom-6"
+              *ngIf="!isValid[2]"
+              id="lastNameMessage"
+              >Please enter valid last name</span
+            >
+          </div>
+          <div class="mt-12 relative">
+            <label
+              for="nickname"
+              id="nicknameLabel"
+              class="block font-outfit font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValid[3] ? 'text-tertiary' : 'text-invalid']"
+              >Nickname
+            </label>
+            <input
+              type="text"
+              id="nickname"
+              class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
+              formControlName="nickname"
+              (ngModelChange)="valueChanged()"
+              [ngClass]="[isValid[3] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2 absolute -bottom-6"
+              *ngIf="!isValid[3]"
+              id="nicknameMessage"
+              >{{ errorContent[1] }}</span
+            >
+          </div>
+          <div class="mt-12 relative">
+            <label
+              for="password"
+              id="passwordLabel"
+              class="block font-outfit font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValid[4] ? 'text-tertiary' : 'text-invalid']"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="password"
+              class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
+              formControlName="password"
+              (ngModelChange)="valueChanged()"
+              [ngClass]="[isValid[4] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2 absolute -bottom-12"
+              *ngIf="!isValid[4]"
+              id="passwordMessage"
+              >Please enter valid password (You have to use uppercase and
+              lowercase letter, special character, digit)</span
+            >
+          </div>
+
+          <div class="mt-12 relative">
+            <label
+              for="repeatPassword"
+              id="repeatPasswordLabel"
+              class="block font-outfit font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValid[5] ? 'text-tertiary' : 'text-invalid']"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              id="repeatPassword"
+              class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
+              formControlName="repeatPassword"
+              (ngModelChange)="valueChanged()"
+              [ngClass]="[isValid[5] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2 absolute -bottom-6"
+              *ngIf="!isValid[5]"
+              id="repeatPasswordMessage"
+              >Passwords don't match</span
+            >
+          </div>
+          <!--todo: change ngModelChange to the same as in login component-->
+          <div class="mt-14 flex items-center">
+            <span
+              class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2"
+              *ngIf="!isValid[6]"
+              id="agreementMessage"
+              >*</span
+            >
+            <input
+              type="checkbox"
+              id="agreement"
+              class="h-6 w-6 accent-secondary cursor-pointer"
+              formControlName="agreement"
+              (ngModelChange)="valueChanged()"
+            />
+            <label
+              for="agreement"
+              id="agreementLabel"
+              class="font-outfit text-tertiary font-semibold text-sm ms-1"
+              >I accept the <a class="text-secondary">Privacy Policy</a> and the
+              <a class="text-secondary">Terms of Service</a></label
+            >
+          </div>
+          <div class="mt-10">
+            <re-captcha (resolved)="checkCaptcha($event)"></re-captcha>
+          </div>
+          <div class="mt-10 flex justify-center">
+            <mat-spinner *ngIf="isLoading" [diameter]="40"></mat-spinner>
+          </div>
+          <button
+            id="signupButton"
+            class="border-white border-solid border w-full py-3 px-10 rounded-xl mt-5 duration-300"
+            [ngClass]="[
+              isEnabled
+                ? 'bg-[#ECF1CC] text-[#637200] hover:bg-[#F1FABB] hover:text-[#5E6B01]'
+                : 'bg-[#F8FBE4] text-[#E3EE97]'
+            ]"
+            [disabled]="!isEnabled"
+            type="button"
+            (click)="signUp()"
+          >
+            Sign up
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
