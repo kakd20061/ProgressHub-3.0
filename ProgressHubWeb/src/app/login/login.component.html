@@ -92,7 +92,7 @@
         <div class="w-full text-end mt-4">
           <a
             *ngIf="isNextStep"
-            href="#"
+            (click)="forgotPassword()"
             class="text-secondary text-base text-end"
             >Forgot password?</a
           >

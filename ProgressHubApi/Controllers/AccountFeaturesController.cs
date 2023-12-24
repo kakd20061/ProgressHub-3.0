@@ -28,11 +28,11 @@ public class AccountFeaturesController : ControllerBase
         switch (result.Item2)
         {
             case Enums.BasicResultEnum.Success:
-                return Ok(result.Item1);
+                return Ok();
             case Enums.BasicResultEnum.Error:
                 return BadRequest(result.Item1);
             default:
-                return Ok(result.Item1);
+                return Ok();
         }
     }
 

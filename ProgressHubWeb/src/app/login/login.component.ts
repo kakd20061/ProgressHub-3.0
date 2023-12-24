@@ -37,7 +37,11 @@ export class LoginComponent implements OnInit {
     this.subscribeToAuthState();
     this.subscribeToValueChanges();
   }
-
+  forgotPassword():void {
+    this._router.navigate(['/verify-password'], {
+      queryParams: { email: this.loginForm.value.email},
+    });
+  }
   subscribeToAuthState(): void {
     this._externalAuthService.authState.subscribe((user: SocialUser):void => {
       this.externalAuth = {
