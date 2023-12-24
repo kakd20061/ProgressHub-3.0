@@ -1,0 +1,81 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+$primary: (
+  50: #B4C734,
+  100: #A9C12B,
+  200: #9EBD22,
+  300: #93B91A,
+  400: #88B511,
+  500: #7DAE08,
+  600: #72AA00,
+  700: #67A100,
+  800: #5C9D00,
+  900: #519400,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #000000,
+  )
+);
+
+$secondary: (
+  50: #637200,
+  100: #6E7D00,
+  200: #798800,
+  300: #849300,
+  400: #8F9E00,
+  500: #9AA900,
+  600: #A5B400,
+  700: #B0BF00,
+  800: #BBCA00,
+  900: #C6D500,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #000000,
+  )
+);
+$ProgressHubWeb-primary: mat.define-palette($primary);
+$ProgressHubWeb-accent: mat.define-palette($secondary);
+
+// The warn palette is optional (defaults to red).
+$ProgressHubWeb-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$ProgressHubWeb-theme: mat.define-light-theme((
+  color: (
+    primary: $ProgressHubWeb-primary,
+    accent: $ProgressHubWeb-accent,
+    warn: $ProgressHubWeb-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($ProgressHubWeb-theme);
+
