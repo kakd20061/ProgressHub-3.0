@@ -56,6 +56,7 @@ export class SignupComponent implements OnInit{
   ngOnInit(): void {
     this.subscribeToAuthState();
     // this.subscribeToValueChanges();
+    //todo: subscribe to value changes
     }
   subscribeToAuthState(): void {
     this._externalAuthService.authState.subscribe((user: SocialUser):void => {
