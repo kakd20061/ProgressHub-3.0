@@ -4,6 +4,7 @@ import { NgxOtpInputConfig } from 'ngx-otp-input';
 import { AuthService } from '../auth.service';
 import { verificationModel } from '../models/verificationModel';
 import {CommonService} from "../common.service";
+import {ChangePasswordService} from "../change-password.service";
 
 @Component({
   selector: 'app-verification-password',
@@ -22,7 +23,8 @@ export class VerificationPasswordComponent {
     private _route: ActivatedRoute,
     private _router: Router,
     private _apiService: AuthService,
-    private _commonService: CommonService
+    private _commonService: CommonService,
+    private _changePasswordService: ChangePasswordService
   ) {}
   otpInputConfig: NgxOtpInputConfig = {
     otpLength: 4,
@@ -58,6 +60,8 @@ export class VerificationPasswordComponent {
           this.isSuccess = 1;
           this.isLoading = false;
           setTimeout(() => {
+            this._changePasswordService.setVerificationStatus(true);
+            this._changePasswordService.setEmail(this.email);
             this._router.navigate(['/change-password']);
           }, 3000);
         },
@@ -67,6 +71,7 @@ export class VerificationPasswordComponent {
           setTimeout(() => {
             this.isSuccess = 0;
             this.isEnabled = false;
+            this._changePasswordService.setVerificationStatus(false);
           }, 3000);
         },
       });
