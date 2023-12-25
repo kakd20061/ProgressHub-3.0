@@ -32,6 +32,7 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleSigninComponent } from './google-signin/google-signin.component';
 import { NgOptimizedImage } from '@angular/common';
 import { VerificationPasswordComponent } from './verification-password/verification-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -45,6 +46,7 @@ export function tokenGetter() {
     VerificationComponent,
     GoogleSigninComponent,
     VerificationPasswordComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

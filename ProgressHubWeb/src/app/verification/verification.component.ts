@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxOtpInputConfig } from 'ngx-otp-input';
 import { AuthService } from '../auth.service';
 import { verificationModel } from '../models/verificationModel';
+import {CommonService} from "../common.service";
 
 @Component({
   selector: 'app-verification',
@@ -20,24 +21,16 @@ export class VerificationComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _apiService: AuthService
+    private _apiService: AuthService,
+    private _commonService: CommonService
   ) {}
   otpInputConfig: NgxOtpInputConfig = {
     otpLength: 4,
   };
   onOtpChange(event: string[]): void {
-    let counter: number = 0;
-    event.forEach((element) => {
-      console.log(element);
-      if (!element || element.length == 0 || isNaN(parseInt(element))) {
-        counter++;
-      }
-    });
-    if (counter == 0) {
+    this.isEnabled = this._commonService.onOtpChange(event);
+    if(this.isEnabled){
       this.otpValue = event;
-      this.isEnabled = true;
-    } else {
-      this.isEnabled = false;
     }
   }
   ngOnInit() {

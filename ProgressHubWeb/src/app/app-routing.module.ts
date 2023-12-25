@@ -6,6 +6,7 @@ import { AuthGuard } from './auth.guard';
 import { SignupComponent } from './signup/signup.component';
 import { VerificationComponent } from './verification/verification.component';
 import {VerificationPasswordComponent} from "./verification-password/verification-password.component";
+import {ChangePasswordComponent} from "./change-password/change-password.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'verify', component: VerificationComponent },
   { path: 'verify-password', component: VerificationPasswordComponent },
+  { path: 'change-password', component: ChangePasswordComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
 ];
 
