@@ -55,8 +55,7 @@ export class SignupComponent implements OnInit{
 
   ngOnInit(): void {
     this.subscribeToAuthState();
-    // this.subscribeToValueChanges();
-    //todo: subscribe to value changes
+    this.subscribeToValueChanges();
     }
   subscribeToAuthState(): void {
     this._externalAuthService.authState.subscribe((user: SocialUser):void => {
@@ -67,7 +66,29 @@ export class SignupComponent implements OnInit{
       this.sendRequest(true);
     });
   }
-
+  subscribeToValueChanges(): void {
+    this.signUpForm.get('email')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('name')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('lastName')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('nickname')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('password')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('repeatPassword')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('agreement')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+  }
   googleSignIn(googleWrapper: any):void {
     googleWrapper.click();
   }
@@ -133,7 +154,6 @@ export class SignupComponent implements OnInit{
         },
       });
   }
-  //todo: google login
   confirmPasswordValidator(
     control: FormControl
   ): { [key: string]: boolean } | null {
@@ -148,12 +168,13 @@ export class SignupComponent implements OnInit{
   }
 
   valueChanged(): void {
+    console.log("works!");
     this.isEnabled = !!(this.signUpForm.get('email')?.value?.length! > 0 &&
-      this.signUpForm.value.name?.length! > 0 &&
-      this.signUpForm.value.lastName?.length! > 0 &&
-      this.signUpForm.value.nickname?.length! > 0 &&
-      this.signUpForm.value.password?.length! > 0 &&
-      this.signUpForm.value.repeatPassword?.length! > 0 &&
+      this.signUpForm.get('name')?.value?.length! > 0 &&
+      this.signUpForm.get('lastName')?.value?.length! > 0 &&
+      this.signUpForm.get('nickname')?.value?.length! > 0 &&
+      this.signUpForm.get('password')?.value?.length! > 0 &&
+      this.signUpForm.get('repeatPassword')?.value?.length! > 0 &&
       this.signUpForm.get("agreement")?.valid &&
       this.captchaResolved);
   }
