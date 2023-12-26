@@ -24,7 +24,6 @@ export class ChangePasswordComponent {
   isEnabled: boolean = false;
   isValidPassword: boolean = true;
   isSuccess: number = 0;
-  isResend: boolean = false;
   isLoading: boolean = false;
 
 
@@ -49,7 +48,6 @@ export class ChangePasswordComponent {
       email: this.email,
       password: this.changePasswordForm.value.password,
     };
-    this.isResend = false;
     this.isLoading = true;
     this._apiService
       .sendRequest('https://localhost:7034/api/features/change', model)
