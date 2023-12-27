@@ -33,6 +33,8 @@ import { GoogleSigninComponent } from './components/google-signin/google-signin.
 import { NgOptimizedImage } from '@angular/common';
 import { VerificationPasswordComponent } from './pages/verification-password/verification-password.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { MainComponent } from './pages/main/main.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -47,6 +49,8 @@ export function tokenGetter() {
     GoogleSigninComponent,
     VerificationPasswordComponent,
     ChangePasswordComponent,
+    NavbarComponent,
+    MainComponent,
   ],
   imports: [
     BrowserModule,
