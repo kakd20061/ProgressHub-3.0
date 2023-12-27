@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './pages/home/home.component';
 import { JwtModule } from '@auth0/angular-jwt';
-import { SignupComponent } from './signup/signup.component';
+import { SignupComponent } from './pages/signup/signup.component';
 import {
   RECAPTCHA_SETTINGS,
   RecaptchaFormsModule,
@@ -16,7 +16,7 @@ import {
 } from 'ng-recaptcha';
 import { environment } from '../environments/environment';
 
-import { VerificationComponent } from './verification/verification.component';
+import { VerificationComponent } from './pages/verification/verification.component';
 import { NgxOtpInputModule } from 'ngx-otp-input';
 import {
   heroCheckCircle,
@@ -29,10 +29,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-import { GoogleSigninComponent } from './google-signin/google-signin.component';
+import { GoogleSigninComponent } from './components/google-signin/google-signin.component';
 import { NgOptimizedImage } from '@angular/common';
-import { VerificationPasswordComponent } from './verification-password/verification-password.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
+import { VerificationPasswordComponent } from './pages/verification-password/verification-password.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');

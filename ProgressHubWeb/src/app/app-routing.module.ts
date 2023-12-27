@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './auth.guard';
-import { SignupComponent } from './signup/signup.component';
-import { VerificationComponent } from './verification/verification.component';
-import {VerificationPasswordComponent} from "./verification-password/verification-password.component";
-import {ChangePasswordComponent} from "./change-password/change-password.component";
-import {ChangePasswordGuard} from "./change-password.guard";
+import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AuthGuard } from './guards/auth.guard';
+import { SignupComponent } from './pages/signup/signup.component';
+import { VerificationComponent } from './pages/verification/verification.component';
+import {VerificationPasswordComponent} from "./pages/verification-password/verification-password.component";
+import {ChangePasswordComponent} from "./pages/change-password/change-password.component";
+import {ChangePasswordGuard} from "./guards/change-password.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
