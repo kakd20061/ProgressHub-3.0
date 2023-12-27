@@ -46,6 +46,7 @@ export class SignupComponent implements OnInit{
   ];
   isLoading: boolean = false;
   isExternalLoginValid: boolean = true;
+  isValidData: boolean = true;
   captchaResolved: boolean = false;
   externalAuth: ExternalAuthModel = {} as ExternalAuthModel;
 
@@ -125,6 +126,7 @@ export class SignupComponent implements OnInit{
             this._router.navigate(['/verify'], {
               queryParams: { email: model.email },
             });
+            this.isValidData = true;
           } else {
             this.setToken(res.accessToken,res.refreshToken);
             setTimeout(():void => {
@@ -138,6 +140,7 @@ export class SignupComponent implements OnInit{
           setTimeout(():void => {
             if(!isExternal) {
               this.isLoading = false;
+              this.isValidData = false;
               if (err.error.includes('email')) {
                 this.errorContent[0] = 'This email is already taken';
                 this.isValid[0] = false;
