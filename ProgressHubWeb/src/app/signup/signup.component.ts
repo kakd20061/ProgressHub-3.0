@@ -46,6 +46,7 @@ export class SignupComponent implements OnInit{
   ];
   isLoading: boolean = false;
   isExternalLoginValid: boolean = true;
+  isValidData: boolean = true;
   captchaResolved: boolean = false;
   externalAuth: ExternalAuthModel = {} as ExternalAuthModel;
 
@@ -55,7 +56,7 @@ export class SignupComponent implements OnInit{
 
   ngOnInit(): void {
     this.subscribeToAuthState();
-    // this.subscribeToValueChanges();
+    this.subscribeToValueChanges();
     }
   subscribeToAuthState(): void {
     this._externalAuthService.authState.subscribe((user: SocialUser):void => {
@@ -66,7 +67,29 @@ export class SignupComponent implements OnInit{
       this.sendRequest(true);
     });
   }
-
+  subscribeToValueChanges(): void {
+    this.signUpForm.get('email')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('name')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('lastName')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('nickname')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('password')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('repeatPassword')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+    this.signUpForm.get('agreement')?.valueChanges.subscribe(() => {
+      this.valueChanged();
+    });
+  }
   googleSignIn(googleWrapper: any):void {
     googleWrapper.click();
   }
@@ -103,6 +126,7 @@ export class SignupComponent implements OnInit{
             this._router.navigate(['/verify'], {
               queryParams: { email: model.email },
             });
+            this.isValidData = true;
           } else {
             this.setToken(res.accessToken,res.refreshToken);
             setTimeout(():void => {
@@ -116,6 +140,7 @@ export class SignupComponent implements OnInit{
           setTimeout(():void => {
             if(!isExternal) {
               this.isLoading = false;
+              this.isValidData = false;
               if (err.error.includes('email')) {
                 this.errorContent[0] = 'This email is already taken';
                 this.isValid[0] = false;
@@ -132,7 +157,6 @@ export class SignupComponent implements OnInit{
         },
       });
   }
-  //todo: google login
   confirmPasswordValidator(
     control: FormControl
   ): { [key: string]: boolean } | null {
@@ -147,12 +171,13 @@ export class SignupComponent implements OnInit{
   }
 
   valueChanged(): void {
+    console.log("works!");
     this.isEnabled = !!(this.signUpForm.get('email')?.value?.length! > 0 &&
-      this.signUpForm.value.name?.length! > 0 &&
-      this.signUpForm.value.lastName?.length! > 0 &&
-      this.signUpForm.value.nickname?.length! > 0 &&
-      this.signUpForm.value.password?.length! > 0 &&
-      this.signUpForm.value.repeatPassword?.length! > 0 &&
+      this.signUpForm.get('name')?.value?.length! > 0 &&
+      this.signUpForm.get('lastName')?.value?.length! > 0 &&
+      this.signUpForm.get('nickname')?.value?.length! > 0 &&
+      this.signUpForm.get('password')?.value?.length! > 0 &&
+      this.signUpForm.get('repeatPassword')?.value?.length! > 0 &&
       this.signUpForm.get("agreement")?.valid &&
       this.captchaResolved);
   }

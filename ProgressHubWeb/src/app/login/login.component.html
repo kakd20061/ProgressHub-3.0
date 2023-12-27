@@ -1,6 +1,6 @@
 <main class="bg-grass w-screen h-screen bg-no-repeat bg-cover max-md:bg-none">
   <div class="backdrop-blur-sm w-full h-full bg-primary bg-opacity-25">
-    <div *ngIf="!isLoading" class="h-full w-sidepanel max-md:w-full bg-white pt-3 ps-8">
+    <div *ngIf="!isLoading" class="h-full w-sidepanel overflow-y-auto sidepanel max-md:w-full bg-white pt-3 ps-8">
       <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
       <h2 class="text-primary text-header font-lobster mt-9">
         Login to your account
@@ -92,14 +92,14 @@
         <div class="w-full text-end mt-4">
           <a
             *ngIf="isNextStep"
-            href="#"
-            class="text-secondary text-base text-end"
+            (click)="forgotPassword()"
+            class="text-secondary text-base text-end hover:cursor-pointer"
             >Forgot password?</a
           >
         </div>
         <button
           *ngIf="!isNextStep"
-          class="border-white border-solid border w-auto py-3 px-10 rounded-xl mt-10 duration-300"
+          class="border-white border-solid border w-auto py-3 px-10 mb-10 rounded-xl mt-10 duration-300"
           [ngClass]="[
             isEnabled
               ? 'bg-[#ECF1CC] text-[#637200] hover:bg-[#F1FABB] hover:text-[#5E6B01]'
@@ -114,7 +114,7 @@
 
         <button
           *ngIf="isNextStep"
-          class="border-white border-solid border w-full py-3 px-10 rounded-xl mt-16 duration-300"
+          class="border-white border-solid border w-full py-3 px-10 mb-10 rounded-xl mt-16 duration-300"
           [ngClass]="[
             isEnabled
               ? 'bg-[#ECF1CC] text-[#637200] hover:bg-[#F1FABB] hover:text-[#5E6B01]'

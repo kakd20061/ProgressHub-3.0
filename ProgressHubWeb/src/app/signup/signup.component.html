@@ -28,8 +28,14 @@
               class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
             ></div>
           </div>
-
           <div class="mt-12 relative">
+            <div class="w-full text-center mb-4">
+            <span
+              *ngIf="!isValidData"
+              class="font-outfit font-normal text-sm text-invalid"
+            >Error occurred</span
+            >
+            </div>
             <label
               for="email"
               id="emailLabel"
@@ -42,7 +48,6 @@
               id="email"
               class="border-solid border w-full p-3 rounded-xl font-outfit"
               formControlName="email"
-              (ngModelChange)="valueChanged()"
               [ngClass]="[isValid[0] ? 'border-button' : 'border-invalid']"
             />
             <span
@@ -66,7 +71,6 @@
               id="name"
               class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
               formControlName="name"
-              (ngModelChange)="valueChanged()"
               [ngClass]="[isValid[1] ? 'border-button' : 'border-invalid']"
             />
             <span
@@ -89,7 +93,6 @@
               id="lastName"
               class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
               formControlName="lastName"
-              (ngModelChange)="valueChanged()"
               [ngClass]="[isValid[2] ? 'border-button' : 'border-invalid']"
             />
             <span
@@ -112,7 +115,6 @@
               id="nickname"
               class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
               formControlName="nickname"
-              (ngModelChange)="valueChanged()"
               [ngClass]="[isValid[3] ? 'border-button' : 'border-invalid']"
             />
             <span
@@ -135,7 +137,6 @@
               id="password"
               class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
               formControlName="password"
-              (ngModelChange)="valueChanged()"
               [ngClass]="[isValid[4] ? 'border-button' : 'border-invalid']"
             />
             <span
@@ -160,7 +161,6 @@
               id="repeatPassword"
               class="border-solid border w-full p-3 border-button rounded-xl font-outfit"
               formControlName="repeatPassword"
-              (ngModelChange)="valueChanged()"
               [ngClass]="[isValid[5] ? 'border-button' : 'border-invalid']"
             />
             <span
@@ -170,7 +170,6 @@
               >Passwords don't match</span
             >
           </div>
-          <!--todo: change ngModelChange to the same as in login component-->
           <div class="mt-14 flex items-center">
             <span
               class="block font-outfit font-normal text-sm text-invalid mb-1 ms-2"
@@ -183,7 +182,6 @@
               id="agreement"
               class="h-6 w-6 accent-secondary cursor-pointer"
               formControlName="agreement"
-              (ngModelChange)="valueChanged()"
             />
             <label
               for="agreement"
