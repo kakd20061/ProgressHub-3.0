@@ -25,8 +25,8 @@ export class LoginComponent implements OnInit {
   isEnabled: boolean = false;
   isValid: boolean = true;
   isValidPassword: boolean = true;
-  isNextStep: boolean = false;
-  isValidData: boolean = true;
+  isNextStep: boolean = true;
+  isValidData: boolean = false;
   isLoading: boolean = false;
   isExternalLoginValid: boolean = true;
   externalAuth: ExternalAuthModel = {} as ExternalAuthModel;
