@@ -3,7 +3,7 @@
     <!-- normal container -->
     <div
       *ngIf="isSuccess == 0 && !isLoading"
-      class="w-verification shadow-xl h-verification bg-white border border-white text-center p-10 rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
+      class="w-verification shadow-xl h-verification max-md:w-full max-md:h-full  bg-white border border-white text-center p-10 rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
     >
       <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
       <p class="font-outfit font-normal mt-10">
@@ -45,7 +45,7 @@
     <!-- result for verification -->
     <div
       *ngIf="isSuccess != 0 && !isResend && !isLoading"
-      class="flex shadow-xl w-verification h-verification bg-white border border-white text-center p-10 rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
+      class="flex shadow-xl w-verification h-verification max-md:w-full max-md:h-full  bg-white border border-white text-center p-10 rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
     >
       <div *ngIf="isSuccess == 1" class="w-full">
         <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
@@ -80,7 +80,7 @@
     <!-- result for resend -->
     <div
       *ngIf="isSuccess != 0 && isResend && !isLoading"
-      class="flex shadow-xl w-verification h-verification bg-white border border-white p-10 text-center rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
+      class="flex shadow-xl w-verification h-verification max-md:w-full max-md:h-full  bg-white border border-white p-10 text-center rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
     >
       <div *ngIf="isSuccess == 1" class="w-full">
         <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
@@ -112,7 +112,7 @@
     <!-- loading -->
     <div
       *ngIf="isLoading"
-      class="w-verification shadow-xl h-verification bg-white border border-white text-center p-10 rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
+      class="w-verification shadow-xl h-verification max-md:w-full max-md:h-full  bg-white border border-white text-center p-10 rounded-3xl absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
     >
       <div class="flex w-full h-full items-center flex-col justify-center">
         <mat-spinner [diameter]="50"></mat-spinner>
