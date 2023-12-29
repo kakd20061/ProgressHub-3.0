@@ -36,14 +36,14 @@ namespace ProgressHubApi.Services
 
         public string GenerateJwt(UserModel model)
         {
-
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier, model.Nickname),
                 new Claim(ClaimTypes.Email, model.Email),
                 new Claim(ClaimTypes.Name, model.Name),
                 new Claim(ClaimTypes.Surname, model.LastName),
+                new Claim(ClaimTypes.Role, Enum.GetName(model.Role))
             };
-            //todo: add roles
+            
             JwtSecurityToken tokeOptions;
 
             

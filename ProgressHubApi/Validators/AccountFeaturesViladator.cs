@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 

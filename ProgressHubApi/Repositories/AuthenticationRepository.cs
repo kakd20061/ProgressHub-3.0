@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Services;

@@ -34,12 +34,14 @@ export class AuthService {
     let name = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
     let surname = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
     let nickname = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    let role = jwt['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
     user.email = email;
     user.name = name;
     user.lastName = surname;
     user.nickname = nickname;
-
+    user.role = role;
+    
     return user;
   }
 

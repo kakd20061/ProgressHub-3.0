@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using ProgressHubApi.Enums;
 
 namespace ProgressHubApi.Models;
 
@@ -29,7 +30,9 @@ public class UserModel
 
     [BsonElement("tokens")]
     public Tokens Tokens { get; set; }
-
+    
+    [BsonElement("role")]
+    public UserRoleEnum Role { get; set; }
     public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt)
     {
         this._Id = _Id;
@@ -38,19 +41,20 @@ public class UserModel
         this.Email = Email;
         this.Nickname = Nickname;
         this.Password = Password;
+        this.Role = UserRoleEnum.User;
         Activity = new UserActivity
         {
             CreatedAt = DateTime.UtcNow,
-            LastLoggedAt = LastLoggedAt == null ? DateTime.UtcNow : LastLoggedAt.Value
+            LastLoggedAt = LastLoggedAt ?? DateTime.UtcNow
         };
         Tokens = new Tokens
         {
             RefreshToken = "",
-            RefreshTokenExpiryTime = DateTime.Now
+            RefreshTokenExpiryTime = DateTime.UtcNow
         };
     }
 
-    public UserModel(UserModel model, DateTime LastLoggedAt)
+    public UserModel(UserModel model, DateTime lastLoggedAt)
     {
         _Id = model._Id;
         Name = model.Name;
@@ -58,15 +62,16 @@ public class UserModel
         Email = model.Email;
         Nickname = model.Nickname;
         Password = model.Password;
+        Role = model.Role;
         Activity = new UserActivity
         {
             CreatedAt = model.Activity.CreatedAt,
-            LastLoggedAt = LastLoggedAt
+            LastLoggedAt = lastLoggedAt
         };
         Tokens = new Tokens
         {
             RefreshToken = "",
-            RefreshTokenExpiryTime = DateTime.Now
+            RefreshTokenExpiryTime = DateTime.UtcNow
         };
     }
 }

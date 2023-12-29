@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models.Token;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;

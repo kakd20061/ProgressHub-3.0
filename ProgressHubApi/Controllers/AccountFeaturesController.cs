@@ -6,7 +6,7 @@ using MongoDB.Driver;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Services;
-
+using ProgressHubApi.Enums.Authentication;
 namespace ProgressHubApi.Controllers;
 
 [ApiController]
@@ -43,11 +43,11 @@ public class AccountFeaturesController : ControllerBase
 
         switch (result)
         {
-            case Enums.ChangePasswordEnum.Success:
+            case ChangePasswordEnum.Success:
                 return Ok();
-            case Enums.ChangePasswordEnum.WeakPassword:
+            case ChangePasswordEnum.WeakPassword:
                 return BadRequest("Your new password is too weak");
-            case Enums.ChangePasswordEnum.Error:
+            case ChangePasswordEnum.Error:
                 return BadRequest("Unexpected error");
             default:
                 return Ok();
@@ -61,15 +61,15 @@ public class AccountFeaturesController : ControllerBase
 
         switch (result)
         {
-            case Enums.VerificationCodeCheckEnum.Success:
+            case VerificationCodeCheckEnum.Success:
                 return Ok();
-            case Enums.VerificationCodeCheckEnum.Error:
+            case VerificationCodeCheckEnum.Error:
                 return BadRequest("Unexpected error");
-            case Enums.VerificationCodeCheckEnum.InvalidCode:
+            case VerificationCodeCheckEnum.InvalidCode:
                 return BadRequest("Entered code is wrong");
-            case Enums.VerificationCodeCheckEnum.NoCode:
+            case VerificationCodeCheckEnum.NoCode:
                 return BadRequest("Code for this user doesn't exist. Please regenerate code");
-            case Enums.VerificationCodeCheckEnum.NoAccount:
+            case VerificationCodeCheckEnum.NoAccount:
                 return BadRequest("There is no account with provided email");
             default:
                 return Ok();

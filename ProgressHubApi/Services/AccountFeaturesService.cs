@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using Amazon.Auth.AccessControlPolicy;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Models.Mail;
