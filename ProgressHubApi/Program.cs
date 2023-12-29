@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MongoDB.Driver;
 using ProgressHubApi;
+using ProgressHubApi.Models;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Models.Token;
 using ProgressHubApi.Repositories;
@@ -77,6 +78,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.Configure<MailSettingsModel>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<GoogleSettingsModel>(builder.Configuration.GetSection("GoogleAuthSettings"));
+
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<CommonService>();
 

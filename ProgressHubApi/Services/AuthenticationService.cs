@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using Amazon.Auth.AccessControlPolicy;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using MongoDB.Driver;
@@ -34,11 +35,12 @@ namespace ProgressHubApi.Services
     {
         private readonly IAuthenticationRepository _repository;
         private readonly CommonService _commonService;
-
-        public AuthenticationService(IAuthenticationRepository repository, CommonService commonService)
+        private readonly GoogleSettingsModel _googleSettings;
+        public AuthenticationService(IAuthenticationRepository repository, CommonService commonService, IOptions<GoogleSettingsModel> googleSettings)
         {
             _repository = repository;
             _commonService = commonService;
+            _googleSettings = googleSettings.Value;
         }
 
         public async Task<SignUpResultEnum> CreateUserAccount(UserDto user)
@@ -100,11 +102,21 @@ namespace ProgressHubApi.Services
         {
             try
             {
-                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                GoogleJsonWebSignature.ValidationSettings settings;
+                if (Environment.GetEnvironmentVariable("GOOGLEID") != null)
                 {
-                    //todo: add to appsettings.json and env variables
-                    Audience = new List<string>() { "761080080074-a87pf53jlc4s051qia305rm3f850l35h.apps.googleusercontent.com" }
-                };
+                    settings = new GoogleJsonWebSignature.ValidationSettings()
+                    {
+                        Audience = new List<string>() { Environment.GetEnvironmentVariable("GOOGLEID") }
+                    };
+                }
+                else
+                {
+                    settings = new GoogleJsonWebSignature.ValidationSettings()
+                    {
+                        Audience = new List<string>() { _googleSettings.Id }
+                    };
+                }
                 var payload = await GoogleJsonWebSignature.ValidateAsync(externalAuth.IdToken, settings);
                 return payload;
             }
