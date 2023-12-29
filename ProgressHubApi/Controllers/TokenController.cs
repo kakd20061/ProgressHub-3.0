@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ProgressHubApi.Models;
+using ProgressHubApi.Models.Token;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Services;
 

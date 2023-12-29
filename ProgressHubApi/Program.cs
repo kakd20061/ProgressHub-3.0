@@ -3,30 +3,46 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MongoDB.Driver;
 using ProgressHubApi;
+using ProgressHubApi.Models;
 using ProgressHubApi.Models.Mail;
+using ProgressHubApi.Models.Token;
 using ProgressHubApi.Repositories;
 using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-
 builder.Services.AddAuthentication(opt => {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        if (Environment.GetEnvironmentVariable("JWTSECRETKEY") != null && Environment.GetEnvironmentVariable("JWTISSUER") != null && Environment.GetEnvironmentVariable("JWTAUDIENCE") != null)
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://localhost:7034",
-            ValidAudience = "https://localhost:7034",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
-        };
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = Environment.GetEnvironmentVariable("JWTISSUER"),
+                ValidAudience = Environment.GetEnvironmentVariable("JWTAUDIENCE"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWTSECRETKEY")))
+            };
+        }
+        else
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration.GetSection("JwtSettings").GetValue<string>("Issuer"),
+                ValidAudience = builder.Configuration.GetSection("JwtSettings").GetValue<string>("Audience"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtSettings").GetValue<string>("SecretKey")))
+            };
+        }
     });
 
 builder.Services.AddControllers();
@@ -44,7 +60,7 @@ builder.Services.AddSingleton<IMongoClient, MongoClient>(x =>
     }
     else
     {
-        client = new MongoClient("mongodb://localhost:27017/");
+        client = new MongoClient(builder.Configuration.GetSection("MongoSettings").GetValue<string>("ConnectionString"));
     }
 
     return client;
@@ -61,7 +77,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.Configure<MailSettingsModel>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<GoogleSettingsModel>(builder.Configuration.GetSection("GoogleAuthSettings"));
+
 builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<CommonService>();
 
 builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();

@@ -7,10 +7,12 @@ using System.Text.Encodings.Web;
 using Amazon.Auth.AccessControlPolicy;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Models.Mail;
@@ -33,17 +35,20 @@ namespace ProgressHubApi.Services
 	public class AuthenticationService : IAuthenticationService
     {
         private readonly IAuthenticationRepository _repository;
-
-        public AuthenticationService(IAuthenticationRepository repository)
+        private readonly CommonService _commonService;
+        private readonly GoogleSettingsModel _googleSettings;
+        public AuthenticationService(IAuthenticationRepository repository, CommonService commonService, IOptions<GoogleSettingsModel> googleSettings)
         {
             _repository = repository;
+            _commonService = commonService;
+            _googleSettings = googleSettings.Value;
         }
 
         public async Task<SignUpResultEnum> CreateUserAccount(UserDto user)
         {
-            var encryptedPassword = CommonService.HashPassword(user.Password);
+            var encryptedPassword = _commonService.HashPassword(user.Password);
             var userModel = new UserModel(null, user.Name, user.Lastname, user.Email, user.NickName, encryptedPassword, null);
-            var verificationCodeModel = new VerificationCodeModel(null, user.Email, CommonService.GenerateVerificationCode());
+            var verificationCodeModel = new VerificationCodeModel(null, user.Email, _commonService.GenerateVerificationCode());
 
             var mailRequestModel = new MailRequestModel()
             {
@@ -64,7 +69,7 @@ namespace ProgressHubApi.Services
 
         public async Task<(string, BasicResultEnum)> ResendVerificationCode(string email)
         {
-            var verificationCodeModel = new VerificationCodeModel(null, email, CommonService.GenerateVerificationCode());
+            var verificationCodeModel = new VerificationCodeModel(null, email, _commonService.GenerateVerificationCode());
             var mailRequestModel = new MailRequestModel()
             {
                 ToEmail = email,
@@ -76,10 +81,10 @@ namespace ProgressHubApi.Services
 
         public async Task<(string?, LoginResultEnum)> CheckUserAccount(LoginModel model)
         {
-            var hashedPassword = CommonService.HashPassword(model.Password);
+            var hashedPassword = _commonService.HashPassword(model.Password);
             var result = await _repository.CheckUserAccount(model,hashedPassword);
             if (result.Item2 != LoginResultEnum.Success) return (null, result.Item2);
-            var token = CommonService.GenerateJwt(result.Item1);
+            var token = _commonService.GenerateJwt(result.Item1);
             return (token,result.Item2);
         }
 
@@ -90,7 +95,7 @@ namespace ProgressHubApi.Services
             var result = await _repository.ExternalLogin(payload);
 
             if (result.Item2 != BasicResultEnum.Success) return (null, null, result.Item2);
-            var token = CommonService.GenerateJwt(result.Item1);
+            var token = _commonService.GenerateJwt(result.Item1);
             return (payload.Email, token, result.Item2);
         }
         
@@ -98,11 +103,21 @@ namespace ProgressHubApi.Services
         {
             try
             {
-                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                GoogleJsonWebSignature.ValidationSettings settings;
+                if (Environment.GetEnvironmentVariable("GOOGLEID") != null)
                 {
-                    //todo: add to appsettings.json and env variables
-                    Audience = new List<string>() { "761080080074-a87pf53jlc4s051qia305rm3f850l35h.apps.googleusercontent.com" }
-                };
+                    settings = new GoogleJsonWebSignature.ValidationSettings()
+                    {
+                        Audience = new List<string>() { Environment.GetEnvironmentVariable("GOOGLEID") }
+                    };
+                }
+                else
+                {
+                    settings = new GoogleJsonWebSignature.ValidationSettings()
+                    {
+                        Audience = new List<string>() { _googleSettings.Id }
+                    };
+                }
                 var payload = await GoogleJsonWebSignature.ValidateAsync(externalAuth.IdToken, settings);
                 return payload;
             }

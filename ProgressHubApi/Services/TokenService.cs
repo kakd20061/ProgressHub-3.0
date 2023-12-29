@@ -5,9 +5,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
 using Google.Apis.Auth;
+using Microsoft.Extensions.Options;
 using ProgressHubApi.Repositories;
 using ProgressHubApi.Enums;
-using ProgressHubApi.Models;
+using ProgressHubApi.Models.Token;
 
 namespace ProgressHubApi.Services
 {
@@ -21,10 +22,14 @@ namespace ProgressHubApi.Services
     public class TokenService : ITokenService
 	{
         private readonly ITokenRepository _repository;
+        private readonly CommonService _commonService;
+        private readonly JwtSettingsModel _jwtSettings;
 
-        public TokenService(ITokenRepository repository)
+        public TokenService(ITokenRepository repository, CommonService commonService, IOptions<JwtSettingsModel> jwtSettings)
         {
             _repository = repository;
+            _commonService = commonService;
+            _jwtSettings = jwtSettings.Value;
         }
 
         public async Task<(string?, BasicResultEnum)> AddRefreshTokenToUser(string email)
@@ -45,14 +50,28 @@ namespace ProgressHubApi.Services
         }
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
-            var tokenValidationParameters = new TokenValidationParameters
+            TokenValidationParameters tokenValidationParameters;
+            if(Environment.GetEnvironmentVariable("JWTSECRETKEY") != null)
             {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345")),
-                ValidateLifetime = false
-            };
+                tokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWTSECRETKEY"))),
+                    ValidateLifetime = false
+                };
+            }else
+            {
+                tokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+                    ValidateLifetime = false
+                };
+            }
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
@@ -78,7 +97,7 @@ namespace ProgressHubApi.Services
 
                 if(result.Item2 == BasicResultEnum.Success)
                 {
-                    var newAccessToken = CommonService.GenerateJwt(result.Item1);
+                    var newAccessToken = _commonService.GenerateJwt(result.Item1);
                     return (new TokenModel() {
                         AccessToken = newAccessToken,
                         RefreshToken = refreshToken

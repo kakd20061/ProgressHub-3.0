@@ -4,6 +4,7 @@ using Amazon.Auth.AccessControlPolicy;
 using MongoDB.Driver;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 

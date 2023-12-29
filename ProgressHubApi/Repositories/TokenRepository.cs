@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
 using ProgressHubApi.Models;
-using ProgressHubApi.Models.Mail;
+using ProgressHubApi.Models.Token;
 using ProgressHubApi.Validators;
 
 namespace ProgressHubApi.Repositories
