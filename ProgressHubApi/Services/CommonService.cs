@@ -3,38 +3,39 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProgressHubApi.Models;
+using ProgressHubApi.Models.Mail;
+using ProgressHubApi.Models.Token;
 
 namespace ProgressHubApi.Services
 {
 	public class CommonService
 	{
+        private readonly JwtSettingsModel _jwtSettings;
 
-        public static string? HashPassword(string password)
+        public CommonService(IOptions<JwtSettingsModel> jwtSettings)
         {
-            string? result;
-            using (SHA512 sha512Hash = SHA512.Create())
-            {
-                byte[] sourceBytes = Encoding.UTF8.GetBytes(password);
-                byte[] hashBytes = sha512Hash.ComputeHash(sourceBytes);
-                result = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
-            }
+            _jwtSettings = jwtSettings.Value;
+        }
+        public string? HashPassword(string password)
+        {
+            var sourceBytes = Encoding.UTF8.GetBytes(password);
+            var hashBytes = SHA512.HashData(sourceBytes);
+            var result = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
             return result;
         }
 
-        public static int GenerateVerificationCode()
+        public int GenerateVerificationCode()
         {
             Random random = new Random();
             int result = random.Next(1000, 10000);
             return result;
         }
 
-        public static string GenerateJwt(UserModel model)
+        public string GenerateJwt(UserModel model)
         {
-            //todo: move this to appsettings.json and .env
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier, model.Nickname),
@@ -43,15 +44,35 @@ namespace ProgressHubApi.Services
                 new Claim(ClaimTypes.Surname, model.LastName),
             };
             //todo: add roles
-            //todo: check what is issuer and audience
-            var tokeOptions = new JwtSecurityToken(
-                issuer: "https://localhost:7034",
-                audience: "https://localhost:7034",
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(5),
-                signingCredentials: signinCredentials
-            );
+            JwtSecurityToken tokeOptions;
 
+            
+            if(Environment.GetEnvironmentVariable("JWTSECRETKEY") != null && Environment.GetEnvironmentVariable("JWTISSUER") != null && Environment.GetEnvironmentVariable("JWTAUDIENCE") != null)
+            {
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWTSECRETKEY")));
+                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                
+                tokeOptions = new JwtSecurityToken(
+                    issuer: Environment.GetEnvironmentVariable("JWTISSUER"),
+                    audience: Environment.GetEnvironmentVariable("JWTAUDIENCE"),
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(5),
+                    signingCredentials: signinCredentials
+                );
+            }else
+            {
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                
+                tokeOptions = new JwtSecurityToken(
+                    issuer: _jwtSettings.Issuer,
+                    audience: _jwtSettings.Audience,
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(5),
+                    signingCredentials: signinCredentials
+                );
+            }
+            
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
 
             return tokenString;

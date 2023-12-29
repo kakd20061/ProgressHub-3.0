@@ -33,17 +33,19 @@ namespace ProgressHubApi.Services
 	public class AuthenticationService : IAuthenticationService
     {
         private readonly IAuthenticationRepository _repository;
+        private readonly CommonService _commonService;
 
-        public AuthenticationService(IAuthenticationRepository repository)
+        public AuthenticationService(IAuthenticationRepository repository, CommonService commonService)
         {
             _repository = repository;
+            _commonService = commonService;
         }
 
         public async Task<SignUpResultEnum> CreateUserAccount(UserDto user)
         {
-            var encryptedPassword = CommonService.HashPassword(user.Password);
+            var encryptedPassword = _commonService.HashPassword(user.Password);
             var userModel = new UserModel(null, user.Name, user.Lastname, user.Email, user.NickName, encryptedPassword, null);
-            var verificationCodeModel = new VerificationCodeModel(null, user.Email, CommonService.GenerateVerificationCode());
+            var verificationCodeModel = new VerificationCodeModel(null, user.Email, _commonService.GenerateVerificationCode());
 
             var mailRequestModel = new MailRequestModel()
             {
@@ -64,7 +66,7 @@ namespace ProgressHubApi.Services
 
         public async Task<(string, BasicResultEnum)> ResendVerificationCode(string email)
         {
-            var verificationCodeModel = new VerificationCodeModel(null, email, CommonService.GenerateVerificationCode());
+            var verificationCodeModel = new VerificationCodeModel(null, email, _commonService.GenerateVerificationCode());
             var mailRequestModel = new MailRequestModel()
             {
                 ToEmail = email,
@@ -76,10 +78,10 @@ namespace ProgressHubApi.Services
 
         public async Task<(string?, LoginResultEnum)> CheckUserAccount(LoginModel model)
         {
-            var hashedPassword = CommonService.HashPassword(model.Password);
+            var hashedPassword = _commonService.HashPassword(model.Password);
             var result = await _repository.CheckUserAccount(model,hashedPassword);
             if (result.Item2 != LoginResultEnum.Success) return (null, result.Item2);
-            var token = CommonService.GenerateJwt(result.Item1);
+            var token = _commonService.GenerateJwt(result.Item1);
             return (token,result.Item2);
         }
 
@@ -90,7 +92,7 @@ namespace ProgressHubApi.Services
             var result = await _repository.ExternalLogin(payload);
 
             if (result.Item2 != BasicResultEnum.Success) return (null, null, result.Item2);
-            var token = CommonService.GenerateJwt(result.Item1);
+            var token = _commonService.GenerateJwt(result.Item1);
             return (payload.Email, token, result.Item2);
         }
         

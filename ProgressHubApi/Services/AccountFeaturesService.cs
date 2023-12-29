@@ -23,10 +23,12 @@ namespace ProgressHubApi.Services
     public class AccountFeaturesService : IAccountFeaturesService
     {
         private readonly IAccountFeaturesRepository _accountFeaturesRepository;
+        private readonly CommonService _commonService;
 
-        public AccountFeaturesService(IAccountFeaturesRepository accountFeaturesRepository)
+        public AccountFeaturesService(IAccountFeaturesRepository accountFeaturesRepository, CommonService commonService)
         {
             _accountFeaturesRepository = accountFeaturesRepository;
+            _commonService = commonService;
         }
 
         public async Task<VerificationCodeCheckEnum> CheckVerificationCode(VerificationCodeDto code)
@@ -37,13 +39,13 @@ namespace ProgressHubApi.Services
         
         public async Task<ChangePasswordEnum> ChangePassword(ChangePasswordModel model)
         {
-            var hashedPassword = CommonService.HashPassword(model.password);
+            var hashedPassword = _commonService.HashPassword(model.password);
             return await _accountFeaturesRepository.ChangePassword(model, hashedPassword);
         }
 
         public async Task<(string, BasicResultEnum)> ResetPasswordCode(string email)
         {
-            var verificationCodeModel = new VerificationCodeModel(null, email, CommonService.GenerateVerificationCode());
+            var verificationCodeModel = new VerificationCodeModel(null, email, _commonService.GenerateVerificationCode());
             var mailRequestModel = new MailRequestModel()
             {
                 ToEmail = email,

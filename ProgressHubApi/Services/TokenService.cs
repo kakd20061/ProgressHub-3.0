@@ -7,7 +7,7 @@ using System.Text;
 using Google.Apis.Auth;
 using ProgressHubApi.Repositories;
 using ProgressHubApi.Enums;
-using ProgressHubApi.Models;
+using ProgressHubApi.Models.Token;
 
 namespace ProgressHubApi.Services
 {
@@ -21,10 +21,12 @@ namespace ProgressHubApi.Services
     public class TokenService : ITokenService
 	{
         private readonly ITokenRepository _repository;
+        private readonly CommonService _commonService;
 
-        public TokenService(ITokenRepository repository)
+        public TokenService(ITokenRepository repository, CommonService commonService)
         {
             _repository = repository;
+            _commonService = commonService;
         }
 
         public async Task<(string?, BasicResultEnum)> AddRefreshTokenToUser(string email)
@@ -45,12 +47,13 @@ namespace ProgressHubApi.Services
         }
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
+            //todo: move this to appsettings.json and .env
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("BasicKey123@!12333333HardToGuess")),
                 ValidateLifetime = false
             };
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -78,7 +81,7 @@ namespace ProgressHubApi.Services
 
                 if(result.Item2 == BasicResultEnum.Success)
                 {
-                    var newAccessToken = CommonService.GenerateJwt(result.Item1);
+                    var newAccessToken = _commonService.GenerateJwt(result.Item1);
                     return (new TokenModel() {
                         AccessToken = newAccessToken,
                         RefreshToken = refreshToken

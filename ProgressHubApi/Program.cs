@@ -4,6 +4,7 @@ using System.Text;
 using MongoDB.Driver;
 using ProgressHubApi;
 using ProgressHubApi.Models.Mail;
+using ProgressHubApi.Models.Token;
 using ProgressHubApi.Repositories;
 using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
@@ -11,7 +12,7 @@ using ProgressHubApi.Validators;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+//todo: move this to appsettings.json and .env
 builder.Services.AddAuthentication(opt => {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,7 +62,9 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.Configure<MailSettingsModel>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<CommonService>();
 
 builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
