@@ -41,7 +41,7 @@ export class AuthService {
     user.lastName = surname;
     user.nickname = nickname;
     user.role = role;
-    
+
     return user;
   }
 

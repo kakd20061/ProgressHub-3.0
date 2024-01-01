@@ -11,10 +11,11 @@ import {AuthService} from "../../services/auth.service";
 })
 export class NavbarComponent {
   user:userModel|null = {} as userModel;
+  isAuthenticated: boolean = false;
   constructor(private _jwtHelper: JwtHelperService, private _authService: AuthService) {}
 
   ngOnInit(): void {
-    this.isUserAuthenticated();
+    this.isAuthenticated = this.isUserAuthenticated();
   }
 
   isUserAuthenticated(): boolean {

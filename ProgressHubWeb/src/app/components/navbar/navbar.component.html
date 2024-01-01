@@ -1,21 +1,42 @@
-<div class="flex px-24 py-3 flex-row items-center justify-between w-full">
+<div class="flex px-24 max-md:px-10 py-3 flex-row items-center justify-between w-full">
   <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>
 
-  <div class="flex flex-row">
-    <p class="text-lg font-outfit font-semibold mt-3 mx-10">
-      <a [routerLink]="'/login'" class="text-tertiary font-medium">Dashboard</a>
-    </p>
-    <p class="text-lg font-outfit font-semibold mt-3 mx-10">
-      <a [routerLink]="'/login'" class="text-tertiary font-medium">Dashboard</a>
-    </p>
-  </div>
+  <div class="max-lg:block hidden">
+    <button class="relative group">
+      <div class="relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-slate-700 ring-0 ring-gray-300 hover:ring-8 group-focus:ring-4 ring-opacity-30 duration-200 shadow-md">
+        <div class="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden">
+          <div class="bg-white h-[2px] w-7 transform transition-all duration-300 origin-left group-focus:translate-y-6 delay-100"></div>
+          <div class="bg-white h-[2px] w-7 rounded transform transition-all duration-300 group-focus:translate-y-6 delay-75"></div>
+          <div class="bg-white h-[2px] w-7 transform transition-all duration-300 origin-left group-focus:translate-y-6"></div>
 
-  <div class="flex flex-row">
-    <p class="text-normal font-outfit font-semibold mt-3 mx-10">
-      <a [routerLink]="'/login'" class="text-[#414F57] font-medium">Login</a>
-    </p>
-    <p class="text-normal font-outfit font-semibold mt-3 mx-10">
-      <a [routerLink]="'/signup'" class="text-secondary font-bold">SignUp</a>
-    </p>
+          <div class="absolute items-center justify-between transform transition-all duration-500 top-2.5 -translate-x-10 group-focus:translate-x-0 flex w-0 group-focus:w-12">
+            <div class="absolute bg-white h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300 group-focus:rotate-45"></div>
+            <div class="absolute bg-white h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300 group-focus:-rotate-45"></div>
+          </div>
+        </div>
+      </div>
+    </button>
+  </div>
+  <div class="buttons max-lg:hidden">
+    <div class="flex flex-row items-center" *ngIf="isAuthenticated">
+      <p class="text-lg font-outfit font-semibold mx-10">
+        <a [routerLink]="'/dashboard'" class="text-tertiary font-medium">Dashboard</a>
+      </p>
+      <div class="profile-section flex flex-row items-center">
+        <img src="./assets/images/user-avatar.png" class="w-14 h-14 rounded-full" alt="user-avatar">
+        <p class="text-[23px] font-outfit font-semibold text-[#414F57] ms-5">
+          {{user?.nickname}}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-row" *ngIf="!isAuthenticated">
+      <p class="text-normal font-outfit font-semibold mx-10">
+        <a [routerLink]="'/login'" class="text-[#414F57] font-medium">Login</a>
+      </p>
+      <p class="text-normal font-outfit font-semibold mx-10">
+        <a [routerLink]="'/signup'" class="text-secondary font-bold">SignUp</a>
+      </p>
+    </div>
   </div>
 </div>
