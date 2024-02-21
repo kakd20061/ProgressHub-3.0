@@ -23,6 +23,8 @@ import {
   heroXCircle,
   heroEnvelope,
   heroFaceFrown,
+  heroBars3,
+  heroXMark,
 } from '@ng-icons/heroicons/outline';
 import { NgIconsModule } from '@ng-icons/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -68,6 +70,8 @@ export function tokenGetter() {
       heroXCircle,
       heroEnvelope,
       heroFaceFrown,
+      heroBars3,
+      heroXMark,
     }),
     JwtModule.forRoot({
       config: {

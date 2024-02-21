@@ -29,4 +29,9 @@ export class NavbarComponent {
     }
     return false;
   }
+
+  toggleSidebar(): void {
+    const menu = document.querySelector('.navbar-menu');
+    menu?.classList.toggle('hidden');
+  }
 }

@@ -1,42 +1,119 @@
-<div class="flex px-24 max-md:px-10 py-3 flex-row items-center justify-between w-full">
-  <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>
+<!--<div class="flex px-24 max-md:px-10 py-3 flex-row items-center justify-between w-full">-->
+<!--  <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>-->
 
-  <div class="max-lg:block hidden">
-    <button class="relative group">
-      <div class="relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-slate-700 ring-0 ring-gray-300 hover:ring-8 group-focus:ring-4 ring-opacity-30 duration-200 shadow-md">
-        <div class="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden">
-          <div class="bg-white h-[2px] w-7 transform transition-all duration-300 origin-left group-focus:translate-y-6 delay-100"></div>
-          <div class="bg-white h-[2px] w-7 rounded transform transition-all duration-300 group-focus:translate-y-6 delay-75"></div>
-          <div class="bg-white h-[2px] w-7 transform transition-all duration-300 origin-left group-focus:translate-y-6"></div>
+<!--  <div class="max-lg:block hidden">-->
+<!--    <button class="relative group">-->
+<!--      <div class="relative flex overflow-hidden items-center justify-center rounded-full w-[50px] h-[50px] transform transition-all bg-slate-700 ring-0 ring-gray-300 hover:ring-8 group-focus:ring-4 ring-opacity-30 duration-200 shadow-md">-->
+<!--        <div class="flex flex-col justify-between w-[20px] h-[20px] transform transition-all duration-300 origin-center overflow-hidden">-->
+<!--          <div class="bg-white h-[2px] w-7 transform transition-all duration-300 origin-left group-focus:translate-y-6 delay-100"></div>-->
+<!--          <div class="bg-white h-[2px] w-7 rounded transform transition-all duration-300 group-focus:translate-y-6 delay-75"></div>-->
+<!--          <div class="bg-white h-[2px] w-7 transform transition-all duration-300 origin-left group-focus:translate-y-6"></div>-->
 
-          <div class="absolute items-center justify-between transform transition-all duration-500 top-2.5 -translate-x-10 group-focus:translate-x-0 flex w-0 group-focus:w-12">
-            <div class="absolute bg-white h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300 group-focus:rotate-45"></div>
-            <div class="absolute bg-white h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300 group-focus:-rotate-45"></div>
-          </div>
-        </div>
-      </div>
+<!--          <div class="absolute items-center justify-between transform transition-all duration-500 top-2.5 -translate-x-10 group-focus:translate-x-0 flex w-0 group-focus:w-12">-->
+<!--            <div class="absolute bg-white h-[2px] w-5 transform transition-all duration-500 rotate-0 delay-300 group-focus:rotate-45"></div>-->
+<!--            <div class="absolute bg-white h-[2px] w-5 transform transition-all duration-500 -rotate-0 delay-300 group-focus:-rotate-45"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </button>-->
+<!--  </div>-->
+<!--  <div class="buttons max-lg:hidden">-->
+<!--    <div class="flex flex-row items-center" *ngIf="isAuthenticated">-->
+<!--      <p class="text-lg font-outfit font-semibold mx-10">-->
+<!--        <a [routerLink]="'/dashboard'" class="text-tertiary font-medium">Dashboard</a>-->
+<!--      </p>-->
+<!--      <div class="profile-section flex flex-row items-center">-->
+<!--        <img src="./assets/images/user-avatar.png" class="w-14 h-14 rounded-full" alt="user-avatar">-->
+<!--        <p class="text-[23px] font-outfit font-semibold text-[#414F57] ms-5">-->
+<!--          {{user?.nickname}}-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="flex flex-row" *ngIf="!isAuthenticated">-->
+<!--      <p class="text-normal font-outfit font-semibold mx-10">-->
+<!--        <a [routerLink]="'/login'" class="text-[#414F57] font-medium">Login</a>-->
+<!--      </p>-->
+<!--      <p class="text-normal font-outfit font-semibold mx-10">-->
+<!--        <a [routerLink]="'/signup'" class="text-secondary font-bold">SignUp</a>-->
+<!--      </p>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<nav class="relative lg:px-20 px-4 py-4 flex justify-between items-center bg-white">
+  <a class="text-3xl font-bold leading-none" href="#">
+    <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>
+  </a>
+  <div class="lg:hidden">
+    <button class="navbar-burger flex items-center" (click)="toggleSidebar()">
+      <ng-icon name="heroBars3" class="text-4xl text-tertiary mx-auto"></ng-icon>
     </button>
   </div>
-  <div class="buttons max-lg:hidden">
-    <div class="flex flex-row items-center" *ngIf="isAuthenticated">
-      <p class="text-lg font-outfit font-semibold mx-10">
-        <a [routerLink]="'/dashboard'" class="text-tertiary font-medium">Dashboard</a>
-      </p>
-      <div class="profile-section flex flex-row items-center">
-        <img src="./assets/images/user-avatar.png" class="w-14 h-14 rounded-full" alt="user-avatar">
-        <p class="text-[23px] font-outfit font-semibold text-[#414F57] ms-5">
-          {{user?.nickname}}
-        </p>
-      </div>
-    </div>
-
-    <div class="flex flex-row" *ngIf="!isAuthenticated">
-      <p class="text-normal font-outfit font-semibold mx-10">
-        <a [routerLink]="'/login'" class="text-[#414F57] font-medium">Login</a>
-      </p>
-      <p class="text-normal font-outfit font-semibold mx-10">
-        <a [routerLink]="'/signup'" class="text-secondary font-bold">SignUp</a>
-      </p>
-    </div>
+  <ul class="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:mx-auto lg:flex lg:items-center lg:w-auto lg:space-x-6">
+    <li><a class="text-lg text-gray-400 hover:text-gray-500" href="#">Home</a></li>
+    <li><a class="text-lg text-gray-400 hover:text-gray-500" href="#" *ngIf="isAuthenticated">Dashboard</a></li>
+    <li><a class="text-lg text-gray-400 hover:text-gray-500" href="#">About</a></li>
+    <li><a class="text-lg text-gray-400 hover:text-gray-500" href="#" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a></li>
+  </ul>
+  <div *ngIf="!isAuthenticated" class="hidden lg:flex flex-row">
+    <a class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-10 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" [routerLink]="'/login'">Login</a>
+    <a class="hidden lg:inline-block py-2 px-10 bg-[#ECF1CC] text-[#637200] hover:bg-[#dde2bc] text-sm font-bold rounded-xl transition duration-200" [routerLink]="'/signup'">SignUp</a>
   </div>
+
+      <div class="hidden lg:flex flex-row items-center" *ngIf="isAuthenticated">
+        <div class="profile-section flex flex-row items-center">
+          <img src="./assets/images/user-avatar.png" class="w-10 h-10 rounded-full" alt="user-avatar">
+          <p class="text-lg font-outfit font-semibold text-tertiary ms-5">
+            {{user?.nickname}}
+          </p>
+        </div>
+      </div>
+
+</nav>
+<div class="navbar-menu relative z-50 hidden">
+  <div class="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25" (click)="toggleSidebar()"></div>
+  <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
+    <div class="flex items-center mb-8">
+      <a class="mr-auto text-3xl font-bold leading-none" href="#">
+        <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>
+      </a>
+      <button class="navbar-close" (click)="toggleSidebar()">
+        <ng-icon name="heroXMark" class="text-2xl text-gray-400 hover:text-gray-500 mx-auto"></ng-icon>
+      </button>
+    </div>
+    <div>
+      <ul>
+        <li class="mb-1">
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#">Home</a>
+        </li>
+        <li class="mb-1">
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#" *ngIf="isAuthenticated">Dashboard</a>
+        </li>
+        <li class="mb-1">
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a>
+        </li>
+        <li class="mb-1">
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#">About</a>
+        </li>
+      </ul>
+    </div>
+    <div class="mt-auto">
+      <div class="pt-6" *ngIf="!isAuthenticated">
+        <a class="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold bg-gray-50 hover:bg-gray-100 rounded-xl" [routerLink]="'/login'">Login</a>
+        <a class="block px-4 py-3 mb-2 leading-loose text-xs text-center bg-[#ECF1CC] text-[#637200] hover:bg-[#dde2bc] font-semibold rounded-xl" [routerLink]="'/signup'">SignUp</a>
+      </div>
+      <div class="flex flex-row items-center" *ngIf="isAuthenticated">
+        <div class="profile-section flex flex-row items-center">
+          <img src="./assets/images/user-avatar.png" class="w-10 h-10 rounded-full" alt="user-avatar">
+          <p class="text-lg font-outfit font-semibold text-tertiary ms-5">
+            {{user?.nickname}}
+          </p>
+        </div>
+      </div>
+      <p class="my-4 text-xs text-center text-gray-400">
+        <span>Copyright © 2024</span>
+      </p>
+    </div>
+  </nav>
 </div>
