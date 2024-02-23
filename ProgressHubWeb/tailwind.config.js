@@ -43,6 +43,21 @@ module.exports = {
       height: {
         verification: "569px",
       },
+
+      keyframes: {
+        sidebar: {
+          '0%': { left: '-100%' },
+          '100%': { left: '0' },
+        },
+        sidebar2: {
+          '0%': { left: '0' },
+          '100%': { left: '-100%' },
+        },
+      },
+      animation: {
+        'open-sidebar': 'sidebar 0.3s linear',
+        'close-sidebar': 'sidebar2 0.3s linear',
+      },
     },
   },
   plugins: [],

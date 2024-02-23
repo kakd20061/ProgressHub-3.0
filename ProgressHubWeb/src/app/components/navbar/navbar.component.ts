@@ -32,6 +32,21 @@ export class NavbarComponent {
 
   toggleSidebar(): void {
     const menu = document.querySelector('.navbar-menu');
-    menu?.classList.toggle('hidden');
+    const sidebar = document.querySelector('.sidebar');
+
+    if(sidebar?.classList.contains('animate-open-sidebar')){
+      sidebar?.classList.remove('animate-open-sidebar');
+      sidebar?.classList.add('animate-close-sidebar');
+      setTimeout(() => {
+        menu?.classList.toggle('hidden');
+      }, 250);
+    } else if(sidebar?.classList.contains('animate-close-sidebar')){
+      menu?.classList.toggle('hidden');
+      sidebar?.classList.remove('animate-close-sidebar');
+      sidebar?.classList.add('animate-open-sidebar');
+    }
+    else {
+      menu?.classList.toggle('hidden');
+    }
   }
 }
