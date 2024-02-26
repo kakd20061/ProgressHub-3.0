@@ -1,33 +1,38 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {jwtUserModel} from "../../models/jwtUserModel";
 import {userModel} from "../../models/userModel";
 import {AuthService} from "../../services/auth.service";
+import {Flowbite} from "../../flowbiteDecorator";
+import {AuthenticationResponseModel} from "../../models/authenticationResponseModel";
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+@Flowbite()
+export class NavbarComponent implements OnInit{
   user:userModel|null = {} as userModel;
   isAuthenticated: boolean = false;
   constructor(private _jwtHelper: JwtHelperService, private _authService: AuthService) {}
 
   ngOnInit(): void {
+    this.refresh();
     this.isAuthenticated = this.isUserAuthenticated();
   }
-
   isUserAuthenticated(): boolean {
     const token = localStorage.getItem('jwt');
     if(this._authService.checkIfUserIsAuthenticated()){
       this.user = this._authService.getUserModelFromJwt(this._jwtHelper.decodeToken(token!));
-
-      console.log(this.user);
-
       return true;
     }
     return false;
+  }
+
+  logOut(): void {
+    this._authService.logOut();
+    this.isAuthenticated = false;
   }
 
   toggleSidebar(): void {
@@ -49,4 +54,43 @@ export class NavbarComponent {
       menu?.classList.toggle('hidden');
     }
   }
+
+  async refresh() {
+    const token = localStorage.getItem('jwt');
+    if (token && !this._jwtHelper.isTokenExpired(token)) {
+      this.isAuthenticated = true;
+    }
+    else {
+      const refreshToken: string = localStorage.getItem('refreshToken')!;
+      if (token && refreshToken) {
+        const credentials = JSON.stringify({
+          accessToken: token,
+          refreshToken: refreshToken,
+        });
+
+        const isRefreshSuccess = await new Promise<AuthenticationResponseModel>(
+          () => {
+            this._authService
+              .tryRefreshingTokens(
+                token!,
+                'https://localhost:7034/api/token/refresh',
+                credentials
+              )
+              .subscribe({
+                next: (res: AuthenticationResponseModel) => {
+                  localStorage.setItem('jwt', res.accessToken);
+                  localStorage.setItem('refreshToken', res.refreshToken);
+                  console.log('refresh');
+                  this.ngOnInit();
+                },
+                error: (_) => {
+                  console.log('logout');
+                  this.isAuthenticated = false;
+                },
+              });
+          }
+        );
+      }
+      }
+    }
 }

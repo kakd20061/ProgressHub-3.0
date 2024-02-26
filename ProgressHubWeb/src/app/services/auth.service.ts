@@ -6,12 +6,13 @@ import {Observable} from "rxjs";
 import {jwtUserModel} from "../models/jwtUserModel";
 import {userModel} from "../models/userModel";
 import {JwtHelperService} from "@auth0/angular-jwt";
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private _http: HttpClient, private _jwtHelper: JwtHelperService) {}
+  constructor(private _http: HttpClient, private _jwtHelper: JwtHelperService, private _router: Router) {}
 
   sendRequest(url: string, form: any):Observable<any> {
     return this._http.post<any>(`${url}`, form);

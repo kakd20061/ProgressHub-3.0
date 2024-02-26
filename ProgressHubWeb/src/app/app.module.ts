@@ -25,6 +25,10 @@ import {
   heroFaceFrown,
   heroBars3,
   heroXMark,
+  heroChevronDoubleDown,
+  heroChevronDoubleUp,
+  heroCog6Tooth,
+  heroArrowRightOnRectangle,
 } from '@ng-icons/heroicons/outline';
 import { NgIconsModule } from '@ng-icons/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -72,6 +76,10 @@ export function tokenGetter() {
       heroFaceFrown,
       heroBars3,
       heroXMark,
+      heroChevronDoubleDown,
+      heroCog6Tooth,
+      heroArrowRightOnRectangle,
+      heroChevronDoubleUp,
     }),
     JwtModule.forRoot({
       config: {

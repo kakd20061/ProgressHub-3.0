@@ -56,6 +56,7 @@
               <button
                 class="w-auto h-auto text-secondary text-base"
                 (click)="previousStep()"
+                type="button"
               >
                 Change
               </button>
@@ -106,7 +107,6 @@
               : 'bg-[#F8FBE4] text-[#E3EE97]'
           ]"
           [disabled]="!isEnabled"
-          type="button"
           (click)="nextStep()"
         >
           Next
@@ -121,7 +121,6 @@
               : 'bg-[#F8FBE4] text-[#E3EE97]'
           ]"
           [disabled]="!isEnabled"
-          type="button"
           (click)="login()"
         >
           Login
