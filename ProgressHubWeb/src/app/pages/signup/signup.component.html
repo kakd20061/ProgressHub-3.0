@@ -4,13 +4,13 @@
       class="h-full w-sidepanelwide overflow-y-auto max-lg:w-full bg-white pt-3 ps-8 float-right"
     >
       <div class="w-sidepanel mb-20">
-        <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
-        <h2 class="text-primary text-header font-lobster mt-9">
+        <h1 class="text-msecondary text-logo font-lobster">ProgressHub</h1>
+        <h2 class="text-msecondary text-header font-lobster mt-9">
           Create your account
         </h2>
         <p class="text-normal font-outfit font-semibold mt-3">
           Have an account?
-          <a [routerLink]="'/login'" class="text-secondary font-bold">
+          <a [routerLink]="'/login'" class="text-mprimary font-bold">
             Log in now</a
           >
         </p>
@@ -187,8 +187,8 @@
               for="agreement"
               id="agreementLabel"
               class="font-outfit text-tertiary font-semibold text-sm ms-1"
-              >I accept the <a class="text-secondary">Privacy Policy</a> and the
-              <a class="text-secondary">Terms of Service</a></label
+              >I accept the <a class="text-msecondary">Privacy Policy</a> and the
+              <a class="text-msecondary">Terms of Service</a></label
             >
           </div>
           <div class="mt-10">
@@ -202,8 +202,8 @@
             class="border-white border-solid border w-full py-3 px-10 rounded-xl mt-5 duration-300"
             [ngClass]="[
               isEnabled
-                ? 'bg-[#ECF1CC] text-[#637200] hover:bg-[#F1FABB] hover:text-[#5E6B01]'
-                : 'bg-[#F8FBE4] text-[#E3EE97]'
+                ? 'bg-mtertiary text-white hover:bg-msecondary'
+                : 'bg-mlight text-msemidark'
             ]"
             [disabled]="!isEnabled"
             type="button"

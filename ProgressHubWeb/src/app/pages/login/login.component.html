@@ -1,13 +1,13 @@
 <main class="bg-grass w-screen h-screen bg-no-repeat bg-cover max-md:bg-none">
   <div class="backdrop-blur-sm w-full h-full bg-primary bg-opacity-25">
     <div *ngIf="!isLoading" class="h-full w-sidepanel overflow-y-auto sidepanel max-md:w-full bg-white pt-3 ps-8">
-      <h1 class="text-primary text-logo font-lobster">ProgressHub</h1>
-      <h2 class="text-primary text-header font-lobster mt-9">
+      <h1 class="text-msecondary text-logo font-lobster">ProgressHub</h1>
+      <h2 class="text-msecondary text-header font-lobster mt-9">
         Login to your account
       </h2>
       <p class="text-normal font-outfit font-semibold mt-3">
         Don’t have an account?
-        <a [routerLink]="'/signup'" class="text-secondary font-bold">Sign Up</a>
+        <a [routerLink]="'/signup'" class="text-mprimary font-bold">Sign Up</a>
       </p>
       <form method="post" class="pe-8 mt-10" [formGroup]="loginForm">
         <app-google-signin (loginWithGoogle)="googleSignIn($event)" [isValid]="isExternalLoginValid"></app-google-signin>
@@ -54,7 +54,7 @@
               *ngIf="isNextStep"
             >
               <button
-                class="w-auto h-auto text-secondary text-base"
+                class="w-auto h-auto text-mprimary text-base"
                 (click)="previousStep()"
                 type="button"
               >
@@ -94,7 +94,7 @@
           <a
             *ngIf="isNextStep"
             (click)="forgotPassword()"
-            class="text-secondary text-base text-end hover:cursor-pointer"
+            class="text-mprimary text-base text-end hover:cursor-pointer"
             >Forgot password?</a
           >
         </div>
@@ -103,8 +103,8 @@
           class="border-white border-solid border w-auto py-3 px-10 mb-10 rounded-xl mt-10 duration-300"
           [ngClass]="[
             isEnabled
-              ? 'bg-[#ECF1CC] text-[#637200] hover:bg-[#F1FABB] hover:text-[#5E6B01]'
-              : 'bg-[#F8FBE4] text-[#E3EE97]'
+              ? 'bg-mtertiary text-white hover:bg-msecondary'
+              : 'bg-mlight text-msemidark'
           ]"
           [disabled]="!isEnabled"
           (click)="nextStep()"
@@ -117,8 +117,8 @@
           class="border-white border-solid border w-full py-3 px-10 mb-10 rounded-xl mt-16 duration-300"
           [ngClass]="[
             isEnabled
-              ? 'bg-[#ECF1CC] text-[#637200] hover:bg-[#F1FABB] hover:text-[#5E6B01]'
-              : 'bg-[#F8FBE4] text-[#E3EE97]'
+              ? 'bg-mtertiary text-white hover:bg-msecondary'
+              : 'bg-mlight text-msemidark'
           ]"
           [disabled]="!isEnabled"
           (click)="login()"
@@ -130,7 +130,7 @@
 
     <div *ngIf="isLoading" class="h-full w-sidepanel max-md:w-full bg-white">
       <div class="flex w-full h-full items-center flex-col justify-center">
-        <h2 class="text-primary text-header font-lobster">ProgressHub</h2>
+        <h2 class="text-mprimary text-header font-lobster">ProgressHub</h2>
         <mat-spinner [diameter]="40" class="mt-10"></mat-spinner>
       </div>
     </div>

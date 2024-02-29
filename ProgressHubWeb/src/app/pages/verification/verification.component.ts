@@ -26,6 +26,9 @@ export class VerificationComponent {
   ) {}
   otpInputConfig: NgxOtpInputConfig = {
     otpLength: 4,
+    classList: {
+      input: 'otp-input',
+    },
   };
   onOtpChange(event: string[]): void {
     this.isEnabled = this._commonService.onOtpChange(event);
