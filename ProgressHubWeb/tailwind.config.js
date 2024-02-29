@@ -8,13 +8,17 @@ module.exports = {
       backgroundImage: {
         grass: "url('assets/images/background.png')",
       },
+      screens: {
+        xs: "400px",
+      },
       backgroundColor: {
         primary: "#ECF1CC",
         disabled: "#ECECEC",
       },
       colors: {
-        primary: "#B4C734",
-        secondary: "#637200",
+        mprimary: "#3FA99B",
+        msecondary: "#45C6A3",
+        mtertiary: "#7ECFB6",
         tertiary: "#5F6C74",
         invalid: "#F32424",
         disabled: "#BCBCBC",

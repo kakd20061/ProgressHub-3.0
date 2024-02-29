@@ -15,7 +15,7 @@ import {
   RecaptchaSettings,
 } from 'ng-recaptcha';
 import { environment } from '../environments/environment';
-
+import { NgxParticlesModule } from "@tsparticles/angular";
 import { VerificationComponent } from './pages/verification/verification.component';
 import { NgxOtpInputModule } from 'ngx-otp-input';
 import {
@@ -89,6 +89,7 @@ export function tokenGetter() {
       },
     }),
     BrowserAnimationsModule,
+    NgxParticlesModule,
   ],
   providers: [
     {

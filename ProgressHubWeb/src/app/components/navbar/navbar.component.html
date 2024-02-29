@@ -1,6 +1,6 @@
-<nav class="relative lg:px-20 px-4 py-4 flex justify-between items-center bg-white">
+<nav class="relative lg:px-20 px-4 h-24 py-4 flex justify-between items-center bg-white">
   <a class="text-3xl font-bold leading-none" href="#">
-    <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>
+    <h1 class="text-mprimary text-[40px] font-lobster">ProgressHub</h1>
   </a>
   <div class="lg:hidden">
     <button class="navbar-burger flex items-center" (click)="toggleSidebar()">
@@ -15,7 +15,7 @@
   </ul>
   <div *ngIf="!isAuthenticated" class="hidden lg:flex flex-row">
     <a class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-10 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" [routerLink]="'/login'">Login</a>
-    <a class="hidden lg:inline-block py-2 px-10 bg-[#ECF1CC] text-[#637200] hover:bg-[#dde2bc] text-sm font-bold rounded-xl transition duration-200" [routerLink]="'/signup'">SignUp</a>
+    <a class="hidden lg:inline-block py-2 px-10 bg-mtertiary text-white hover:bg-mprimary text-sm font-bold rounded-xl transition duration-200" [routerLink]="'/signup'">SignUp</a>
   </div>
       <div class="hidden lg:block" *ngIf="isAuthenticated">
         <button id="accountDropdownNormalBtn" data-dropdown-toggle="accountDropdownNormal" class="text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
@@ -59,7 +59,7 @@
   <nav class="fixed sidebar animate-close-sidebar top-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
     <div class="flex items-center mb-8">
       <a class="mr-auto text-3xl font-bold leading-none" href="#">
-        <h1 class="text-primary text-[40px] font-lobster">ProgressHub</h1>
+        <h1 class="text-mprimary text-[40px] font-lobster">ProgressHub</h1>
       </a>
       <button class="navbar-close" (click)="toggleSidebar()">
         <ng-icon name="heroXMark" class="text-2xl text-gray-400 hover:text-gray-500 mx-auto"></ng-icon>
@@ -68,23 +68,23 @@
     <div>
       <ul>
         <li class="mb-1">
-          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#">Home</a>
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#">Home</a>
         </li>
         <li class="mb-1">
-          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#" *ngIf="isAuthenticated">Dashboard</a>
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#" *ngIf="isAuthenticated">Dashboard</a>
         </li>
         <li class="mb-1">
-          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a>
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a>
         </li>
         <li class="mb-1">
-          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-primary hover:text-secondary rounded" href="#">About</a>
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#">About</a>
         </li>
       </ul>
     </div>
     <div class="mt-auto">
       <div class="pt-6" *ngIf="!isAuthenticated">
         <a class="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold bg-gray-50 hover:bg-gray-100 rounded-xl" [routerLink]="'/login'">Login</a>
-        <a class="block px-4 py-3 mb-2 leading-loose text-xs text-center bg-[#ECF1CC] text-[#637200] hover:bg-[#dde2bc] font-semibold rounded-xl" [routerLink]="'/signup'">SignUp</a>
+        <a class="block px-4 py-3 mb-2 leading-loose text-xs text-center bg-mtertiary text-white hover:bg-mprimary font-semibold rounded-xl" [routerLink]="'/signup'">SignUp</a>
       </div>
       <div class="text-center w-100" *ngIf="isAuthenticated">
         <button id="accountDropdownSidebarBtn" data-dropdown-toggle="accountDropdownSidebar" class=" mx-auto font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
