@@ -5,6 +5,10 @@ import {verificationModel} from "../../models/verificationModel";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {changePasswordModel} from "../../models/changePasswordModel";
+import {Engine} from "@tsparticles/engine";
+import {loadSlim} from "@tsparticles/slim";
+import configs from "@tsparticles/configs";
+import {NgParticlesService} from "@tsparticles/angular";
 
 @Component({
   selector: 'app-change-password',
@@ -25,12 +29,36 @@ export class ChangePasswordComponent {
   isValidPassword: boolean = true;
   isSuccess: number = 0;
   isLoading: boolean = false;
+  particlesOptions = configs.basic;
 
-
-  constructor(private _changePasswordService: ChangePasswordService, private _apiService : AuthService, private _router:Router) {}
+  constructor(private _changePasswordService: ChangePasswordService, private _apiService : AuthService, private _router:Router, private _ngParticlesService:NgParticlesService) {}
 
   //functions-------------------------------------------------------------------
+  private SetUpBasic():void {
+    this.particlesOptions.background!.color = "#D5F4EE";
+    this.particlesOptions.particles!.color!.value = "#3FA99B";
+    this.particlesOptions.fullScreen! = true;
+    this.particlesOptions.particles!['links'] = {
+      enable: true,
+      distance: 150,
+      color: "#3FA99B",
+      opacity: 0.4,
+      width: 1,
+    }
+    this.particlesOptions.particles!.color!.animation! = {
+      enable: false,
+      speed: 20,
+      sync: true,
+    };
+  }
+
   ngOnInit():void {
+    this.SetUpBasic();
+    this._ngParticlesService.init(async (engine:Engine) => {
+      console.log(engine);
+      await loadSlim(engine);
+    });
+
     this.email = this._changePasswordService.getEmail();
     this.subscribeToValueChanges();
   }

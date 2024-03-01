@@ -6,6 +6,10 @@ import { signUpModel } from '../../models/signUpModel';
 import {ExternalAuthModel} from "../../models/externalAuthModel";
 import {SocialAuthService, SocialUser} from "@abacritt/angularx-social-login";
 import {AuthenticationResponseModel} from "../../models/authenticationResponseModel";
+import configs from "@tsparticles/configs";
+import {Engine} from "@tsparticles/engine";
+import {loadSlim} from "@tsparticles/slim";
+import {NgParticlesService} from "@tsparticles/angular";
 
 @Component({
   selector: 'app-signup',
@@ -49,12 +53,35 @@ export class SignupComponent implements OnInit{
   isValidData: boolean = true;
   captchaResolved: boolean = false;
   externalAuth: ExternalAuthModel = {} as ExternalAuthModel;
+  particlesOptions = configs.basic;
 
   //functions-------------------------------------------------------------------
 
-  constructor(private _apiService: AuthService, private _router: Router, private _externalAuthService: SocialAuthService) {}
-
+  constructor(private _apiService: AuthService, private _router: Router, private _externalAuthService: SocialAuthService, private _ngParticlesService:NgParticlesService) {}
+  private SetUpBasic():void {
+    this.particlesOptions.background!.color = "#D5F4EE";
+    this.particlesOptions.particles!.color!.value = "#3FA99B";
+    this.particlesOptions.fullScreen! = true;
+    this.particlesOptions.particles!['links'] = {
+      enable: true,
+      distance: 150,
+      color: "#3FA99B",
+      opacity: 0.4,
+      width: 1,
+    }
+    this.particlesOptions.particles!.color!.animation! = {
+      enable: false,
+      speed: 20,
+      sync: true,
+    };
+  }
   ngOnInit(): void {
+    this.SetUpBasic();
+    this._ngParticlesService.init(async (engine:Engine) => {
+      console.log(engine);
+      await loadSlim(engine);
+    });
+
     this.subscribeToAuthState();
     this.subscribeToValueChanges();
     }

@@ -1,5 +1,11 @@
-<main class="bg-grass w-screen h-screen bg-no-repeat bg-cover max-md:bg-none">
-  <div class="backdrop-blur-sm w-full h-full bg-primary bg-opacity-25">
+<main class=" w-screen h-screen">
+  <div class="w-full h-full">
+    <ngx-particles
+      [id]="'tsParticles'"
+      [options]="particlesOptions"
+      class="w-full h-full absolute -z-50"
+    ></ngx-particles>
+
     <div *ngIf="!isLoading" class="h-full w-sidepanel overflow-y-auto sidepanel max-md:w-full bg-white pt-3 ps-8">
       <h1 class="text-msecondary text-logo font-lobster">ProgressHub</h1>
       <h2 class="text-msecondary text-header font-lobster mt-9">

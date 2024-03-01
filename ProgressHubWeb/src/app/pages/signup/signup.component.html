@@ -1,5 +1,10 @@
-<main class="bg-grass w-screen h-screen bg-no-repeat bg-cover max-lg:bg-none">
-  <div class="backdrop-blur-sm w-full h-full bg-primary bg-opacity-25">
+<main class="w-screen h-screen">
+  <div class="w-full h-full">
+    <ngx-particles
+      [id]="'tsParticles'"
+      [options]="particlesOptions"
+      class="w-full h-full absolute -z-50"
+    ></ngx-particles>
     <div
       class="h-full w-sidepanelwide overflow-y-auto max-lg:w-full bg-white pt-3 ps-8 float-right"
     >

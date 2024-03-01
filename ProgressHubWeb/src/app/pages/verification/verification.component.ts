@@ -4,6 +4,10 @@ import { NgxOtpInputConfig } from 'ngx-otp-input';
 import { AuthService } from '../../services/auth.service';
 import { verificationModel } from '../../models/verificationModel';
 import {CommonService} from "../../services/common.service";
+import configs from "@tsparticles/configs";
+import {Engine} from "@tsparticles/engine";
+import {loadSlim} from "@tsparticles/slim";
+import {NgParticlesService} from "@tsparticles/angular";
 
 @Component({
   selector: 'app-verification',
@@ -17,19 +21,42 @@ export class VerificationComponent {
   isSuccess: number = 0;
   isResend: boolean = false;
   isLoading: boolean = false;
+  particlesOptions = configs.basic;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _apiService: AuthService,
-    private _commonService: CommonService
+    private _commonService: CommonService,
+    private _ngParticlesService: NgParticlesService
   ) {}
   otpInputConfig: NgxOtpInputConfig = {
     otpLength: 4,
     classList: {
       input: 'otp-input',
+    inputFilled: 'my-super-filled-class',
+    inputDisabled: 'my-super-disable-class',
+    inputSuccess: 'my-super-success-class',
+    inputError: 'my-super-error-class',
     },
   };
+  private SetUpBasic():void {
+    this.particlesOptions.background!.color = "#D5F4EE";
+    this.particlesOptions.particles!.color!.value = "#3FA99B";
+    this.particlesOptions.fullScreen! = true;
+    this.particlesOptions.particles!['links'] = {
+      enable: true,
+      distance: 150,
+      color: "#3FA99B",
+      opacity: 0.4,
+      width: 1,
+    }
+    this.particlesOptions.particles!.color!.animation! = {
+      enable: false,
+      speed: 20,
+      sync: true,
+    };
+  }
   onOtpChange(event: string[]): void {
     this.isEnabled = this._commonService.onOtpChange(event);
     if(this.isEnabled){
@@ -37,6 +64,12 @@ export class VerificationComponent {
     }
   }
   ngOnInit() {
+    this.SetUpBasic();
+    this._ngParticlesService.init(async (engine:Engine) => {
+      console.log(engine);
+      await loadSlim(engine);
+    });
+
     this._route.queryParams.subscribe((params) => {
       this.email = params['email'];
     });
