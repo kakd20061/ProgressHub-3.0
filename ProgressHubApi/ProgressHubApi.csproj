@@ -38,12 +38,4 @@
     <None Remove="Models\Mail\" />
     <None Remove="Validators\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
-    <Folder Include="Providers\" />
-    <Folder Include="Models\DTOs\" />
-    <Folder Include="Validators\" />
-  </ItemGroup>
 </Project>

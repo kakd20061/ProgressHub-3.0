@@ -43,12 +43,13 @@ export class LoginComponent implements OnInit {
     this.particlesOptions.background!.color = "#D5F4EE";
     this.particlesOptions.particles!.color!.value = "#3FA99B";
     this.particlesOptions.fullScreen! = true;
+    this.particlesOptions.particles!.size!.value = 5;
     this.particlesOptions.particles!['links'] = {
       enable: true,
       distance: 150,
       color: "#3FA99B",
       opacity: 0.4,
-      width: 1,
+      width: 2,
     }
     this.particlesOptions.particles!.color!.animation! = {
       enable: false,

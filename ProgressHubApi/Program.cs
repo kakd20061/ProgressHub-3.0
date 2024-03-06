@@ -6,6 +6,7 @@ using ProgressHubApi;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Models.Token;
+using ProgressHubApi.Providers;
 using ProgressHubApi.Repositories;
 using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
@@ -93,6 +94,14 @@ builder.Services.AddTransient<IAccountFeaturesValidator, AccountFeaturesValidato
 
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<ITokenService, TokenService>();
+
+builder.Services.AddTransient<IAccountSettingsRepository, AccountSettingsRepository>();
+builder.Services.AddTransient<IAccountSettingsService, AccountSettingsService>();
+builder.Services.AddTransient<IAccountSettingsValidator, AccountSettingsValidator>();
+builder.Services.AddTransient<IAccountSettingsProvider, AccountSettingsProvider>();
+
+builder.Services.AddTransient<ISeedRepository, SeedRepository>();
+builder.Services.AddTransient<ISeedService, SeedService>();
 
 var app = builder.Build();
 

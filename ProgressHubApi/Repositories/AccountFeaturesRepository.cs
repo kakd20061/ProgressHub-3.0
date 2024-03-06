@@ -8,7 +8,6 @@ using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace ProgressHubApi.Repositories
 {

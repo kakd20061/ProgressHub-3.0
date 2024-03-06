@@ -7,6 +7,7 @@ import {jwtUserModel} from "../models/jwtUserModel";
 import {userModel} from "../models/userModel";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
+import {tagModel} from "../models/tagModel";
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,10 @@ export class AuthService {
     });
   }
 
+  getTags(url:string): Observable<any> {
+    return this._http.get<any>(url);
+  }
+
   getUserModelFromJwt(jwt: any): userModel {
     let user: userModel = {} as userModel;
     let email = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
@@ -36,12 +41,14 @@ export class AuthService {
     let surname = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
     let nickname = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
     let role = jwt['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    let tags = jwt['Tags'];
 
     user.email = email;
     user.name = name;
     user.lastName = surname;
     user.nickname = nickname;
     user.role = role;
+    user.tags = tags;
 
     return user;
   }

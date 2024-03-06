@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Models.Token;
@@ -41,7 +42,8 @@ namespace ProgressHubApi.Services
                 new Claim(ClaimTypes.Email, model.Email),
                 new Claim(ClaimTypes.Name, model.Name),
                 new Claim(ClaimTypes.Surname, model.LastName),
-                new Claim(ClaimTypes.Role, Enum.GetName(model.Role))
+                new Claim(ClaimTypes.Role, Enum.GetName(model.Role)),
+                new Claim("Tags", JsonConvert.SerializeObject(model.Tags, Formatting.None)),
             };
             
             JwtSecurityToken tokeOptions;

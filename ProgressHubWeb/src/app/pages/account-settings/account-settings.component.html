@@ -1,0 +1,215 @@
+<nav class="px-4 h-24 py-4 flex justify-between z-10 items-center bg-white fixed w-screen">
+  <a class="text-3xl font-bold leading-none" href="#">
+    <h1 class="text-mprimary text-[40px] font-lobster">ProgressHub</h1>
+  </a>
+  <div class="hidden md:block" *ngIf="isAuthenticated">
+    <button id="accountDropdownNormalBtn" data-dropdown-toggle="accountDropdownNormal" class="text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
+      <div class="profile-section flex flex-row items-center">
+        <img src="./assets/images/user-avatar.png" class="w-10 h-10 rounded-full" alt="user-avatar">
+        <p class="text-lg truncate font-outfit font-light text-tertiary ms-2">
+          {{user?.nickname}}
+        </p>
+        <ng-icon name="heroChevronDoubleDown" class="text-lg text-tertiary ms-2 me-2 font-semibold"></ng-icon>
+      </div>
+    </button>
+  </div>
+  <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar" aria-controls="cta-button-sidebar" type="button" class="hidden max-md:inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+    <span class="sr-only">Open sidebar</span>
+    <ng-icon name="heroBars3BottomLeftSolid" class="text-3xl"></ng-icon>
+  </button>
+  <!-- Dropdown menu -->
+  <div id="accountDropdownNormal" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
+    <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+      <div class="font-medium flex flex-row items-center justify-between">
+        <span>{{user?.name}} {{user?.lastName}}</span>
+        <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300" *ngIf="user?.role == 'User'">User</span>
+        <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300" *ngIf="user?.role == 'Admin'">Admin</span>
+      </div>
+      <div class="truncate">{{user?.email}}</div>
+    </div>
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+      <li>
+        <a [routerLink]="'/account-settings'" class="flex flex-row items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+          <span>Account settings</span>
+          <ng-icon name="heroCog6Tooth" class="text-xl text-tertiary ms-2 me-1 font-semibold"></ng-icon>
+        </a>
+      </li>
+      <li>
+        <a href="#" (click)="logOut()" class="flex flex-row items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+          <span>Log out</span>
+          <ng-icon name="heroArrowRightOnRectangle" class="text-xl text-tertiary ms-2 me-1 font-semibold"></ng-icon>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+
+<!--sidebar-->
+
+<aside id="cta-button-sidebar" class="fixed left-0 z-0 max-sm:z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+  <div class="h-full px-3 py-4 overflow-y-auto bg-white">
+    <div class="flex flex-col justify-between h-full pt-[6rem] max-sm:pt-0 overflow-x-hidden">
+    <ul class="space-y-2 font-medium">
+      <li>
+        <a (click)="changeTab(0)" class="flex items-center p-2 hover:cursor-pointer rounded-lg group"
+           [ngClass]="selectedTab==0?'bg-mtertiary text-white':'text-gray-900 hover:bg-gray-100'">
+          <ng-icon name="heroUsersSolid" class="text-2xl  transition duration-75"
+                   [ngClass]="selectedTab==0?'':'text-gray-500 group-hover:text-gray-900'"></ng-icon>
+
+          <span class="flex-1 ms-3 whitespace-nowrap">Personal data</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="changeTab(1)" class="flex items-center p-2 hover:cursor-pointer rounded-lg group"
+        [ngClass]="selectedTab==1?'bg-mtertiary text-white':'text-gray-900 hover:bg-gray-100'">
+          <ng-icon name="heroPhotoSolid" class="text-2xl  transition duration-75"
+                   [ngClass]="selectedTab==1?'':'text-gray-500 group-hover:text-gray-900'"></ng-icon>
+
+          <span class="flex-1 ms-3 whitespace-nowrap">Change avatar</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="changeTab(2)" class="flex items-center p-2 hover:cursor-pointer rounded-lg group"
+           [ngClass]="selectedTab==2?'bg-mtertiary text-white':'text-gray-900 hover:bg-gray-100'">
+          <ng-icon name="heroTagSolid" class="text-2xl  transition duration-75"
+                   [ngClass]="selectedTab==2?'':'text-gray-500 group-hover:text-gray-900'"></ng-icon>
+
+          <span class="flex-1 ms-3 whitespace-nowrap">Manage tags</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="changeTab(3)" class="flex items-center p-2 hover:cursor-pointer rounded-lg group"
+           [ngClass]="selectedTab==3?'bg-mtertiary text-white':'text-gray-900 hover:bg-gray-100'">
+          <ng-icon name="heroLockClosedSolid" class="text-2xl  transition duration-75"
+                   [ngClass]="selectedTab==3?'':'text-gray-500 group-hover:text-gray-900'"></ng-icon>
+
+          <span class="flex-1 ms-3 whitespace-nowrap">Change password</span>
+        </a>
+      </li>
+      <li>
+            <div id="dropdown-cta" class="p-4 mt-6 rounded-lg bg-mlight" role="alert">
+              <div class="flex items-center mb-3">
+                <span class="bg-mtertiary text-white text-sm font-semibold me-2 px-2.5 py-0.5 rounded">Account settings</span>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-mlight inline-flex justify-center items-center rounded-lg p-1 h-6 w-6" data-dismiss-target="#dropdown-cta" aria-label="Close">
+                  <span class="sr-only">Close</span>
+                  <ng-icon name="heroXMark" class="w-2.5 h-2.5 text-gray-500"></ng-icon>
+                </button>
+              </div>
+              <p class="mb-3 text-sm text-mprimary">
+                Welcome to account settings. Here you can manage your personal data, change your avatar, manage tags and change your password.
+              </p>
+            </div>
+      </li>
+    </ul>
+    <div class="p-2 hidden max-md:block text-center" *ngIf="isAuthenticated">
+      <button id="accountDropdownSidebarBtn" data-dropdown-toggle="accountDropdownSidebar" class="font-medium mx-auto text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
+        <div class="profile-section flex flex-row items-center">
+          <img src="./assets/images/user-avatar.png" class="w-10 h-10 rounded-full" alt="user-avatar">
+          <p class="text-lg truncate font-outfit font-light max-w-32 text-tertiary ms-2">
+            {{user?.nickname}}
+          </p>
+          <ng-icon name="heroChevronDoubleUp" class="text-lg text-tertiary mx-2 font-semibold"></ng-icon>
+        </div>
+      </button>
+    </div>
+  </div>
+    <!-- Dropdown menu -->
+    <div id="accountDropdownSidebar" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
+      <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+        <div class="font-medium flex flex-row items-center justify-between">
+          <span>{{user?.name}} {{user?.lastName}}</span>
+          <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300" *ngIf="user?.role == 'User'">User</span>
+          <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300" *ngIf="user?.role == 'Admin'">Admin</span>
+        </div>
+        <div class="truncate">{{user?.email}}</div>
+      </div>
+      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+        <li>
+          <a [routerLink]="'/account-settings'" class="flex flex-row items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+            <span>Account settings</span>
+            <ng-icon name="heroCog6Tooth" class="text-xl text-tertiary ms-2 me-1 font-semibold"></ng-icon>
+          </a>
+        </li>
+        <li>
+          <a href="#" (click)="logOut()" class="flex flex-row items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+            <span>Log out</span>
+            <ng-icon name="heroArrowRightOnRectangle" class="text-xl text-tertiary ms-2 me-1 font-semibold"></ng-icon>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<div class="p-4 sm:ml-64 pt-[6rem]">
+  <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg">
+    <div *ngIf="selectedTab==0">
+      <p>Personal data</p>
+    </div>
+    <div *ngIf="selectedTab==1">
+      <p>Change avatar</p>
+    </div>
+    <div *ngIf="selectedTab==2">
+      <p>Manage tags</p>
+      <div>
+        <mat-chip-listbox aria-label="Fish selection" class="border-none" multiple>
+          <mat-chip-option color="primary" *ngFor="let tag of tags" [selected]="userTagsIds.includes(tag._Id)" (selectionChange)="changeSelected('s', tag._Id)">{{tag.name}}</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+<!--      [ngClass]="[userTagsIds.includes(tag._Id)?'mat-mdc-chip-selected mdc-evolution-chip--selected':'']"-->
+<!--      [class.mdc-evolution-chip&#45;&#45;selected]="userTagsIds.includes(tag._Id)" [class.mat-mdc-chip-selected]="userTagsIds.includes(tag._Id)"-->
+      <button
+        class="border-white border-solid border bg-mtertiary text-white hover:bg-msecondary w-full py-3 px-10 mb-10 rounded-xl mt-16 duration-300"
+        (click)="saveTags()"
+      >
+        Save
+      </button>
+    </div>
+    <div *ngIf="selectedTab==3" [formGroup]="changePasswordForm">
+      <h1 class="text-mprimary text-center text-[40px] font-lobster">Change password</h1>
+
+      <label
+        for="password"
+        class="block font-outfit font-semibold text-sm mb-1 ms-2"
+        [ngClass]="[isValidPassword ? 'text-tertiary' : 'text-invalid']"
+      >Current password</label
+      >
+      <input
+        type="password"
+        id="password"
+        class="border-solid border w-full p-3 rounded-xl font-outfit"
+        formControlName="password"
+        [ngClass]="[isValidPassword ? 'border-button' : 'border-invalid']"
+      />
+
+      <label
+        for="newpassword"
+        class="block font-outfit font-semibold text-sm mb-1 ms-2"
+        [ngClass]="[isValidPassword ? 'text-tertiary' : 'text-invalid']"
+      >New password</label
+      >
+      <input
+        type="password"
+        id="newpassword"
+        class="border-solid border w-full p-3 rounded-xl font-outfit"
+        formControlName="newpassword"
+        [ngClass]="[isValidPassword ? 'border-button' : 'border-invalid']"
+      />
+
+      <button
+        class="border-white border-solid border w-full py-3 px-10 mb-10 rounded-xl mt-16 duration-300"
+        [ngClass]="[
+            isEnabledPasswordButton
+              ? 'bg-mtertiary text-white hover:bg-msecondary'
+              : 'bg-mlight text-msemidark'
+          ]"
+        [disabled]="!isEnabledPasswordButton"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>

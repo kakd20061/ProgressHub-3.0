@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Models.AccountSettings;
 
 namespace ProgressHubApi.Models;
 
@@ -33,6 +34,9 @@ public class UserModel
     
     [BsonElement("role")]
     public UserRoleEnum Role { get; set; }
+    
+    [BsonElement("tags")]
+    public List<TagModel>? Tags { get; set; }
     public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt)
     {
         this._Id = _Id;
@@ -41,6 +45,7 @@ public class UserModel
         this.Email = Email;
         this.Nickname = Nickname;
         this.Password = Password;
+        this.Tags = new List<TagModel>();
         this.Role = UserRoleEnum.User;
         Activity = new UserActivity
         {
@@ -63,6 +68,7 @@ public class UserModel
         Nickname = model.Nickname;
         Password = model.Password;
         Role = model.Role;
+        this.Tags = model.Tags;
         Activity = new UserActivity
         {
             CreatedAt = model.Activity.CreatedAt,

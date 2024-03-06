@@ -29,7 +29,9 @@ import {
   heroChevronDoubleUp,
   heroCog6Tooth,
   heroArrowRightOnRectangle,
+
 } from '@ng-icons/heroicons/outline';
+import{heroUsersSolid,heroPhotoSolid,heroTagSolid,heroLockClosedSolid,heroBars3BottomLeftSolid} from "@ng-icons/heroicons/solid";
 import { NgIconsModule } from '@ng-icons/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -41,7 +43,8 @@ import { VerificationPasswordComponent } from './pages/verification-password/ver
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './pages/main/main.component';
-
+import { AccountSettingsComponent } from './pages/account-settings/account-settings.component';
+import {MatChipsModule} from '@angular/material/chips';
 export function tokenGetter() {
   return localStorage.getItem('jwt');
 }
@@ -57,6 +60,7 @@ export function tokenGetter() {
     ChangePasswordComponent,
     NavbarComponent,
     MainComponent,
+    AccountSettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,6 +84,11 @@ export function tokenGetter() {
       heroCog6Tooth,
       heroArrowRightOnRectangle,
       heroChevronDoubleUp,
+      heroUsersSolid,
+      heroPhotoSolid,
+      heroTagSolid,
+      heroLockClosedSolid,
+      heroBars3BottomLeftSolid
     }),
     JwtModule.forRoot({
       config: {
@@ -90,6 +99,7 @@ export function tokenGetter() {
     }),
     BrowserAnimationsModule,
     NgxParticlesModule,
+    MatChipsModule,
   ],
   providers: [
     {

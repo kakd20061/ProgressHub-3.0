@@ -9,6 +9,7 @@ import {VerificationPasswordComponent} from "./pages/verification-password/verif
 import {ChangePasswordComponent} from "./pages/change-password/change-password.component";
 import {ChangePasswordGuard} from "./guards/change-password.guard";
 import {MainComponent} from "./pages/main/main.component";
+import {AccountSettingsComponent} from "./pages/account-settings/account-settings.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/main', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'verify-password', component: VerificationPasswordComponent },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [ChangePasswordGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'account-settings', component: AccountSettingsComponent, canActivate: [AuthGuard] },
   { path: 'main', component: MainComponent },
 ];
 
