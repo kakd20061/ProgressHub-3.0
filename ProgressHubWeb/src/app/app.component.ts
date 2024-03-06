@@ -14,9 +14,5 @@ export class AppComponent implements OnInit {
 
   constructor(private readonly ngParticlesService: NgParticlesService) {}
   ngOnInit(): void {
-    this.ngParticlesService.init(async (engine) => {
-      console.log();
-      await loadFull(engine);
-    });
   }
 }

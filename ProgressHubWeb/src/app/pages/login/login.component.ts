@@ -119,6 +119,13 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (res: AuthenticationResponseModel):void => {
           this.setToken(res.accessToken,res.refreshToken);
+          console.log(res);
+          if (res.hasPassword != null){
+            localStorage.setItem('hasPassword', res.hasPassword.toString());
+          }else
+          {
+            localStorage.setItem('hasPassword', 'true');
+          }
           if(!isExternal)this.isValidData = true;
           setTimeout(():void => {
             if(isExternal)this.isExternalLoginValid = true;

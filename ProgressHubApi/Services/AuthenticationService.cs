@@ -29,7 +29,7 @@ namespace ProgressHubApi.Services
 
         public Task<(string?, LoginResultEnum)> CheckUserAccount(LoginModel model);
         public Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(ExternalAuthModel externalAuth);
-        public Task<(string?,string?, BasicResultEnum)> ExternalLogin(ExternalAuthModel model);
+        public Task<(string?,string?, BasicResultEnum,bool)> ExternalLogin(ExternalAuthModel model);
     }
 
 	public class AuthenticationService : IAuthenticationService
@@ -88,15 +88,15 @@ namespace ProgressHubApi.Services
             return (token,result.Item2);
         }
 
-        public async Task<(string?,string?, BasicResultEnum)> ExternalLogin(ExternalAuthModel model)
+        public async Task<(string?,string?, BasicResultEnum,bool)> ExternalLogin(ExternalAuthModel model)
         {
             var payload =  await VerifyGoogleToken(model);
-            if(payload == null) return (null,null, BasicResultEnum.Error);
+            if(payload == null) return (null,null, BasicResultEnum.Error, false);
             var result = await _repository.ExternalLogin(payload);
 
-            if (result.Item2 != BasicResultEnum.Success) return (null, null, result.Item2);
+            if (result.Item2 != BasicResultEnum.Success) return (null, null, result.Item2, result.Item3);
             var token = _commonService.GenerateJwt(result.Item1);
-            return (payload.Email, token, result.Item2);
+            return (payload.Email, token, result.Item2, result.Item3);
         }
         
         public async Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(ExternalAuthModel externalAuth)

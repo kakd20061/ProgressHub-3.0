@@ -56,5 +56,21 @@ public class AccountSettingsController : ControllerBase
             return Ok();
         }
     }
+    
+    [HttpPost("ChangePassword")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordModelWithCurrentPassword model)
+    {
+        var result = await _service.ChangePassword(model);
+    
+        switch (result)
+        {
+        case Enums.BasicResultEnum.Success:
+            return Ok();
+        case Enums.BasicResultEnum.Error:
+            return BadRequest();
+        default:
+            return Ok();
+        }
+    }
 }
 

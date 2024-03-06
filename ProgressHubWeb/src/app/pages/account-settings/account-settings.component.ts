@@ -24,9 +24,9 @@ export class AccountSettingsComponent {
   userTags : tagModel[] = {} as tagModel[];
   userTagsIds: string[] = [];
   selectedChips: any[] = [];
+  hasPassword: boolean = true;
   changePasswordForm = new FormGroup({
     password: new FormControl('', [
-      Validators.required,
       Validators.pattern(
         '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
       ),
@@ -53,7 +53,6 @@ export class AccountSettingsComponent {
     }
   }
   saveTags(): void {
-    localStorage.setItem('selectedTabAccountSettings', '2');
     let tags=this.selectedChips;
     let model : SaveTagsModel = {
       Email : this.user?.email!,
@@ -74,9 +73,18 @@ export class AccountSettingsComponent {
     });
   }
   reloadPage(){
+    localStorage.setItem('selectedTabAccountSettings', this.selectedTab.toString());
     window.location.reload();
   }
   ngOnInit(): void {
+    if(localStorage.getItem('hasPassword')!=null){
+      this.hasPassword = JSON.parse(localStorage.getItem('hasPassword')!);
+    }
+    else
+    {
+      this.hasPassword = true;
+    }
+    if(this.hasPassword)this.changePasswordForm.get('password')?.setValidators(Validators.required);
     if(localStorage.getItem('selectedTabAccountSettings')!=null){
       this.selectedTab = parseInt(localStorage.getItem('selectedTabAccountSettings')!);
     }else{
@@ -101,10 +109,16 @@ export class AccountSettingsComponent {
   inputChangedPassword(): void {
     if(this.changePasswordForm.get('password')?.value?.length!>0 && this.changePasswordForm.get('newpassword')?.value?.length!>0){
       this.isEnabledPasswordButton = true;
-    }else{
+    }
+    else if(!this.hasPassword && this.changePasswordForm.get('newpassword')?.value?.length!>0)
+    {
+      this.isEnabledPasswordButton = true;
+    }
+    else{
       this.isEnabledPasswordButton = false;
     }
   }
+  //todo: test this, update input after refresh (add hasPassword to refresh method),try to generate material chips instead of using ngFor in html, containers if succeeded or failed
   subscribeToValueChanges(): void {
     this.changePasswordForm.get('password')?.valueChanges.subscribe(() => {
       this.inputChangedPassword();
@@ -116,6 +130,38 @@ export class AccountSettingsComponent {
   }
   changeTab(tab: number): void {
     this.selectedTab = tab;
+  }
+  changePassword(): void {
+    this.isValidPassword = this.changePasswordForm.get('password')?.valid!;
+    this.isValidPasswordNew = this.changePasswordForm.get('newpassword')?.valid!;
+
+    if (this.isValidPassword && this.isValidPasswordNew) {
+      let model = {};
+      if(this.hasPassword){
+        model = {
+          email: this.user?.email,
+          password: this.changePasswordForm.get('newpassword')?.value,
+          currentPassword: this.changePasswordForm.get('password')?.value,
+        };
+      }
+      else{
+        model = {
+          email: this.user?.email,
+          password: this.changePasswordForm.get('newpassword')?.value,
+          currentPassword: '',
+        };
+      }
+
+      let url:string = 'https://localhost:7034/api/settings/account/ChangePassword';
+      this._apiService.sendRequest(url, model).subscribe({
+        next: () => {
+          this.refresh().then(r => {});
+        },
+        error: (_) => {
+          console.log('error');
+        },
+      });
+    }
   }
   isUserAuthenticated(): boolean {
     const token = localStorage.getItem('jwt');

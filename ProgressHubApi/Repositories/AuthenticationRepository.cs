@@ -19,7 +19,7 @@ namespace ProgressHubApi.Repositories
         public Task<(UserModel?, LoginResultEnum)> CheckUserAccount(LoginModel model, string? hashedPassword);
         
         //external
-        public Task<(UserModel?,BasicResultEnum)> ExternalLogin(GoogleJsonWebSignature.Payload payload);
+        public Task<(UserModel?,BasicResultEnum,bool)> ExternalLogin(GoogleJsonWebSignature.Payload payload);
     }
 
     public class AuthenticationRepository : IAuthenticationRepository
@@ -134,7 +134,7 @@ namespace ProgressHubApi.Repositories
         
         //external--------------
         
-        public async Task<(UserModel?,BasicResultEnum)> ExternalLogin(GoogleJsonWebSignature.Payload payload)
+        public async Task<(UserModel?,BasicResultEnum,bool)> ExternalLogin(GoogleJsonWebSignature.Payload payload)
         {
             try
             {
@@ -144,18 +144,18 @@ namespace ProgressHubApi.Repositories
                 {
                     var updatedModel = new UserModel(account, DateTime.UtcNow);
                     await _accounts.FindOneAndReplaceAsync(x => x.Email.Equals(updatedModel.Email), updatedModel);
-                    return (account, BasicResultEnum.Success);
+                    return (account, BasicResultEnum.Success, updatedModel.Password != null);
                 }
                 payload.FamilyName ??= "";
                 payload.GivenName ??= "";
 
                 var user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email, payload.Name, null, null);
                 await _accounts.InsertOneAsync(user);
-                return (user, BasicResultEnum.Success);
+                return (user, BasicResultEnum.Success, false);
             }
             catch (Exception e)
             {
-                return (null,BasicResultEnum.Error);
+                return (null,BasicResultEnum.Error, false);
             }
         }
     }

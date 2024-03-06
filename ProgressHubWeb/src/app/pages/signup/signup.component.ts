@@ -156,6 +156,10 @@ export class SignupComponent implements OnInit{
             });
             this.isValidData = true;
           } else {
+            if (res.hasPassword != null){
+              localStorage.setItem('hasPassword', res.hasPassword.toString());
+            }
+            else localStorage.setItem('hasPassword', 'true');
             this.setToken(res.accessToken,res.refreshToken);
             setTimeout(():void => {
               this.isExternalLoginValid = true;

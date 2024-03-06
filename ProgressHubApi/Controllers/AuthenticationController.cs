@@ -125,10 +125,11 @@ public class AuthenticationController : ControllerBase
                 var token = await _tokenService.AddRefreshTokenToUser(result.Item1);
                 if (token.Item2 == BasicResultEnum.Success)
                 {
-                    return Ok(new TokenModel
+                    return Ok(new ExternalTokenModel()
                     {
                         AccessToken = result.Item2,
-                        RefreshToken = token.Item1
+                        RefreshToken = token.Item1,
+                        HasPassword = result.Item4
                     });
                 }
 

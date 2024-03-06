@@ -25,6 +25,8 @@ namespace ProgressHubApi.Services
     {
         //functions from repositories
         public Task<BasicResultEnum> SaveTags(SaveTagsMogel model);
+        public Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model);
+
     }
 
 	public class AccountSettingsService : IAccountSettingsService
@@ -38,6 +40,11 @@ namespace ProgressHubApi.Services
         public async Task<BasicResultEnum> SaveTags(SaveTagsMogel model)
         {
             return await _repository.SaveTags(model);
+        }
+        
+        public async Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model)
+        {
+            return await _repository.ChangePassword(model);
         }
     }
 }

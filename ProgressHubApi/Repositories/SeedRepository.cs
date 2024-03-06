@@ -58,6 +58,100 @@ namespace ProgressHubApi.Repositories
                 {
                     Name = "Weightlifting",
                 };
+                var tag6 = new TagModel
+                {
+                    Name = "Olympic Weightlifting",
+                };
+                var tag7 = new TagModel
+                {
+                    Name = "Calisthenics",
+                };
+                var tag8 = new TagModel
+                {
+                    Name = "Gymnastics",
+                };
+                var tag9 = new TagModel
+                {
+                    Name = "Yoga",
+                };
+                var tag10 = new TagModel
+                {
+                    Name = "Pilates",
+                };
+                var tag11 = new TagModel
+                {
+                    Name = "Running",
+                };
+                var tag12 = new TagModel
+                {
+                    Name = "Cycling",
+                };
+                var tag13 = new TagModel
+                {
+                    Name = "Swimming",
+                };
+                var tag14 = new TagModel
+                {
+                    Name = "Rowing",
+                };
+                var tag15 = new TagModel
+                {
+                    Name = "Boxing",
+                };
+                var tag16 = new TagModel
+                {
+                    Name = "MMA",
+                };
+                var tag17 = new TagModel
+                {
+                    Name = "Kickboxing",
+                };
+                var tag18 = new TagModel
+                {
+                    Name = "Muay Thai",
+                };
+                var tag19 = new TagModel
+                {
+                    Name = "Jiu Jitsu",
+                };
+                var tag20 = new TagModel
+                {
+                    Name = "Karate",
+                };
+                var tag21 = new TagModel
+                {
+                    Name = "Taekwondo",
+                };
+                var tag22 = new TagModel
+                {
+                    Name = "Judo",
+                };
+                var tag23 = new TagModel
+                {
+                    Name = "Wrestling",
+                };
+                var tag24 = new TagModel
+                {
+                    Name = "Aikido",
+                };
+                var tag25 = new TagModel
+                {
+                    Name = "Kendo",
+                };
+                var tag26 = new TagModel
+                {
+                    Name = "Fencing",
+                };
+                var tag27 = new TagModel
+                {
+                    Name = "Archery",
+                };
+                var tag28 = new TagModel
+                {
+                    Name = "Arm wrestling",
+                };
+                
+                
                 
                 if(_tags.Find(_ => true).ToList().Count > 0)
                     return (BasicResultEnum.Success,"");
@@ -67,6 +161,29 @@ namespace ProgressHubApi.Repositories
                 await _tags.InsertOneAsync(tag3);
                 await _tags.InsertOneAsync(tag4);
                 await _tags.InsertOneAsync(tag5);
+                await _tags.InsertOneAsync(tag6);
+                await _tags.InsertOneAsync(tag7);
+                await _tags.InsertOneAsync(tag8);
+                await _tags.InsertOneAsync(tag9);
+                await _tags.InsertOneAsync(tag10);
+                await _tags.InsertOneAsync(tag11);
+                await _tags.InsertOneAsync(tag12);
+                await _tags.InsertOneAsync(tag13);
+                await _tags.InsertOneAsync(tag14);
+                await _tags.InsertOneAsync(tag15);
+                await _tags.InsertOneAsync(tag16);
+                await _tags.InsertOneAsync(tag17);
+                await _tags.InsertOneAsync(tag18);
+                await _tags.InsertOneAsync(tag19);
+                await _tags.InsertOneAsync(tag20);
+                await _tags.InsertOneAsync(tag21);
+                await _tags.InsertOneAsync(tag22);
+                await _tags.InsertOneAsync(tag23);
+                await _tags.InsertOneAsync(tag24);
+                await _tags.InsertOneAsync(tag25);
+                await _tags.InsertOneAsync(tag26);
+                await _tags.InsertOneAsync(tag27);
+                await _tags.InsertOneAsync(tag28);
 
                 return (BasicResultEnum.Success,"");
             }

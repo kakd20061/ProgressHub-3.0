@@ -152,61 +152,105 @@
     <div *ngIf="selectedTab==1">
       <p>Change avatar</p>
     </div>
-    <div *ngIf="selectedTab==2">
-      <p>Manage tags</p>
-      <div>
-        <mat-chip-listbox aria-label="Fish selection" class="border-none" multiple>
-          <mat-chip-option color="primary" *ngFor="let tag of tags" [selected]="userTagsIds.includes(tag._Id)" (selectionChange)="changeSelected('s', tag._Id)">{{tag.name}}</mat-chip-option>
-        </mat-chip-listbox>
+    <div *ngIf="selectedTab==2" class="w-full text-center">
+      <h1 class="text-mprimary text-[40px] text-center font-lobster p-0 m-0">Manage tags</h1>
+      <div class="flex flex-row mt-2 mb-5">
+        <div
+          class="flex-1 h-0.5 border-b w-max border-button mr-2 my-2"
+        ></div>
+        <span class="text-tertiary text-sm font-outfit font-medium">
+            Here you can select you account tags
+          </span>
+        <div
+          class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
+        ></div>
       </div>
-<!--      [ngClass]="[userTagsIds.includes(tag._Id)?'mat-mdc-chip-selected mdc-evolution-chip--selected':'']"-->
-<!--      [class.mdc-evolution-chip&#45;&#45;selected]="userTagsIds.includes(tag._Id)" [class.mat-mdc-chip-selected]="userTagsIds.includes(tag._Id)"-->
+      <mat-chip-listbox aria-label="Tag selection" class="border-none text-center" multiple>
+        <mat-chip-option color="primary" *ngFor="let tag of (tags|objectToArray)" [selected]="userTagsIds.includes(tag._Id)" (selectionChange)="changeSelected('s', tag._Id)">{{tag.name}}</mat-chip-option>
+      </mat-chip-listbox>
       <button
-        class="border-white border-solid border bg-mtertiary text-white hover:bg-msecondary w-full py-3 px-10 mb-10 rounded-xl mt-16 duration-300"
+        class="border-white border-solid border bg-mtertiary text-white hover:bg-msecondary py-3 px-16 min-w-[250px] rounded-xl mt-16 duration-300"
         (click)="saveTags()"
       >
         Save
       </button>
     </div>
-    <div *ngIf="selectedTab==3" [formGroup]="changePasswordForm">
-      <h1 class="text-mprimary text-center text-[40px] font-lobster">Change password</h1>
-
-      <label
-        for="password"
-        class="block font-outfit font-semibold text-sm mb-1 ms-2"
-        [ngClass]="[isValidPassword ? 'text-tertiary' : 'text-invalid']"
-      >Current password</label
-      >
-      <input
-        type="password"
-        id="password"
-        class="border-solid border w-full p-3 rounded-xl font-outfit"
-        formControlName="password"
-        [ngClass]="[isValidPassword ? 'border-button' : 'border-invalid']"
-      />
-
-      <label
-        for="newpassword"
-        class="block font-outfit font-semibold text-sm mb-1 ms-2"
-        [ngClass]="[isValidPassword ? 'text-tertiary' : 'text-invalid']"
-      >New password</label
-      >
-      <input
-        type="password"
-        id="newpassword"
-        class="border-solid border w-full p-3 rounded-xl font-outfit"
-        formControlName="newpassword"
-        [ngClass]="[isValidPassword ? 'border-button' : 'border-invalid']"
-      />
+    <div *ngIf="selectedTab==3" [formGroup]="changePasswordForm" class="text-center">
+      <h1 class="text-mprimary text-[40px] text-center font-lobster p-0 m-0">Change password</h1>
+      <div class="flex flex-row mt-2 mb-5">
+        <div
+          class="flex-1 h-0.5 border-b w-max border-button mr-2 my-2"
+        ></div>
+        <span class="text-tertiary text-sm font-outfit font-medium">
+            Here you can change your password
+          </span>
+        <div
+          class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
+        ></div>
+      </div>
+        <div class="mt-5 pe-8 ps-10 relative mx-auto  max-w-[500px]">
+          <label
+            for="password"
+            class="block text-left font-outfit font-semibold text-sm mb-1 ms-2"
+            [ngClass]="[isValidPassword ? 'text-tertiary' : 'text-invalid']"
+          >Current password</label
+          >
+          <input
+            type="password"
+            id="password"
+            class="border-solid border w-full p-3 rounded-xl font-outfit"
+            formControlName="password"
+            [ngClass]="[isValidPassword ? 'border-button' : 'border-invalid',
+            !hasPassword ? 'bg-disabled text-disabled' : '']"
+            [readOnly]="!hasPassword"
+          />
+          <span
+            class="block font-outfit font-normal text-sm text-tertiary absolute -bottom-6"
+            *ngIf="!hasPassword"
+            id="hasPasswordMessage"
+          >
+            You don't have password so you don't have to enter current password
+          </span>
+          <span
+            class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+            *ngIf="!isValidPassword"
+            id="passwordMessage"
+          >You have to use uppercase and
+              lowercase letter, special character, digit</span
+          >
+        </div>
+        <div class="mt-14 pe-8 ps-10 relative mx-auto  max-w-[500px]">
+          <label
+            for="newpassword"
+            class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+            [ngClass]="[isValidPasswordNew ? 'text-tertiary' : 'text-invalid']"
+          >New password</label
+          >
+          <input
+            type="password"
+            id="newpassword"
+            class="border-solid border w-full p-3 rounded-xl font-outfit"
+            formControlName="newpassword"
+            [ngClass]="[isValidPasswordNew ? 'border-button' : 'border-invalid']"
+          />
+          <span
+            class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+            *ngIf="!isValidPasswordNew"
+            id="passwordNewMessage"
+          >You have to use uppercase and
+              lowercase letter, special character, digit</span
+          >
+        </div>
 
       <button
-        class="border-white border-solid border w-full py-3 px-10 mb-10 rounded-xl mt-16 duration-300"
+        class="border-white border-solid border min-w-[250px] py-3 px-10 rounded-xl mt-16 duration-300"
         [ngClass]="[
             isEnabledPasswordButton
               ? 'bg-mtertiary text-white hover:bg-msecondary'
               : 'bg-mlight text-msemidark'
           ]"
         [disabled]="!isEnabledPasswordButton"
+        (click)="changePassword()"
       >
         Confirm
       </button>

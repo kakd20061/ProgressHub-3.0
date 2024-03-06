@@ -117,7 +117,7 @@ namespace ProgressHubApi.Validators
             return LoginResultEnum.Success;
         }
 
-        public bool isValidPassword(string? dbPassword, string? providedPassword)
+        private bool isValidPassword(string? dbPassword, string? providedPassword)
         {
             return dbPassword == providedPassword ? true : false;
         }

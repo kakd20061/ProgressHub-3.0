@@ -45,6 +45,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './pages/main/main.component';
 import { AccountSettingsComponent } from './pages/account-settings/account-settings.component';
 import {MatChipsModule} from '@angular/material/chips';
+import {PipeFor} from "./pipeFor";
+
 export function tokenGetter() {
   return localStorage.getItem('jwt');
 }
@@ -61,6 +63,7 @@ export function tokenGetter() {
     NavbarComponent,
     MainComponent,
     AccountSettingsComponent,
+    PipeFor
   ],
   imports: [
     BrowserModule,

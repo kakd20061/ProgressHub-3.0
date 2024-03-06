@@ -5,6 +5,7 @@ using ProgressHubApi.Models;
 using ProgressHubApi.Models.AccountSettings;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Models.Mail;
+using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
 
 namespace ProgressHubApi.Repositories;
@@ -13,6 +14,7 @@ public interface IAccountSettingsRepository
 {
     public Task<(BasicResultEnum,ICollection<TagModel>?)> GetAllTags();
     public Task<BasicResultEnum> SaveTags(SaveTagsMogel model);
+    public Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model);
 }
 
 public class AccountSettingsRepository : IAccountSettingsRepository
@@ -20,14 +22,16 @@ public class AccountSettingsRepository : IAccountSettingsRepository
         private IMongoCollection<UserModel> _accounts;
         private IMongoCollection<TagModel> _tags;
         private IAccountSettingsValidator _validator;
+        private readonly CommonService _commonService;
 
-        public AccountSettingsRepository(IMongoClient client, IAccountSettingsValidator validator)
+        public AccountSettingsRepository(IMongoClient client, IAccountSettingsValidator validator, CommonService commonService)
         {
             var mongoDatabase = client.GetDatabase("ProgressHub");
 
             _accounts = mongoDatabase.GetCollection<UserModel>("Users");
             _tags = mongoDatabase.GetCollection<TagModel>("Tags");
             _validator = validator;
+            _commonService = commonService;
         }
 
         public async Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags()
@@ -77,6 +81,36 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             {
                 return BasicResultEnum.Error;
 
+            }
+        }
+        
+        public async Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model)
+        {
+            try
+            {
+                var findUser = await _accounts.FindAsync(x => x.Email == model.email);
+                var user = await findUser.FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    return BasicResultEnum.Error;
+                }
+                if(user.Password == null && _validator.ValidateNewPassword(model.password))
+                {
+                    user.Password = _commonService.HashPassword(model.password);
+                    await _accounts.ReplaceOneAsync(x => x.Email == model.email, user);
+                    return BasicResultEnum.Success;
+                }
+                if (!_validator.ValidatePasswords(model.password, model.currentPassword, user))
+                {
+                    return BasicResultEnum.Error;
+                }
+                user.Password = _commonService.HashPassword(model.password);
+                await _accounts.ReplaceOneAsync(x => x.Email == model.email, user);
+                return BasicResultEnum.Success;
+            }
+            catch (Exception e)
+            {
+                return BasicResultEnum.Error;
             }
         }
     }
