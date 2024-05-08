@@ -29,7 +29,7 @@ import {
   heroChevronDoubleUp,
   heroCog6Tooth,
   heroArrowRightOnRectangle,
-
+  heroCloudArrowUp,
 } from '@ng-icons/heroicons/outline';
 import{heroUsersSolid,heroPhotoSolid,heroTagSolid,heroLockClosedSolid,heroBars3BottomLeftSolid,heroCheckCircleSolid,heroXCircleSolid} from "@ng-icons/heroicons/solid";
 import { NgIconsModule } from '@ng-icons/core';
@@ -96,6 +96,7 @@ export function tokenGetter() {
       heroBars3BottomLeftSolid,
       heroXCircleSolid,
       heroCheckCircleSolid,
+      heroCloudArrowUp,
     }),
     JwtModule.forRoot({
       config: {
