@@ -17,7 +17,7 @@ namespace ProgressHubApi.Services
         string GenerateRefreshToken();
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
         public Task<(string?,BasicResultEnum)> AddRefreshTokenToUser(string email);
-        public Task<(TokenModel?, BasicResultEnum)> Refresh(TokenModel model);
+        public Task<(ExternalTokenModel?, BasicResultEnum)> Refresh(TokenModel model);
     }
     public class TokenService : ITokenService
 	{
@@ -81,7 +81,7 @@ namespace ProgressHubApi.Services
             return principal;
         }
 
-        public async Task<(TokenModel?, BasicResultEnum)> Refresh(TokenModel model)
+        public async Task<(ExternalTokenModel?, BasicResultEnum)> Refresh(TokenModel model)
         {
             try
             {
@@ -98,9 +98,10 @@ namespace ProgressHubApi.Services
                 if(result.Item2 == BasicResultEnum.Success)
                 {
                     var newAccessToken = _commonService.GenerateJwt(result.Item1);
-                    return (new TokenModel() {
+                    return (new ExternalTokenModel() {
                         AccessToken = newAccessToken,
-                        RefreshToken = refreshToken
+                        RefreshToken = refreshToken,
+                        HasPassword = result.Item1.Password != null
                     }, BasicResultEnum.Success);
                 }
                 return (null, result.Item2);

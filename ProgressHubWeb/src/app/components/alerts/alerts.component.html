@@ -1,0 +1,26 @@
+<div *ngIf="!IsSuccess" id="alert-2" class="tagMsgE transition-opacity duration-300 ease-out flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+  <ng-icon name="heroXCircleSolid" class="flex-shrink-0 text-xl"></ng-icon>
+
+  <span class="sr-only">Info</span>
+  <div class="ms-3 text-sm font-medium">
+    {{message}}
+  </div>
+  <button type="button" (click)="hideTagMsg()" class="ms-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700">
+    <span class="sr-only">Close</span>
+    <ng-icon name="heroXMark" class=" text-xl"></ng-icon>
+  </button>
+</div>
+
+
+<div *ngIf="IsSuccess" id="alert-3" class="tagMsgG transition-opacity duration-300 ease-out flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+  <ng-icon name="heroCheckCircleSolid" class="flex-shrink-0 text-xl"></ng-icon>
+
+  <span class="sr-only">Info</span>
+  <div class="ms-3 text-sm font-medium">
+    {{message}}
+  </div>
+  <button type="button" (click)="hideTagMsg()" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700">
+    <span class="sr-only">Close</span>
+    <ng-icon name="heroXMark" class=" text-xl"></ng-icon>
+  </button>
+</div>

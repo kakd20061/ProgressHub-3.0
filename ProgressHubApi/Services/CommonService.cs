@@ -6,9 +6,12 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using ProgressHubApi.Enums;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Models.Token;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace ProgressHubApi.Services
 {
@@ -28,6 +31,52 @@ namespace ProgressHubApi.Services
             return result;
         }
 
+        public BasicResultEnum UploadFile(IFormFile file, string path,string fileName, string previousFileName)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    if (previousFileName != "" && File.Exists(path+"/"+previousFileName))
+                    {
+                        File.Delete(path+"/"+previousFileName);
+                    }
+                    using (var image = Image.Load(file.OpenReadStream()))
+                    {
+                        var ratio = 400 / (double)image.Height;
+                        var targetWidth = (int)(image.Width * ratio);
+                        if(targetWidth < 200) targetWidth = 200;
+                        image.Mutate(n=>n.Resize(targetWidth,400).Crop(new Rectangle((image.Width - 200) / 2, (image.Height -200) / 2,200,200)));
+
+                        image.Save(path+"/"+fileName);
+                    }
+                    return BasicResultEnum.Success;
+                }
+                return BasicResultEnum.Error;
+            }
+            catch (Exception e)
+            {
+                return BasicResultEnum.Error;
+            }
+        }
+        
+        public BasicResultEnum DeleteFile(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    return BasicResultEnum.Success;
+                }
+                return BasicResultEnum.Error;
+            }
+            catch (Exception e)
+            {
+                return BasicResultEnum.Error;
+            }
+        }
+        
         public int GenerateVerificationCode()
         {
             Random random = new Random();
@@ -44,6 +93,7 @@ namespace ProgressHubApi.Services
                 new Claim(ClaimTypes.Surname, model.LastName),
                 new Claim(ClaimTypes.Role, Enum.GetName(model.Role)),
                 new Claim("Tags", JsonConvert.SerializeObject(model.Tags, Formatting.None)),
+                new Claim("Avatar", model.Avatar ?? "")
             };
             
             JwtSecurityToken tokeOptions;

@@ -37,7 +37,11 @@ public class UserModel
     
     [BsonElement("tags")]
     public List<TagModel>? Tags { get; set; }
-    public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt)
+    
+    [BsonElement("avatar")]
+    public string Avatar { get; set; }
+    
+    public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt, string Avatar = "")
     {
         this._Id = _Id;
         this.Name = Name;
@@ -47,6 +51,7 @@ public class UserModel
         this.Password = Password;
         this.Tags = new List<TagModel>();
         this.Role = UserRoleEnum.User;
+        this.Avatar = Avatar;
         Activity = new UserActivity
         {
             CreatedAt = DateTime.UtcNow,
@@ -69,6 +74,7 @@ public class UserModel
         Password = model.Password;
         Role = model.Role;
         this.Tags = model.Tags;
+        this.Avatar = model.Avatar;
         Activity = new UserActivity
         {
             CreatedAt = model.Activity.CreatedAt,

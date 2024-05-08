@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.FileProviders;
 using MongoDB.Driver;
 using ProgressHubApi;
 using ProgressHubApi.Models;
+using ProgressHubApi.Models.AccountSettings;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Models.Token;
 using ProgressHubApi.Providers;
@@ -80,6 +82,8 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<MailSettingsModel>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<GoogleSettingsModel>(builder.Configuration.GetSection("GoogleAuthSettings"));
+builder.Services.Configure<AvatarSettingsModel>(builder.Configuration.GetSection("AvatarSettings"));
+
 
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<CommonService>();
@@ -104,7 +108,13 @@ builder.Services.AddTransient<ISeedRepository, SeedRepository>();
 builder.Services.AddTransient<ISeedService, SeedService>();
 
 var app = builder.Build();
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new 
+        PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Assets","_uploads","avatars")),
+    RequestPath = "/avatars"
+});
+app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();

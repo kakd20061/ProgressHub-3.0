@@ -13,6 +13,7 @@ namespace ProgressHubApi.Validators
 	{
         public bool ValidatePasswords(string newPassword, string currentPassword, UserModel user);
         public bool ValidateNewPassword(string newPassword);
+        public bool ValidateFileForAvatar(IFormFile filetype);
     }
 
     public class AccountSettingsValidator : IAccountSettingsValidator
@@ -50,6 +51,11 @@ namespace ProgressHubApi.Validators
                 return false;
             }
             return true;
+        }
+
+        public bool ValidateFileForAvatar(IFormFile file)
+        {
+            return file is { Length: > 0, ContentType: "image/jpeg" or "image/png" };
         }
     }
 }

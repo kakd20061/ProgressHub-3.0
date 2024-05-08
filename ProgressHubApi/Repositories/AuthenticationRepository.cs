@@ -148,8 +148,8 @@ namespace ProgressHubApi.Repositories
                 }
                 payload.FamilyName ??= "";
                 payload.GivenName ??= "";
-
-                var user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email, payload.Name, null, null);
+                payload.Picture ??= "";
+                var user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email, await _validator.GetUniqueUserName(payload.Name), null, null, payload.Picture);
                 await _accounts.InsertOneAsync(user);
                 return (user, BasicResultEnum.Success, false);
             }

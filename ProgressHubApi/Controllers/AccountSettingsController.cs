@@ -30,47 +30,62 @@ public class AccountSettingsController : ControllerBase
     {
         var result = await _provider.GetAllTags();
 
-        switch (result.Item1)
+        return result.Item1 switch
         {
-            case Enums.BasicResultEnum.Success:
-                return Ok(result.Item2);
-            case Enums.BasicResultEnum.Error:
-                return BadRequest();
-            default:
-                return Ok();
-        }
+            Enums.BasicResultEnum.Success => Ok(result.Item2),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
     }
     
     [HttpPost("SaveTags")]
     public async Task<IActionResult> SaveTags(SaveTagsMogel tags)
     {
         var result = await _service.SaveTags(tags);
-    
-        switch (result)
+
+        return result switch
         {
-        case Enums.BasicResultEnum.Success:
-            return Ok();
-        case Enums.BasicResultEnum.Error:
-            return BadRequest();
-        default:
-            return Ok();
-        }
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
     }
     
     [HttpPost("ChangePassword")]
     public async Task<IActionResult> ChangePassword(ChangePasswordModelWithCurrentPassword model)
     {
         var result = await _service.ChangePassword(model);
-    
-        switch (result)
+
+        return result switch
         {
-        case Enums.BasicResultEnum.Success:
-            return Ok();
-        case Enums.BasicResultEnum.Error:
-            return BadRequest();
-        default:
-            return Ok();
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
+    }
+    
+    [HttpPost("ChangeAvatar")]
+    public async Task<IActionResult> ChangeAvatar()
+    {
+        var formCollection = await Request.ReadFormAsync();
+        IFormFile? file = null;
+        if (formCollection["file"] != "")
+        {
+            file = formCollection.Files.First();
         }
+        var model = new ChangeAvatarModel
+        {
+            Email = formCollection["email"],
+            File = file
+        };
+        var result = await _service.ChangeAvatar(model);
+
+        return result switch
+        {
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
     }
 }
 

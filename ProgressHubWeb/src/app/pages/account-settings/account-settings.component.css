@@ -1,0 +1,14 @@
+.blurred::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.blurred {
+  position: relative;
+  background: no-repeat center center;
+  background-size: cover;
+}

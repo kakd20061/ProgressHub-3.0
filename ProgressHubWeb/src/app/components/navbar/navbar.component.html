@@ -20,7 +20,7 @@
       <div class="hidden lg:block" *ngIf="isAuthenticated">
         <button id="accountDropdownNormalBtn" data-dropdown-toggle="accountDropdownNormal" class="text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
           <div class="profile-section flex flex-row items-center">
-            <img src="./assets/images/user-avatar.png" class="w-10 h-10 rounded-full" alt="user-avatar">
+            <img [src]="user?.avatar != '' ? user?.avatar : './assets/images/user-avatar.png'" class="w-10 h-10 rounded-full" alt="user-avatar">
             <p class="text-lg truncate font-outfit font-light text-tertiary ms-2">
               {{user?.nickname}}
             </p>
@@ -89,7 +89,7 @@
       <div class="text-center w-100" *ngIf="isAuthenticated">
         <button id="accountDropdownSidebarBtn" data-dropdown-toggle="accountDropdownSidebar" class=" mx-auto font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white" type="button">
           <div class="profile-section flex flex-row items-center">
-            <img src="./assets/images/user-avatar.png" class="w-10 h-10 rounded-full" alt="user-avatar">
+            <img [src]="user?.avatar != '' ? user?.avatar : './assets/images/user-avatar.png'" class="w-10 h-10 rounded-full" alt="user-avatar">
             <p class="text-lg truncate font-outfit font-light text-tertiary ms-2">
               {{user?.nickname}}
             </p>

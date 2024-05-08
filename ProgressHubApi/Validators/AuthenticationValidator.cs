@@ -17,6 +17,7 @@ namespace ProgressHubApi.Validators
 
         public LoginResultEnum ValidateCheckUserAccount(LoginModel model, string? hashedPassword, UserModel userInDb);
         public Task<(VerificationCodeCheckEnum, UserModel?)> ValidateCheckVerificationCode(VerificationCodeModel code);
+        public Task<string> GetUniqueUserName(string nickname);
     }
 
     public class AuthenticationValidator : IAuthenticationValidator
@@ -153,6 +154,22 @@ namespace ProgressHubApi.Validators
                 return (VerificationCodeCheckEnum.NoCode, null);
             }
 
+        }
+
+        public async Task<string> GetUniqueUserName(string nickname)
+        {
+            var accounts = await _accounts.Find(_ => true).ToListAsync();
+            while(true){
+                var username = accounts.FirstOrDefault(n => n.Nickname == nickname);
+                if (username != null)
+                {
+                    nickname = nickname + " " + new Random().Next(0, 1000);
+                }
+                else
+                {
+                    return nickname;
+                }
+            }
         }
     }
 }

@@ -38,7 +38,6 @@ export class AuthGuard {
       () => {
         this._service
           .tryRefreshingTokens(
-            token!,
             'https://localhost:7034/api/token/refresh',
             credentials
           )
@@ -46,6 +45,7 @@ export class AuthGuard {
             next: (res: AuthenticationResponseModel) => {
               localStorage.setItem('jwt', res.accessToken);
               localStorage.setItem('refreshToken', res.refreshToken);
+              localStorage.setItem('hasPassword', res.hasPassword.toString());
               return true;
             },
             error: (_) => {

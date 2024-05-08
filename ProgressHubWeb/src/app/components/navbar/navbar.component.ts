@@ -72,7 +72,6 @@ export class NavbarComponent implements OnInit{
           () => {
             this._authService
               .tryRefreshingTokens(
-                token!,
                 'https://localhost:7034/api/token/refresh',
                 credentials
               )
@@ -80,6 +79,7 @@ export class NavbarComponent implements OnInit{
                 next: (res: AuthenticationResponseModel) => {
                   localStorage.setItem('jwt', res.accessToken);
                   localStorage.setItem('refreshToken', res.refreshToken);
+                  localStorage.setItem('hasPassword', res.hasPassword.toString());
                   console.log('refresh');
                   this.ngOnInit();
                 },

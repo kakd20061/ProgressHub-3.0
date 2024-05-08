@@ -5,4 +5,5 @@ export interface userModel {
   nickname: string;
   role: string;
   tags: any;
+  avatar: string;
 }

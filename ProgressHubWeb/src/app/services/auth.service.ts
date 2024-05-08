@@ -22,7 +22,7 @@ export class AuthService {
   resendRequest(url: string, email: string):Observable<any> {
     return this._http.post<any>(`${url}?email=${email}`, null);
   }
-  tryRefreshingTokens(token: string, url: string, credentials: string):Observable<AuthenticationResponseModel> {
+  tryRefreshingTokens(url: string, credentials: string):Observable<AuthenticationResponseModel> {
     return this._http.post<AuthenticationResponseModel>(url, credentials, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -42,6 +42,7 @@ export class AuthService {
     let nickname = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
     let role = jwt['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     let tags = jwt['Tags'];
+    let avatar = jwt['Avatar'];
 
     user.email = email;
     user.name = name;
@@ -49,6 +50,7 @@ export class AuthService {
     user.nickname = nickname;
     user.role = role;
     user.tags = tags;
+    user.avatar = avatar;
 
     return user;
   }
@@ -61,5 +63,6 @@ export class AuthService {
   logOut(): void {
     localStorage.removeItem('jwt');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('hasPassword');
   }
 }
