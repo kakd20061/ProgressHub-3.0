@@ -5,6 +5,7 @@ import {userModel} from "../../models/userModel";
 import {AuthService} from "../../services/auth.service";
 import {Flowbite} from "../../flowbiteDecorator";
 import {AuthenticationResponseModel} from "../../models/authenticationResponseModel";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-navbar',
@@ -72,7 +73,7 @@ export class NavbarComponent implements OnInit{
           () => {
             this._authService
               .tryRefreshingTokens(
-                'https://localhost:7034/api/token/refresh',
+                environment.backend.baseUrl+'token/refresh',
                 credentials
               )
               .subscribe({

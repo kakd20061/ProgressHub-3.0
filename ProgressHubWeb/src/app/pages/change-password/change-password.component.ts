@@ -9,6 +9,7 @@ import {Engine} from "@tsparticles/engine";
 import {loadSlim} from "@tsparticles/slim";
 import configs from "@tsparticles/configs";
 import {NgParticlesService} from "@tsparticles/angular";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-change-password',
@@ -78,7 +79,7 @@ export class ChangePasswordComponent {
     };
     this.isLoading = true;
     this._apiService
-      .sendRequest('https://localhost:7034/api/features/change', model)
+      .sendRequest(environment.backend.baseUrl+'features/change', model)
       .subscribe({
         next: (res):void => {
           this.isSuccess = 1;

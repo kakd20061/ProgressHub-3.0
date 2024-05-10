@@ -7,6 +7,7 @@ import {
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthService } from '../services/auth.service';
 import { AuthenticationResponseModel } from '../models/authenticationResponseModel';
+import {environment} from "../../environments/environment";
 @Injectable({
   providedIn: 'root',
 })
@@ -38,7 +39,7 @@ export class AuthGuard {
       () => {
         this._service
           .tryRefreshingTokens(
-            'https://localhost:7034/api/token/refresh',
+            environment.backend.baseUrl+'token/refresh',
             credentials
           )
           .subscribe({

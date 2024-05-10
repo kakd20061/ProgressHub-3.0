@@ -9,6 +9,7 @@ import configs from "@tsparticles/configs";
 import {NgParticlesService} from "@tsparticles/angular";
 import {Engine} from "@tsparticles/engine";
 import {loadSlim} from "@tsparticles/slim";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-verification-password',
@@ -22,13 +23,12 @@ export class VerificationPasswordComponent {
   isSuccess: number = 0;
   isResend: boolean = false;
   isLoading: boolean = false;
-  particlesOptions = configs.basic;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _apiService: AuthService,
-    private _commonService: CommonService,
+    public _commonService: CommonService,
     private _changePasswordService: ChangePasswordService,
     private _ngParticlesService: NgParticlesService
   ) {}
@@ -36,31 +36,13 @@ export class VerificationPasswordComponent {
     otpLength: 4,
     classList: {
       input: 'otp-input',
-    inputFilled: 'my-super-filled-class',
-    inputDisabled: 'my-super-disable-class',
-    inputSuccess: 'my-super-success-class',
-    inputError: 'my-super-error-class',
+      inputFilled: 'my-super-filled-class',
+      inputDisabled: 'my-super-disable-class',
+      inputSuccess: 'my-super-success-class',
+      inputError: 'my-super-error-class',
     },
   };
 
-  private SetUpBasic():void {
-    this.particlesOptions.background!.color = "#D5F4EE";
-    this.particlesOptions.particles!.color!.value = "#3FA99B";
-    this.particlesOptions.fullScreen! = true;
-    this.particlesOptions.particles!.size!.value = 5;
-    this.particlesOptions.particles!['links'] = {
-      enable: true,
-      distance: 150,
-      color: "#3FA99B",
-      opacity: 0.4,
-      width: 2,
-    }
-    this.particlesOptions.particles!.color!.animation! = {
-      enable: false,
-      speed: 20,
-      sync: true,
-    };
-  }
   onOtpChange(event: string[]): void {
     this.isEnabled = this._commonService.onOtpChange(event);
     if(this.isEnabled){
@@ -68,7 +50,6 @@ export class VerificationPasswordComponent {
     }
   }
   async ngOnInit():Promise<void> {
-    this.SetUpBasic();
     await this._ngParticlesService.init(async (engine:Engine) => {
       console.log(engine);
       await loadSlim(engine);
@@ -92,7 +73,7 @@ export class VerificationPasswordComponent {
     this.isResend = false;
     this.isLoading = true;
     this._apiService
-      .sendRequest('https://localhost:7034/api/features/check', model)
+      .sendRequest(environment.backend.baseUrl+'features/check', model)
       .subscribe({
         next: (res):void => {
           this.isSuccess = 1;
@@ -118,7 +99,7 @@ export class VerificationPasswordComponent {
     this.isLoading = true;
     this.isResend = true;
     this._apiService
-      .resendRequest('https://localhost:7034/api/features/resend', this.email)
+      .resendRequest(environment.backend.baseUrl+'features/resend', this.email)
       .subscribe({
         next: (res):void => {
           this.isSuccess = 1;

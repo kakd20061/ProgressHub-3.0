@@ -10,6 +10,8 @@ import configs from "@tsparticles/configs";
 import {Engine} from "@tsparticles/engine";
 import {loadSlim} from "@tsparticles/slim";
 import {NgParticlesService} from "@tsparticles/angular";
+import {environment} from "../../../environments/environment";
+import {CommonService} from "../../services/common.service";
 
 @Component({
   selector: 'app-signup',
@@ -53,31 +55,11 @@ export class SignupComponent implements OnInit{
   isValidData: boolean = true;
   captchaResolved: boolean = false;
   externalAuth: ExternalAuthModel = {} as ExternalAuthModel;
-  particlesOptions = configs.basic;
 
   //functions-------------------------------------------------------------------
 
-  constructor(private _apiService: AuthService, private _router: Router, private _externalAuthService: SocialAuthService, private _ngParticlesService:NgParticlesService) {}
-  private SetUpBasic():void {
-    this.particlesOptions.background!.color = "#D5F4EE";
-    this.particlesOptions.particles!.color!.value = "#3FA99B";
-    this.particlesOptions.fullScreen! = true;
-    this.particlesOptions.particles!.size!.value = 5;
-    this.particlesOptions.particles!['links'] = {
-      enable: true,
-      distance: 150,
-      color: "#3FA99B",
-      opacity: 0.4,
-      width: 2,
-    }
-    this.particlesOptions.particles!.color!.animation! = {
-      enable: false,
-      speed: 20,
-      sync: true,
-    };
-  }
+  constructor(public _commonService:CommonService,private _apiService: AuthService, private _router: Router, private _externalAuthService: SocialAuthService, private _ngParticlesService:NgParticlesService) {}
   ngOnInit(): void {
-    this.SetUpBasic();
     this._ngParticlesService.init(async (engine:Engine) => {
       console.log(engine);
       await loadSlim(engine);
@@ -139,10 +121,10 @@ export class SignupComponent implements OnInit{
         nickname: this.signUpForm.value.nickname,
         password: this.signUpForm.value.password,
       } as signUpModel;
-      url = 'https://localhost:7034/api/auth/signup';
+      url = environment.backend.baseUrl+'auth/signup';
     }else{
       model = this.externalAuth;
-      url = 'https://localhost:7034/api/auth/external';
+      url = environment.backend.baseUrl+'auth/external';
     }
 
     this._apiService

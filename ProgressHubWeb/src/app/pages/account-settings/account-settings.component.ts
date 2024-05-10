@@ -7,6 +7,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {tagModel} from "../../models/tagModel";
 import {SaveTagsModel} from "../../models/SaveTagsModel";
 import {AuthenticationResponseModel} from "../../models/authenticationResponseModel";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-account-settings',
@@ -101,7 +102,7 @@ export class AccountSettingsComponent implements OnInit{
         dateOfBirth: this.personalDataForm.get('dateOfBirth')?.value,
         gender: this.personalDataForm.get('gender')?.value,
       };
-      let url:string = 'https://localhost:7034/api/settings/account/ChangePersonalData';
+      let url:string = environment.backend.baseUrl+'settings/account/ChangePersonalData';
 
       this._apiService.sendRequest(url, model).subscribe({
         next: () => {
@@ -148,7 +149,7 @@ export class AccountSettingsComponent implements OnInit{
     }
 
 
-    let url:string = 'https://localhost:7034/api/settings/account/ChangeAvatar';
+    let url:string = environment.backend.baseUrl+'settings/account/ChangeAvatar';
     console.log(formData);
     this._apiService.sendRequest(url, formData).subscribe({
       next: () => {
@@ -211,7 +212,7 @@ export class AccountSettingsComponent implements OnInit{
       Email : this.user?.email!,
       TagsIds : tags
     }
-    let url:string = 'https://localhost:7034/api/settings/account/SaveTags';
+    let url:string = environment.backend.baseUrl+'settings/account/SaveTags';
     this._apiService.sendRequest(url, model).subscribe({
       next: () => {
         this.refresh().then(r => {});
@@ -278,7 +279,7 @@ export class AccountSettingsComponent implements OnInit{
   }
 
   getTags(): void {
-    let url:string = 'https://localhost:7034/api/settings/account/GetAllTags';
+    let url:string = environment.backend.baseUrl+'settings/account/GetAllTags';
 
     this._apiService.getTags(url).subscribe((data) => {
       this.tags=data;
@@ -305,7 +306,6 @@ export class AccountSettingsComponent implements OnInit{
       this.isEnabledPersonalDataButton = false;
     }
   }
-  //todo: localhost change to env
   subscribeToValueChanges(): void {
     this.changePasswordForm.get('password')?.valueChanges.subscribe(() => {
       this.inputChangedPassword();
@@ -379,7 +379,7 @@ export class AccountSettingsComponent implements OnInit{
         };
       }
 
-      let url:string = 'https://localhost:7034/api/settings/account/ChangePassword';
+      let url:string = environment.backend.baseUrl+'settings/account/ChangePassword';
       this._apiService.sendRequest(url, model).subscribe({
         next: () => {
           this.refresh().then(r => {});
@@ -430,7 +430,7 @@ export class AccountSettingsComponent implements OnInit{
           () => {
             this._apiService
               .tryRefreshingTokens(
-                'https://localhost:7034/api/token/refresh',
+                environment.backend.baseUrl+'token/refresh',
                 credentials
               )
               .subscribe({

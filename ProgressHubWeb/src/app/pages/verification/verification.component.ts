@@ -8,6 +8,7 @@ import configs from "@tsparticles/configs";
 import {Engine} from "@tsparticles/engine";
 import {loadSlim} from "@tsparticles/slim";
 import {NgParticlesService} from "@tsparticles/angular";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-verification',
@@ -21,13 +22,12 @@ export class VerificationComponent {
   isSuccess: number = 0;
   isResend: boolean = false;
   isLoading: boolean = false;
-  particlesOptions = configs.basic;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _apiService: AuthService,
-    private _commonService: CommonService,
+    public _commonService: CommonService,
     private _ngParticlesService: NgParticlesService
   ) {}
   otpInputConfig: NgxOtpInputConfig = {
@@ -40,24 +40,6 @@ export class VerificationComponent {
     inputError: 'my-super-error-class',
     },
   };
-  private SetUpBasic():void {
-    this.particlesOptions.background!.color = "#D5F4EE";
-    this.particlesOptions.particles!.color!.value = "#3FA99B";
-    this.particlesOptions.fullScreen! = true;
-    this.particlesOptions.particles!.size!.value = 5;
-    this.particlesOptions.particles!['links'] = {
-      enable: true,
-      distance: 150,
-      color: "#3FA99B",
-      opacity: 0.4,
-      width: 2,
-    }
-    this.particlesOptions.particles!.color!.animation! = {
-      enable: false,
-      speed: 20,
-      sync: true,
-    };
-  }
   onOtpChange(event: string[]): void {
     this.isEnabled = this._commonService.onOtpChange(event);
     if(this.isEnabled){
@@ -65,7 +47,6 @@ export class VerificationComponent {
     }
   }
   ngOnInit() {
-    this.SetUpBasic();
     this._ngParticlesService.init(async (engine:Engine) => {
       console.log(engine);
       await loadSlim(engine);
@@ -89,7 +70,7 @@ export class VerificationComponent {
     this.isResend = false;
     this.isLoading = true;
     this._apiService
-      .sendRequest('https://localhost:7034/api/auth/verify', model)
+      .sendRequest(environment.backend.baseUrl+'auth/verify', model)
       .subscribe({
         next: (res):void => {
           this.isSuccess = 1;
@@ -112,7 +93,7 @@ export class VerificationComponent {
     this.isLoading = true;
     this.isResend = true;
     this._apiService
-      .resendRequest('https://localhost:7034/api/auth/resend', this.email)
+      .resendRequest(environment.backend.baseUrl+'auth/resend', this.email)
       .subscribe({
         next: (res):void => {
           this.isSuccess = 1;
@@ -135,4 +116,6 @@ export class VerificationComponent {
         },
       });
   }
+
+  protected readonly CommonService = CommonService;
 }
