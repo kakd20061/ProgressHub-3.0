@@ -90,10 +90,10 @@ namespace ProgressHubApi.Services
                     return (null, BasicResultEnum.Error);
                 }
                 var principal = GetPrincipalFromExpiredToken(model.AccessToken);
-                var username = principal.Claims.FirstOrDefault(n=>n.Type == ClaimTypes.NameIdentifier).Value;
+                var email = principal.Claims.FirstOrDefault(n=>n.Type == ClaimTypes.Email).Value;
                 var refreshToken = GenerateRefreshToken();
 
-                var result = await _repository.Refresh(username, refreshToken, model);
+                var result = await _repository.Refresh(email, refreshToken, model);
 
                 if(result.Item2 == BasicResultEnum.Success)
                 {

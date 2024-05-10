@@ -41,6 +41,12 @@ public class UserModel
     [BsonElement("avatar")]
     public string Avatar { get; set; }
     
+    [BsonElement("DateOfBirth")]
+    public DateTime? DateOfBirth { get; set; }
+    
+    [BsonElement("Gender")]
+    public UserGenderEnum Gender { get; set; }
+
     public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt, string Avatar = "")
     {
         this._Id = _Id;
@@ -49,9 +55,11 @@ public class UserModel
         this.Email = Email;
         this.Nickname = Nickname;
         this.Password = Password;
-        this.Tags = new List<TagModel>();
-        this.Role = UserRoleEnum.User;
+        Tags = new List<TagModel>();
+        Role = UserRoleEnum.User;
         this.Avatar = Avatar;
+        DateOfBirth = null;
+        Gender = UserGenderEnum.PreferNotToSay;
         Activity = new UserActivity
         {
             CreatedAt = DateTime.UtcNow,
@@ -73,8 +81,10 @@ public class UserModel
         Nickname = model.Nickname;
         Password = model.Password;
         Role = model.Role;
-        this.Tags = model.Tags;
-        this.Avatar = model.Avatar;
+        Tags = model.Tags;
+        Avatar = model.Avatar;
+        DateOfBirth = model.DateOfBirth;
+        Gender = model.Gender;
         Activity = new UserActivity
         {
             CreatedAt = model.Activity.CreatedAt,

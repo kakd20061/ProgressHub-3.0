@@ -6,4 +6,6 @@ export interface userModel {
   role: string;
   tags: any;
   avatar: string;
+  dateofbirth: string;
+  gender: number;
 }

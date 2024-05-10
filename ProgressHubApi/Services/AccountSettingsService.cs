@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
+using ProgressHubApi.Enums.AccountSettings;
 using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.AccountSettings;
@@ -27,6 +28,7 @@ namespace ProgressHubApi.Services
         public Task<BasicResultEnum> SaveTags(SaveTagsMogel model);
         public Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model);
         public Task<BasicResultEnum> ChangeAvatar(ChangeAvatarModel model);
+        public Task<PersonalDataChangeResultEnum> ChangePersonalData(PersonalDataChangeModel model);
     }
 
 	public class AccountSettingsService : IAccountSettingsService
@@ -50,6 +52,11 @@ namespace ProgressHubApi.Services
         public Task<BasicResultEnum> ChangeAvatar(ChangeAvatarModel model)
         {
             return _repository.ChangeAvatar(model);
+        }
+
+        public Task<PersonalDataChangeResultEnum> ChangePersonalData(PersonalDataChangeModel model)
+        {
+            return _repository.ChangePersonalData(model);
         }
     }
 }

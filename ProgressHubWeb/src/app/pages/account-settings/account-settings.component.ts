@@ -60,7 +60,79 @@ export class AccountSettingsComponent implements OnInit{
   file: File = {} as File;
   isEnableChangeAvatarButton: boolean = false;
   avatarIsSaved: boolean = true;
+
+  //personal data
+  personalDataForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    lastName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+    ]),
+    nickname: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5),
+    ]),
+    dateOfBirth: new FormControl(''),
+    gender: new FormControl('0', [Validators.required, Validators.pattern('^[0-3]$')]),
+  });
+  isEnabledPersonalDataButton: boolean = false;
+  isValidPersonalData: boolean[] = [true, true, true, true, true];
+  personalDataIndicator: boolean = false;
+  personalDataResult: number = 0;
+  personalDataErrorMessage: string = 'Unexpected error occurred. Please try again later.';
+
   constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService) {}
+
+  changePersonalData(): void {
+    this.personalDataResult = 0;
+    this.personalDataIndicator = true;
+    this.isValidPersonalData[0] = this.personalDataForm.get('name')?.valid!;
+    this.isValidPersonalData[1] = this.personalDataForm.get('lastName')?.valid!;
+    this.isValidPersonalData[2] = this.personalDataForm.get('nickname')?.valid!;
+    this.isValidPersonalData[3] = this.personalDataForm.get('dateOfBirth')?.valid!;
+    this.isValidPersonalData[4] = this.personalDataForm.get('gender')?.valid!
+
+    if (this.isValidPersonalData[0] && this.isValidPersonalData[1] && this.isValidPersonalData[2] && this.isValidPersonalData[3] && this.isValidPersonalData[4]) {
+      let model = {
+        email: this.user?.email,
+        name: this.personalDataForm.get('name')?.value,
+        lastName: this.personalDataForm.get('lastName')?.value,
+        nickname: this.personalDataForm.get('nickname')?.value,
+        dateOfBirth: this.personalDataForm.get('dateOfBirth')?.value,
+        gender: this.personalDataForm.get('gender')?.value,
+      };
+      let url:string = 'https://localhost:7034/api/settings/account/ChangePersonalData';
+
+      this._apiService.sendRequest(url, model).subscribe({
+        next: () => {
+          this.refresh().then(r => {});
+          setTimeout(() => {
+              this.personalDataIndicator = false;
+              this.personalDataResult = 1;
+              this.isEnabledPersonalDataButton = false;
+            }, 1000
+          );
+        },
+        error: (_) => {
+          console.log('error');
+          setTimeout(() => {
+              this.personalDataIndicator = false;
+              if(_.error.includes('Nickname')){
+                this.personalDataErrorMessage = 'This nickname is already taken';
+              }
+              else{
+                this.personalDataErrorMessage = 'Unexpected error occurred. Please try again later.';
+              }
+              this.personalDataResult = 2;
+              this.isEnabledPersonalDataButton = false;
+            }, 1000
+          )
+        },
+      });
+    }else{
+      this.personalDataIndicator = false;
+    }
+  }
 
   saveAvatar(isDelete:boolean): void {
     this.avatarResult = 0;
@@ -193,7 +265,18 @@ export class AccountSettingsComponent implements OnInit{
     this.userTagsIds = tempIds;
     this.subscribeToValueChanges();
     this.initTags();
+
+    this.setPersonalData();
   }
+
+  setPersonalData(): void{
+    this.personalDataForm.get('name')?.setValue(this.user?.name!);
+    this.personalDataForm.get('lastName')?.setValue(this.user?.lastName!);
+    this.personalDataForm.get('nickname')?.setValue(this.user?.nickname!);
+    this.personalDataForm.get('dateOfBirth')?.setValue(this.user?.dateofbirth!);
+    this.personalDataForm.get('gender')?.setValue(this.user?.gender.toString()!);
+  }
+
   getTags(): void {
     let url:string = 'https://localhost:7034/api/settings/account/GetAllTags';
 
@@ -213,6 +296,16 @@ export class AccountSettingsComponent implements OnInit{
       this.isEnabledPasswordButton = false;
     }
   }
+
+  inputChangedPersonalData(): void {
+    if (this.personalDataForm.get('name')?.value?.length! > 0 && this.personalDataForm.get('lastName')?.value?.length! > 0 && this.personalDataForm.get('nickname')?.value?.length! > 0 && this.personalDataForm.get('gender')?.value?.length! > 0) {
+      this.isEnabledPersonalDataButton = this.personalDataForm.get('name')?.value != this.user?.name || this.personalDataForm.get('lastName')?.value != this.user?.lastName || this.personalDataForm.get('nickname')?.value != this.user?.nickname || this.personalDataForm.get('dateOfBirth')?.value != this.user?.dateofbirth || this.personalDataForm.get('gender')?.value != this.user?.gender.toString();
+    }
+    else{
+      this.isEnabledPersonalDataButton = false;
+    }
+  }
+  //todo: localhost change to env
   subscribeToValueChanges(): void {
     this.changePasswordForm.get('password')?.valueChanges.subscribe(() => {
       this.inputChangedPassword();
@@ -220,6 +313,26 @@ export class AccountSettingsComponent implements OnInit{
 
     this.changePasswordForm.get('newpassword')?.valueChanges.subscribe(() => {
       this.inputChangedPassword();
+    });
+
+    this.personalDataForm.get('name')?.valueChanges.subscribe(() => {
+      this.inputChangedPersonalData();
+    });
+
+    this.personalDataForm.get('lastName')?.valueChanges.subscribe(() => {
+      this.inputChangedPersonalData();
+    });
+
+    this.personalDataForm.get('nickname')?.valueChanges.subscribe(() => {
+      this.inputChangedPersonalData();
+    });
+
+    this.personalDataForm.get('dateOfBirth')?.valueChanges.subscribe(() => {
+      this.inputChangedPersonalData();
+    });
+
+    this.personalDataForm.get('gender')?.valueChanges.subscribe(() => {
+      this.inputChangedPersonalData();
     });
   }
   changeTab(tab: number): void {
@@ -237,6 +350,11 @@ export class AccountSettingsComponent implements OnInit{
     this.isEnabledPasswordButton = false;
     this.avatarResult = 0;
     this.avatarIsSaved = true;
+    if (tab==0){
+      this.setPersonalData();
+    }
+    this.personalDataResult = 0;
+    this.personalDataIndicator = false;
   }
   changePassword(): void {
     this.changePasswordResult = 0;

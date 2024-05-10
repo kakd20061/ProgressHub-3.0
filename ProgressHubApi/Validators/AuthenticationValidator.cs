@@ -75,7 +75,7 @@ namespace ProgressHubApi.Validators
             tempAccount = tempAccounts.FirstOrDefault(n => n.Nickname == user.Nickname);
             account = accounts.FirstOrDefault(n => n.Nickname == user.Nickname);
 
-            if (account != null || account != null)
+            if (account != null || tempAccount != null)
             {
                 return SignUpResultEnum.NicknameExists;
             }

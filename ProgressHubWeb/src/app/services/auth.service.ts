@@ -43,6 +43,9 @@ export class AuthService {
     let role = jwt['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     let tags = jwt['Tags'];
     let avatar = jwt['Avatar'];
+    let dateOfBirth = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth'];
+    let gender = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/gender'];
+
 
     user.email = email;
     user.name = name;
@@ -51,6 +54,8 @@ export class AuthService {
     user.role = role;
     user.tags = tags;
     user.avatar = avatar;
+    user.dateofbirth = dateOfBirth;
+    user.gender = gender;
 
     return user;
   }

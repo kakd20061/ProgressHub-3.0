@@ -311,8 +311,161 @@
 
 <div class="p-4 sm:ml-64 pt-[6rem]">
   <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg">
-    <div *ngIf="selectedTab == 0">
-      <p>Personal data</p>
+    <div *ngIf="selectedTab == 0" [formGroup]="personalDataForm" class="text-center w-full">
+      <div>
+        <app-alerts
+          *ngIf="personalDataResult == 1"
+          [IsSuccess]="true"
+          [message]="'Successfully updated your personal data.'"
+          [Show]="personalDataResult == 1"
+        ></app-alerts>
+        <app-alerts
+          *ngIf="personalDataResult == 2"
+          [IsSuccess]="false"
+          [message]="personalDataErrorMessage"
+          [Show]="personalDataResult == 2"
+        ></app-alerts>
+      </div>
+      <h1 class="text-mprimary text-[40px] text-center font-lobster p-0 m-0">
+        Personal data
+      </h1>
+      <div class="flex flex-row mt-2 mb-5">
+        <div class="flex-1 h-0.5 border-b w-max border-button mr-2 my-2"></div>
+        <span class="text-tertiary text-sm font-outfit font-medium">
+          Here you can change your personal data
+        </span>
+        <div
+          class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
+        ></div>
+      </div>
+          <div class="mt-14 pe-8 ps-10 relative mx-auto max-w-[500px]">
+            <label
+              for="name"
+              class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValidPersonalData[0] ? 'text-tertiary' : 'text-invalid']"
+            >Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              class="border-solid border w-full p-3 rounded-xl font-outfit"
+              formControlName="name"
+              [ngClass]="[isValidPersonalData[0] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+              *ngIf="!isValidPersonalData[0]"
+              id="nameMessage"
+            >Please enter valid name</span
+            >
+          </div>
+
+          <div class="mt-14 pe-8 ps-10 relative mx-auto max-w-[500px]">
+            <label
+              for="lastName"
+              class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValidPersonalData[1] ? 'text-tertiary' : 'text-invalid']"
+            >Last Name</label
+            >
+            <input
+              type="text"
+              id="lastName"
+              class="border-solid border w-full p-3 rounded-xl font-outfit"
+              formControlName="lastName"
+              [ngClass]="[isValidPersonalData[1] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+              *ngIf="!isValidPersonalData[1]"
+              id="lastNameMessage"
+            >Please enter valid last name</span
+            >
+          </div>
+
+          <div class="mt-14 pe-8 ps-10 relative mx-auto max-w-[500px]">
+            <label
+              for="nickname"
+              class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+              [ngClass]="[isValidPersonalData[2] ? 'text-tertiary' : 'text-invalid']"
+            >Nickname</label
+            >
+            <input
+              type="text"
+              id="nickname"
+              class="border-solid border w-full p-3 rounded-xl font-outfit"
+              formControlName="nickname"
+              [ngClass]="[isValidPersonalData[2] ? 'border-button' : 'border-invalid']"
+            />
+            <span
+              class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+              *ngIf="!isValidPersonalData[2]"
+              id="nicknameMessage"
+            >Please enter valid nickname (min length should be 5 letters)</span
+            >
+          </div>
+
+      <div class="mt-14 pe-8 ps-10 relative mx-auto max-w-[500px]">
+        <label
+          for="birthDate"
+          class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+          [ngClass]="[isValidPersonalData[3] ? 'text-tertiary' : 'text-invalid']"
+        >Date of birth</label
+        >
+        <input
+          type="date"
+          id="birthDate"
+          class="border-solid border w-full p-3 rounded-xl font-outfit"
+          formControlName="dateOfBirth"
+          [ngClass]="[isValidPersonalData[3] ? 'border-button' : 'border-invalid']"
+        />
+        <span
+          class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+          *ngIf="!isValidPersonalData[3]"
+          id="birthDateMessage"
+        >Please enter valid date of birth</span
+        >
+      </div>
+
+      <div class="mt-14 pe-8 ps-10 relative mx-auto max-w-[500px]">
+        <label
+          for="gender"
+          class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+          [ngClass]="[isValidPersonalData[4] ? 'text-tertiary' : 'text-invalid']"
+        >Gender</label
+        >
+        <select
+          id="gender"
+          class="border-solid border w-full p-3 rounded-xl font-outfit"
+          formControlName="gender"
+          [ngClass]="[isValidPersonalData[4] ? 'border-button' : 'border-invalid']">
+          <option value="0">Prefer not to say</option>
+          <option value="1">Male</option>
+          <option value="2">Female</option>
+          <option value="3">Other</option>
+        </select>
+
+        <span
+          class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-10"
+          *ngIf="!isValidPersonalData[4]"
+          id="genderMessage"
+        >Please enter valid gender</span
+        >
+      </div>
+      <div *ngIf="personalDataIndicator">
+        <mat-spinner [diameter]="40" class="mx-auto mt-10"></mat-spinner>
+      </div>
+      <button
+        class="border-white border-solid border min-w-[250px] py-3 px-10 rounded-xl mt-10 duration-300"
+        [ngClass]="[
+          isEnabledPersonalDataButton
+            ? 'bg-mtertiary text-white hover:bg-msecondary'
+            : 'bg-mlight text-msemidark'
+        ]"
+        [disabled]="!isEnabledPersonalDataButton"
+        (click)="changePersonalData()"
+      >
+        Save changes
+      </button>
     </div>
     <div *ngIf="selectedTab == 1" class="text-center w-full">
       <div>
@@ -378,7 +531,7 @@
               <img
                 [src]="source"
                 alt="user-avatar"
-                class="h-40 z-10 w-40 bg-white object-cover rounded-full"
+                class="h-40 z-10 w-40 bg-white object-cover rounded-full avatar"
               />
             </div>
           </div>
@@ -476,10 +629,7 @@
         Save
       </button>
     </div>
-    <div
-      *ngIf="selectedTab == 3"
-      [formGroup]="changePasswordForm"
-      class="text-center"
+    <div *ngIf="selectedTab == 3" [formGroup]="changePasswordForm" class="text-center"
     >
       <div>
         <app-alerts

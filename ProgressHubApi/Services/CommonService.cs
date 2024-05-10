@@ -86,6 +86,7 @@ namespace ProgressHubApi.Services
 
         public string GenerateJwt(UserModel model)
         {
+            var genderNum = (int)model.Gender;
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier, model.Nickname),
                 new Claim(ClaimTypes.Email, model.Email),
@@ -93,7 +94,9 @@ namespace ProgressHubApi.Services
                 new Claim(ClaimTypes.Surname, model.LastName),
                 new Claim(ClaimTypes.Role, Enum.GetName(model.Role)),
                 new Claim("Tags", JsonConvert.SerializeObject(model.Tags, Formatting.None)),
-                new Claim("Avatar", model.Avatar ?? "")
+                new Claim("Avatar", model.Avatar ?? ""),
+                new Claim(ClaimTypes.DateOfBirth, model.DateOfBirth?.ToString("yyyy-MM-dd") ?? ""),
+                new Claim(ClaimTypes.Gender, genderNum.ToString()),
             };
             
             JwtSecurityToken tokeOptions;

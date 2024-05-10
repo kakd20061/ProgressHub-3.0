@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using ProgressHubApi.Enums.AccountSettings;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Services;
@@ -84,6 +85,20 @@ public class AccountSettingsController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
+    }
+    
+    [HttpPost("ChangePersonalData")]
+    public async Task<IActionResult> ChangePersonalData(PersonalDataChangeModel model)
+    {
+        var result = await _service.ChangePersonalData(model);
+
+        return result switch
+        {
+            PersonalDataChangeResultEnum.Success => Ok(),
+            PersonalDataChangeResultEnum.Error => BadRequest(),
+            PersonalDataChangeResultEnum.NicknameExists => BadRequest("Nickname already exists"),
             _ => Ok()
         };
     }

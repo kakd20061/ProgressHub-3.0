@@ -12,3 +12,10 @@
   background: no-repeat center center;
   background-size: cover;
 }
+
+@media (max-width: 815px) {
+  .avatar {
+    width: 140px;
+    height: 140px;
+  }
+}

@@ -10,7 +10,7 @@ namespace ProgressHubApi.Repositories
     public interface ITokenRepository
     {
         public Task<(string?,BasicResultEnum)> AddRefreshTokenToUser(string email, string refreshToken, DateTime? expiryTime);
-        public Task<(UserModel?,BasicResultEnum)> Refresh(string username, string refreshToken, TokenModel model);
+        public Task<(UserModel?,BasicResultEnum)> Refresh(string email, string refreshToken, TokenModel model);
     }
 
     public class TokenRepository : ITokenRepository
@@ -48,18 +48,18 @@ namespace ProgressHubApi.Repositories
             }
         }
 
-        public async Task<(UserModel?, BasicResultEnum)> Refresh(string username, string refreshToken, TokenModel model)
+        public async Task<(UserModel?, BasicResultEnum)> Refresh(string email, string refreshToken, TokenModel model)
         {
             try
             {
                 var accounts = await _accounts.Find(_ => true).ToListAsync();
-                var account = accounts.FirstOrDefault(n => n.Nickname == username);
+                var account = accounts.FirstOrDefault(n => n.Email == email);
                 if (account is null || account.Tokens.RefreshToken != model.RefreshToken || account.Tokens.RefreshTokenExpiryTime <= DateTime.UtcNow)
                     return (null,BasicResultEnum.Forbidden);
 
                 account.Tokens.RefreshToken = refreshToken;
 
-                await _accounts.FindOneAndReplaceAsync(x => x.Nickname.Equals(username), account);
+                await _accounts.FindOneAndReplaceAsync(x => x.Email.Equals(email), account);
 
                 return (account, BasicResultEnum.Success);
             }
