@@ -10,4 +10,5 @@ export interface userModel {
   gender: number;
   weight: string;
   height: string;
+  bodyFat: string;
 }

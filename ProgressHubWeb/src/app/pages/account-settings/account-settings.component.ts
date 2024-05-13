@@ -86,17 +86,19 @@ export class AccountSettingsComponent implements OnInit{
   bodyParametersForm = new FormGroup({
     weight: new FormControl(''),
     height: new FormControl(''),
+    bodyFat: new FormControl('', [Validators.pattern('^\\d+(\\.\\d{1,2})?$'), Validators.min(0), Validators.max(90)]),
     weightUnit: new FormControl('0', [Validators.required, Validators.pattern('^[0-1]$')]),
     heightUnit: new FormControl('0', [Validators.required, Validators.pattern('^[0-1]$')]),
   });
   isEnabledBodyParametersButton: boolean = false;
-  isValidBodyParameters: boolean[] = [true, true];
+  isValidBodyParameters: boolean[] = [true, true, true];
   bodyParametersIndicator: boolean = false;
   bodyParametersResult: number = 0;
   heightPlaceholder: string = 'ex. 5’11”';
   weightPlaceholder: string = 'ex. 225';
   userWeight: string = '';
   userHeight: string = '';
+  userBodyFat: string = '';
   userWeightUnit: string = '';
   userHeightUnit: string = '';
 
@@ -334,9 +336,12 @@ export class AccountSettingsComponent implements OnInit{
       this.bodyParametersForm.get('height')?.setValue(this.userHeight);
     }
     else{
-      this.userWeight = '';
-      this.bodyParametersForm.get('height')?.setValue(this.userWeight);
+      this.userHeight = '';
+      this.bodyParametersForm.get('height')?.setValue(this.userHeight);
     }
+
+    this.userBodyFat = this.user?.bodyFat! == '' ? '' : this.user?.bodyFat!;
+    this.bodyParametersForm.get('bodyFat')?.setValue(this.userBodyFat == '' ? '' : this.userBodyFat);
   }
 
   getTags(): void {
@@ -374,16 +379,18 @@ export class AccountSettingsComponent implements OnInit{
 
     this.isValidBodyParameters[0] = this.bodyParametersForm.get('weight')?.valid!;
     this.isValidBodyParameters[1] = this.bodyParametersForm.get('height')?.valid!;
+    this.isValidBodyParameters[2] = this.bodyParametersForm.get('bodyFat')?.valid!;
 
     console.log(this.isValidBodyParameters);
 
-    if (this.isValidBodyParameters[0] && this.isValidBodyParameters[1]) {
+    if (this.isValidBodyParameters[0] && this.isValidBodyParameters[1] && this.isValidBodyParameters[2]) {
       let model = {
         email: this.user?.email,
         weight: this.bodyParametersForm.get('weight')?.value,
         height: this.bodyParametersForm.get('height')?.value,
         weightUnit: this.bodyParametersForm.get('weightUnit')?.value == "0" ? 'lbs' : 'kg',
         heightUnit: this.bodyParametersForm.get('heightUnit')?.value == "0" ? 'ft in' : 'cm',
+        bodyFatPercentage: this.bodyParametersForm.get('bodyFat')?.value,
       };
       let url:string = environment.backend.baseUrl+'settings/account/ChangeBodyParameters';
 
@@ -413,15 +420,21 @@ export class AccountSettingsComponent implements OnInit{
   }
 
   inputChangedBodyParameters(): void {
-    console.log("lol");
-
     let userWeightUnitNumber = this.userWeightUnit == 'lbs' ? 0 : 1;
     let userHeightUnitNumber = this.userHeightUnit == 'ft in' ? 0 : 1;
 
-    this.isEnabledBodyParametersButton = this.bodyParametersForm.get('weight')?.value! != this.userWeight
+    if(this.bodyParametersForm.get('weight')?.value! == "") userWeightUnitNumber = 0;
+    if(this.bodyParametersForm.get('height')?.value! == "") userHeightUnitNumber = 0;
+
+    if(this.bodyParametersForm.get('weight')?.value! != this.userWeight
       || this.bodyParametersForm.get('height')?.value! != this.userHeight
       || this.bodyParametersForm.get('weightUnit')?.value! != userWeightUnitNumber.toString()
-      || this.bodyParametersForm.get('heightUnit')?.value! != userHeightUnitNumber.toString();
+      || this.bodyParametersForm.get('heightUnit')?.value! != userHeightUnitNumber.toString()
+      || this.bodyParametersForm.get('bodyFat')?.value! != this.userBodyFat){
+      this.isEnabledBodyParametersButton = true;
+    }else{
+      this.isEnabledBodyParametersButton = false;
+    }
 
     if(this.bodyParametersForm.get('heightUnit')?.value == '0'){
       this.bodyParametersForm.get('height')?.setValidators([Validators.pattern('^([1-9]|1[0-9])\'([0-9]|1[0-1])"?$')]);
@@ -442,6 +455,8 @@ export class AccountSettingsComponent implements OnInit{
 
     this.bodyParametersForm.get('weight')?.updateValueAndValidity({emitEvent:false});
     this.bodyParametersForm.get('height')?.updateValueAndValidity({emitEvent:false});
+
+
   }
 
   subscribeToValueChanges(): void {
@@ -488,6 +503,10 @@ export class AccountSettingsComponent implements OnInit{
     });
 
     this.bodyParametersForm.get('heightUnit')?.valueChanges.subscribe(() => {
+      this.inputChangedBodyParameters();
+    });
+
+    this.bodyParametersForm.get('bodyFat')?.valueChanges.subscribe(() => {
       this.inputChangedBodyParameters();
     });
   }

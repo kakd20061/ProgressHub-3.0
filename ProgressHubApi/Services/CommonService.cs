@@ -99,6 +99,7 @@ namespace ProgressHubApi.Services
                 new Claim(ClaimTypes.Gender, genderNum.ToString()),
                 new Claim("Weight", model.BodyParameters.Weight),
                 new Claim("Height", model.BodyParameters.Height),
+                new Claim("BodyFatPercentage", model.BodyParameters.BodyFatPercentage),
             };
             
             JwtSecurityToken tokeOptions;

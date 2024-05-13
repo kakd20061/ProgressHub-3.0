@@ -817,7 +817,7 @@
       <div class="mt-14  relative mx-auto max-w-[500px]">
         <div>
           <label
-            for="weight"
+            for="height"
             class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
             [ngClass]="[isValidBodyParameters[1] ? 'text-tertiary' : 'text-invalid']"
           >Height</label
@@ -848,6 +848,30 @@
             *ngIf="!isValidBodyParameters[1]"
             id="heightMessage"
           >Please enter valid height</span
+          >
+        </div>
+      </div>
+      <div class="mt-14  relative mx-auto max-w-[500px]">
+        <div>
+          <label
+            for="bodyFat"
+            class="block font-outfit text-left font-semibold text-sm mb-1 ms-2"
+            [ngClass]="[isValidBodyParameters[2] ? 'text-tertiary' : 'text-invalid']"
+          >Body fat percentage</label
+          >
+            <input
+              type="text"
+              id="bodyFat"
+              class="border-solid border w-full p-3 rounded-xl font-outfit"
+              formControlName="bodyFat"
+              placeholder="ex. 15 or 15.5"
+              [ngClass]="[isValidBodyParameters[2] ? 'border-button' : 'border-invalid']"
+            />
+          <span
+            class="block font-outfit font-normal text-left text-sm text-invalid mb-1 absolute -bottom-6"
+            *ngIf="!isValidBodyParameters[2]"
+            id="bodyFatMessage"
+          >Please enter valid body fat percentage</span
           >
         </div>
       </div>

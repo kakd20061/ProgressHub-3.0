@@ -1,8 +1,10 @@
 ﻿using Google.Apis.Auth;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
 using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
+using ProgressHubApi.Models.AccountSettings;
 using ProgressHubApi.Models.Mail;
 using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
@@ -29,8 +31,10 @@ namespace ProgressHubApi.Repositories
         private readonly IMongoCollection<VerificationCodeModel> _verificationCodes;
         private readonly IMailService _mailService;
         private readonly IAuthenticationValidator _validator;
+        private readonly AvatarSettingsModel _avatarSettings;
 
-        public AuthenticationRepository(IMongoClient client, IMailService mailService, IAuthenticationValidator validator)
+
+        public AuthenticationRepository(IMongoClient client, IMailService mailService, IAuthenticationValidator validator, IOptions<AvatarSettingsModel> avatarSettings)
         {
             var mongoDatabase = client.GetDatabase("ProgressHub");
 
@@ -39,6 +43,7 @@ namespace ProgressHubApi.Repositories
             _verificationCodes = mongoDatabase.GetCollection<VerificationCodeModel>("VerificationCodes");
             _mailService = mailService;
             _validator = validator;
+            _avatarSettings = avatarSettings.Value;
         }
 
         //registration--------------
@@ -149,13 +154,56 @@ namespace ProgressHubApi.Repositories
                 payload.FamilyName ??= "";
                 payload.GivenName ??= "";
                 payload.Picture ??= "";
-                var user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email, await _validator.GetUniqueUserName(payload.Name), null, null, payload.Picture);
+                
+                var saveGooglePhotoResult = await this.SaveGooglePhoto(payload.Picture);
+                UserModel user;
+                if (saveGooglePhotoResult.Item2 == BasicResultEnum.Success)
+                {
+                    if (Environment.GetEnvironmentVariable("AVATARPATH") != null)
+                    {
+                        user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email,
+                            await _validator.GetUniqueUserName(payload.Name), null, null, Environment.GetEnvironmentVariable("AVATARPATH")+saveGooglePhotoResult.Item1);
+                    }
+                    else
+                    {
+                        user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email,
+                            await _validator.GetUniqueUserName(payload.Name), null, null, _avatarSettings.Path+saveGooglePhotoResult.Item1);
+                    }
+                }
+                else
+                {
+                    user = new UserModel(null, payload.GivenName, payload.FamilyName, payload.Email, await _validator.GetUniqueUserName(payload.Name), null, null, payload.Picture);
+                }
+
+                
                 await _accounts.InsertOneAsync(user);
                 return (user, BasicResultEnum.Success, false);
             }
             catch (Exception e)
             {
                 return (null,BasicResultEnum.Error, false);
+            }
+        }
+        
+        private async Task<(string, BasicResultEnum)> SaveGooglePhoto(string photoUrl)
+        {
+            try
+            {
+                var client = new HttpClient();
+                var response = await client.GetAsync(photoUrl);
+                var randomName = Guid.NewGuid() + ".jpg";
+                if (response.IsSuccessStatusCode)
+                {
+                    var photo = await response.Content.ReadAsByteArrayAsync();
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "_uploads", "avatars", randomName);
+                    await File.WriteAllBytesAsync(path, photo);
+                    return (randomName, BasicResultEnum.Success);
+                }
+                return ("", BasicResultEnum.Error);
+            }
+            catch (Exception e)
+            {
+                return (e.ToString(), BasicResultEnum.Error);
             }
         }
     }

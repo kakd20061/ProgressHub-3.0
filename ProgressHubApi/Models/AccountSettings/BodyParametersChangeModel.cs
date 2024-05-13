@@ -7,4 +7,5 @@ public class BodyParametersChangeModel
     public string Weight { get; set; }
     public string HeightUnit { get; set; }
     public string WeightUnit { get; set; }
+    public string BodyFatPercentage { get; set; }
 }

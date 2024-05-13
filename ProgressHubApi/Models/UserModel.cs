@@ -76,7 +76,8 @@ public class UserModel
         BodyParameters = new BodyParameters
         {
             Weight = "",
-            Height = ""
+            Height = "",
+            BodyFatPercentage = ""
         };
     }
 
@@ -132,5 +133,7 @@ public class BodyParameters
 
     [BsonElement("height")] 
     public string Height { get; set; }
+    [BsonElement("bodyFatPercentage")]
+    public string BodyFatPercentage { get; set; }
 }
 

@@ -107,12 +107,21 @@ namespace ProgressHubApi.Validators
             {
                 switch (model.WeightUnit)
                 {
-                    case "kg" when (double.Parse(model.Weight.Replace('.',',')) < 20 || double.Parse(model.Weight.Replace('.',',')) > 300 || !Regex.IsMatch(model.Weight, @"[^\\d+(\\.\\d{1,2})?$]")):
-                    case "lbs" when (double.Parse(model.Weight.Replace('.',',')) < 50 || double.Parse(model.Weight.Replace('.',',')) > 600 || !Regex.IsMatch(model.Weight, @"[^\\d+(\\.\\d{1,2})?$]")):
+                    case "kg" when (double.Parse(model.Weight.Replace('.',',')) < 20 || double.Parse(model.Weight.Replace('.',',')) > 300 || !Regex.IsMatch(model.Weight, @"^\d+(?:\.\d{1,2})?$|^$")):
+                    case "lbs" when (double.Parse(model.Weight.Replace('.',',')) < 50 || double.Parse(model.Weight.Replace('.',',')) > 600 || !Regex.IsMatch(model.Weight, @"^\d+(?:\.\d{1,2})?$|^$")):
                         return false;
                 }
             }
 
+            if(model.BodyFatPercentage != "")
+            {
+                var bodyFatPercentage = double.Parse(model.BodyFatPercentage.Replace('.',','));
+                if (bodyFatPercentage < 0 || bodyFatPercentage > 90 || !Regex.IsMatch(model.BodyFatPercentage, @"^\d+(?:\.\d{1,2})?$|^$"))
+                {
+                    return false;
+                }
+            }
+            
             if (model.Height == "") return true;
             
             switch (model.HeightUnit)

@@ -258,7 +258,8 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             user.BodyParameters = new()
             {
                 Height = model.Height == "" ? "" : model.Height + " " + model.HeightUnit,
-                Weight = model.Weight == "" ? "" : model.Weight + " " + model.WeightUnit
+                Weight = model.Weight == "" ? "" : model.Weight + " " + model.WeightUnit,
+                BodyFatPercentage = model.BodyFatPercentage,
             };
             
             await _accounts.ReplaceOneAsync(x => x.Email == model.Email, user);
