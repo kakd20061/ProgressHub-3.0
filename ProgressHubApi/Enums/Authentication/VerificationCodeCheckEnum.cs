@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 namespace ProgressHubApi.Enums.Authentication
 {
-	public enum VerificationCodeCheckEnum
-	{
-		Success,
+    public enum VerificationCodeCheckEnum
+    {
+        Success,
         InvalidCode,
-		NoCode,
-		NoAccount,
-		Error
-	}
+        NoCode,
+        NoAccount,
+        Error
+    }
 }
-

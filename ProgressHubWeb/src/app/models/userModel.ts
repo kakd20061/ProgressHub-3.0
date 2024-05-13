@@ -8,4 +8,6 @@ export interface userModel {
   avatar: string;
   dateofbirth: string;
   gender: number;
+  weight: string;
+  height: string;
 }

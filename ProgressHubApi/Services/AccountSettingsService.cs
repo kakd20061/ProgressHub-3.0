@@ -13,7 +13,6 @@ using MimeKit;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
 using ProgressHubApi.Enums.AccountSettings;
-using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.AccountSettings;
 using ProgressHubApi.Models.DTOs;
@@ -29,6 +28,7 @@ namespace ProgressHubApi.Services
         public Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model);
         public Task<BasicResultEnum> ChangeAvatar(ChangeAvatarModel model);
         public Task<PersonalDataChangeResultEnum> ChangePersonalData(PersonalDataChangeModel model);
+        public Task<BasicResultEnum> ChangeBodyParameters(BodyParametersChangeModel model);
     }
 
 	public class AccountSettingsService : IAccountSettingsService
@@ -57,6 +57,11 @@ namespace ProgressHubApi.Services
         public Task<PersonalDataChangeResultEnum> ChangePersonalData(PersonalDataChangeModel model)
         {
             return _repository.ChangePersonalData(model);
+        }
+
+        public Task<BasicResultEnum> ChangeBodyParameters(BodyParametersChangeModel model)
+        {
+            return _repository.ChangeBodyParameters(model);
         }
     }
 }

@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Services;
-using ProgressHubApi.Enums.Authentication;
 namespace ProgressHubApi.Controllers;
 
 [ApiController]

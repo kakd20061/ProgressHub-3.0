@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
 using ProgressHubApi.Enums.AccountSettings;
-using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.AccountSettings;
 using ProgressHubApi.Models.DTOs;
@@ -17,6 +16,7 @@ namespace ProgressHubApi.Validators
         public bool ValidateNewPassword(string newPassword);
         public bool ValidateFileForAvatar(IFormFile filetype);
         public Task<PersonalDataChangeResultEnum> ValidatePersonalData(PersonalDataChangeModel model);
+        public bool ValidateBodyParameters(BodyParametersChangeModel model);
     }
 
     public class AccountSettingsValidator : IAccountSettingsValidator
@@ -91,6 +91,38 @@ namespace ProgressHubApi.Validators
                 return PersonalDataChangeResultEnum.Error;
             }
             return PersonalDataChangeResultEnum.Success;
+        }
+
+        public bool ValidateBodyParameters(BodyParametersChangeModel model)
+        {
+            if(model.WeightUnit != "kg" && model.WeightUnit != "lbs")
+            {
+                return false;
+            }
+            if(model.HeightUnit != "cm" && model.HeightUnit != "ft in")
+            {
+                return false;
+            }
+            if(model.Weight != "")
+            {
+                switch (model.WeightUnit)
+                {
+                    case "kg" when (double.Parse(model.Weight.Replace('.',',')) < 20 || double.Parse(model.Weight.Replace('.',',')) > 300 || !Regex.IsMatch(model.Weight, @"[^\\d+(\\.\\d{1,2})?$]")):
+                    case "lbs" when (double.Parse(model.Weight.Replace('.',',')) < 50 || double.Parse(model.Weight.Replace('.',',')) > 600 || !Regex.IsMatch(model.Weight, @"[^\\d+(\\.\\d{1,2})?$]")):
+                        return false;
+                }
+            }
+
+            if (model.Height == "") return true;
+            
+            switch (model.HeightUnit)
+            {
+                case "cm" when (int.Parse(model.Height) < 100 || int.Parse(model.Height) > 250 ||
+                                !Regex.IsMatch(model.Height, @"^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|250)?$")):
+                case "ft in" when !Regex.IsMatch(model.Height, @"^([1-9]|1[0-9])\'([0-9]|1[0-1])""?$"):
+                    return false;
+            }
+            return true;
         }
     }
 }

@@ -97,6 +97,8 @@ namespace ProgressHubApi.Services
                 new Claim("Avatar", model.Avatar ?? ""),
                 new Claim(ClaimTypes.DateOfBirth, model.DateOfBirth?.ToString("yyyy-MM-dd") ?? ""),
                 new Claim(ClaimTypes.Gender, genderNum.ToString()),
+                new Claim("Weight", model.BodyParameters.Weight),
+                new Claim("Height", model.BodyParameters.Height),
             };
             
             JwtSecurityToken tokeOptions;

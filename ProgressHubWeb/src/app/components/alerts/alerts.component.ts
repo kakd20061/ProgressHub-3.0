@@ -10,7 +10,7 @@ export class AlertsComponent {
   @Input() message: string = '';
   @Input() IsSuccess: boolean = true;
   @Input() Show: boolean = false;
-
+  //todo: show only for 10 sec
   ngOnChanges(changes: SimpleChanges) {
     if (changes['Show']) {
       if(this.Show){

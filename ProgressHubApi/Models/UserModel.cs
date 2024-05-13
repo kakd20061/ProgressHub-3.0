@@ -41,11 +41,14 @@ public class UserModel
     [BsonElement("avatar")]
     public string Avatar { get; set; }
     
-    [BsonElement("DateOfBirth")]
+    [BsonElement("dateOfBirth")]
     public DateTime? DateOfBirth { get; set; }
     
-    [BsonElement("Gender")]
+    [BsonElement("gender")]
     public UserGenderEnum Gender { get; set; }
+    
+    [BsonElement("bodyParameters")]
+    public BodyParameters BodyParameters { get; set; }
 
     public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt, string Avatar = "")
     {
@@ -69,6 +72,11 @@ public class UserModel
         {
             RefreshToken = "",
             RefreshTokenExpiryTime = DateTime.UtcNow
+        };
+        BodyParameters = new BodyParameters
+        {
+            Weight = "",
+            Height = ""
         };
     }
 
@@ -95,6 +103,7 @@ public class UserModel
             RefreshToken = "",
             RefreshTokenExpiryTime = DateTime.UtcNow
         };
+        BodyParameters = model.BodyParameters;
     }
 }
 
@@ -114,5 +123,14 @@ public class Tokens
 
     [BsonElement("refreshTokenExpiryTime")]
     public DateTime RefreshTokenExpiryTime { get; set; }
+}
+
+public class BodyParameters
+{
+    [BsonElement("weight")] 
+    public string Weight { get; set; }
+
+    [BsonElement("height")] 
+    public string Height { get; set; }
 }
 

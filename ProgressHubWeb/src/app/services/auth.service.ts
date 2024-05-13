@@ -45,6 +45,8 @@ export class AuthService {
     let avatar = jwt['Avatar'];
     let dateOfBirth = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth'];
     let gender = jwt['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/gender'];
+    let weight = jwt['Weight'];
+    let height = jwt['Height'];
 
 
     user.email = email;
@@ -56,6 +58,8 @@ export class AuthService {
     user.avatar = avatar;
     user.dateofbirth = dateOfBirth;
     user.gender = gender;
+    user.weight = weight;
+    user.height = height;
 
     return user;
   }

@@ -20,6 +20,7 @@ module.exports = {
         msecondary: "#45C6A3",
         mtertiary: "#7ECFB6",
         mlight: "#D5F4EE",
+        msemilight: "#C4EFE6",
         msemidark: "#8AD6CC",
         tertiary: "#5F6C74",
         invalid: "#F32424",

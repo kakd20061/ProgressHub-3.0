@@ -20,6 +20,7 @@ public interface IAccountSettingsRepository
     public Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model);
     public Task<BasicResultEnum> ChangeAvatar(ChangeAvatarModel model);
     public Task<PersonalDataChangeResultEnum> ChangePersonalData(PersonalDataChangeModel model);
+    public Task<BasicResultEnum> ChangeBodyParameters(BodyParametersChangeModel model);
 }
 
 public class AccountSettingsRepository : IAccountSettingsRepository
@@ -236,6 +237,37 @@ public class AccountSettingsRepository : IAccountSettingsRepository
         catch (Exception e)
         {
             return PersonalDataChangeResultEnum.Error;
+        }
+    }
+
+    public async Task<BasicResultEnum> ChangeBodyParameters(BodyParametersChangeModel model)
+    {
+        try
+        {
+            var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
+            var user = await findUser.FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return BasicResultEnum.Error;
+            }
+            
+            var validate = _validator.ValidateBodyParameters(model);
+            if (!validate) return BasicResultEnum.Error;
+            
+            
+            user.BodyParameters = new()
+            {
+                Height = model.Height == "" ? "" : model.Height + " " + model.HeightUnit,
+                Weight = model.Weight == "" ? "" : model.Weight + " " + model.WeightUnit
+            };
+            
+            await _accounts.ReplaceOneAsync(x => x.Email == model.Email, user);
+            return BasicResultEnum.Success;
+        }
+        catch(Exception e)
+        {
+            return BasicResultEnum.Error;
+
         }
     }
 }

@@ -82,6 +82,24 @@ export class AccountSettingsComponent implements OnInit{
   personalDataResult: number = 0;
   personalDataErrorMessage: string = 'Unexpected error occurred. Please try again later.';
 
+  //body parameters
+  bodyParametersForm = new FormGroup({
+    weight: new FormControl(''),
+    height: new FormControl(''),
+    weightUnit: new FormControl('0', [Validators.required, Validators.pattern('^[0-1]$')]),
+    heightUnit: new FormControl('0', [Validators.required, Validators.pattern('^[0-1]$')]),
+  });
+  isEnabledBodyParametersButton: boolean = false;
+  isValidBodyParameters: boolean[] = [true, true];
+  bodyParametersIndicator: boolean = false;
+  bodyParametersResult: number = 0;
+  heightPlaceholder: string = 'ex. 5’11”';
+  weightPlaceholder: string = 'ex. 225';
+  userWeight: string = '';
+  userHeight: string = '';
+  userWeightUnit: string = '';
+  userHeightUnit: string = '';
+
   constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService) {}
 
   changePersonalData(): void {
@@ -268,6 +286,7 @@ export class AccountSettingsComponent implements OnInit{
     this.initTags();
 
     this.setPersonalData();
+    this.setBodyParameters();
   }
 
   setPersonalData(): void{
@@ -276,6 +295,48 @@ export class AccountSettingsComponent implements OnInit{
     this.personalDataForm.get('nickname')?.setValue(this.user?.nickname!);
     this.personalDataForm.get('dateOfBirth')?.setValue(this.user?.dateofbirth!);
     this.personalDataForm.get('gender')?.setValue(this.user?.gender.toString()!);
+  }
+
+  setBodyParameters(): void{
+    if(this.user?.weight! != ''){
+      this.userWeightUnit = this.user?.weight!.substring(this.user?.weight!.indexOf(' ') + 1)!;
+      if(this.userWeightUnit == 'lbs'){
+        this.bodyParametersForm.get('weightUnit')?.setValue('0');
+      }else{
+        this.bodyParametersForm.get('weightUnit')?.setValue('1');
+      }
+    }else{
+      this.userWeightUnit = '';
+      this.bodyParametersForm.get('weightUnit')?.setValue('0');
+    }
+    if(this.user?.height! != '') {
+      this.userHeightUnit = this.user?.height!.substring(this.user?.height!.indexOf(' ') + 1)!;
+      if(this.userHeightUnit == 'ft in'){
+        this.bodyParametersForm.get('heightUnit')?.setValue('0');
+      }
+      else{
+        this.bodyParametersForm.get('heightUnit')?.setValue('1');
+      }
+    }else{
+      this.userHeightUnit = '';
+      this.bodyParametersForm.get('heightUnit')?.setValue('0');
+    }
+    if(this.user?.weight! != ''){
+      this.userWeight = this.user?.weight.substring(0, this.user?.weight!.indexOf(' '))!;
+      this.bodyParametersForm.get('weight')?.setValue(this.userWeight);
+    }else {
+      this.userWeight = '';
+      this.bodyParametersForm.get('weight')?.setValue(this.userWeight);
+    }
+
+    if(this.user?.height! != ''){
+      this.userHeight = this.user?.height.substring(0, this.user?.height!.indexOf(' '))!;
+      this.bodyParametersForm.get('height')?.setValue(this.userHeight);
+    }
+    else{
+      this.userWeight = '';
+      this.bodyParametersForm.get('height')?.setValue(this.userWeight);
+    }
   }
 
   getTags(): void {
@@ -306,6 +367,83 @@ export class AccountSettingsComponent implements OnInit{
       this.isEnabledPersonalDataButton = false;
     }
   }
+  //todo: downloading image from google server if logged in with google
+  changeBodyParameters(): void {
+    this.bodyParametersResult = 0;
+    this.bodyParametersIndicator = true;
+
+    this.isValidBodyParameters[0] = this.bodyParametersForm.get('weight')?.valid!;
+    this.isValidBodyParameters[1] = this.bodyParametersForm.get('height')?.valid!;
+
+    console.log(this.isValidBodyParameters);
+
+    if (this.isValidBodyParameters[0] && this.isValidBodyParameters[1]) {
+      let model = {
+        email: this.user?.email,
+        weight: this.bodyParametersForm.get('weight')?.value,
+        height: this.bodyParametersForm.get('height')?.value,
+        weightUnit: this.bodyParametersForm.get('weightUnit')?.value == "0" ? 'lbs' : 'kg',
+        heightUnit: this.bodyParametersForm.get('heightUnit')?.value == "0" ? 'ft in' : 'cm',
+      };
+      let url:string = environment.backend.baseUrl+'settings/account/ChangeBodyParameters';
+
+      this._apiService.sendRequest(url, model).subscribe({
+        next: () => {
+          this.refresh().then(r => {});
+          setTimeout(() => {
+              this.bodyParametersIndicator = false;
+              this.bodyParametersResult = 1;
+              this.isEnabledBodyParametersButton = false;
+            }, 1000
+          );
+        },
+        error: (_) => {
+          console.log('error');
+          setTimeout(() => {
+              this.bodyParametersIndicator = false;
+              this.bodyParametersResult = 2;
+              this.isEnabledBodyParametersButton = false;
+            }, 1000
+          )
+        },
+      });
+    }else{
+      this.bodyParametersIndicator = false;
+    }
+  }
+
+  inputChangedBodyParameters(): void {
+    console.log("lol");
+
+    let userWeightUnitNumber = this.userWeightUnit == 'lbs' ? 0 : 1;
+    let userHeightUnitNumber = this.userHeightUnit == 'ft in' ? 0 : 1;
+
+    this.isEnabledBodyParametersButton = this.bodyParametersForm.get('weight')?.value! != this.userWeight
+      || this.bodyParametersForm.get('height')?.value! != this.userHeight
+      || this.bodyParametersForm.get('weightUnit')?.value! != userWeightUnitNumber.toString()
+      || this.bodyParametersForm.get('heightUnit')?.value! != userHeightUnitNumber.toString();
+
+    if(this.bodyParametersForm.get('heightUnit')?.value == '0'){
+      this.bodyParametersForm.get('height')?.setValidators([Validators.pattern('^([1-9]|1[0-9])\'([0-9]|1[0-1])"?$')]);
+      this.heightPlaceholder = 'ex. 5’11”';
+    }
+    else{
+      this.bodyParametersForm.get('height')?.setValidators([Validators.pattern('^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|250)?$')]);
+      this.heightPlaceholder = 'ex. 180';
+    }
+    if(this.bodyParametersForm.get('weightUnit')?.value == '0'){
+      this.bodyParametersForm.get('weight')?.setValidators([Validators.pattern('^\\d+(\\.\\d{1,2})?$'), Validators.min(50), Validators.max(600)]);
+      this.weightPlaceholder = 'ex. 225';
+    }
+    else{
+      this.bodyParametersForm.get('weight')?.setValidators([Validators.pattern('^\\d+(\\.\\d{1,2})?$'), Validators.min(20), Validators.max(300)]);
+      this.weightPlaceholder = 'ex. 100';
+    }
+
+    this.bodyParametersForm.get('weight')?.updateValueAndValidity({emitEvent:false});
+    this.bodyParametersForm.get('height')?.updateValueAndValidity({emitEvent:false});
+  }
+
   subscribeToValueChanges(): void {
     this.changePasswordForm.get('password')?.valueChanges.subscribe(() => {
       this.inputChangedPassword();
@@ -334,6 +472,24 @@ export class AccountSettingsComponent implements OnInit{
     this.personalDataForm.get('gender')?.valueChanges.subscribe(() => {
       this.inputChangedPersonalData();
     });
+
+    this.bodyParametersForm.get('weight')?.valueChanges.subscribe(() => {
+      this.inputChangedBodyParameters();
+    }
+    );
+
+    this.bodyParametersForm.get('height')?.valueChanges.subscribe(() => {
+      this.inputChangedBodyParameters();
+    }
+    );
+
+    this.bodyParametersForm.get('weightUnit')?.valueChanges.subscribe(() => {
+      this.inputChangedBodyParameters();
+    });
+
+    this.bodyParametersForm.get('heightUnit')?.valueChanges.subscribe(() => {
+      this.inputChangedBodyParameters();
+    });
   }
   changeTab(tab: number): void {
     this.selectedTab = tab;
@@ -353,8 +509,15 @@ export class AccountSettingsComponent implements OnInit{
     if (tab==0){
       this.setPersonalData();
     }
+    if(tab == 4){
+      this.setBodyParameters();
+    }
     this.personalDataResult = 0;
     this.personalDataIndicator = false;
+    this.isEnabledPersonalDataButton = false;
+
+    this.bodyParametersResult = 0;
+    this.bodyParametersIndicator = false;
   }
   changePassword(): void {
     this.changePasswordResult = 0;

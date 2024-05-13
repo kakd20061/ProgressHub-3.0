@@ -7,7 +7,6 @@ using ProgressHubApi.Enums.AccountSettings;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.DTOs;
 using ProgressHubApi.Services;
-using ProgressHubApi.Enums.Authentication;
 using ProgressHubApi.Models.AccountSettings;
 using ProgressHubApi.Providers;
 
@@ -101,6 +100,20 @@ public class AccountSettingsController : ControllerBase
             PersonalDataChangeResultEnum.NicknameExists => BadRequest("Nickname already exists"),
             _ => Ok()
         };
+    }
+    
+    [HttpPost("ChangeBodyParameters")]
+    public async Task<IActionResult> ChangeBodyParameters(BodyParametersChangeModel model)
+    {
+        var result = await _service.ChangeBodyParameters(model);
+
+        return result switch
+        {
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
+        return Ok();
     }
 }
 

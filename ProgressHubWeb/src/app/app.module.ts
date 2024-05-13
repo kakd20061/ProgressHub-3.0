@@ -31,7 +31,7 @@ import {
   heroArrowRightOnRectangle,
   heroCloudArrowUp,
 } from '@ng-icons/heroicons/outline';
-import{heroUsersSolid,heroPhotoSolid,heroTagSolid,heroLockClosedSolid,heroBars3BottomLeftSolid,heroCheckCircleSolid,heroXCircleSolid} from "@ng-icons/heroicons/solid";
+import{heroUsersSolid,heroChartBarSolid,heroPhotoSolid,heroTagSolid,heroLockClosedSolid,heroBars3BottomLeftSolid,heroCheckCircleSolid,heroXCircleSolid} from "@ng-icons/heroicons/solid";
 import { NgIconsModule } from '@ng-icons/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -97,6 +97,7 @@ export function tokenGetter() {
       heroXCircleSolid,
       heroCheckCircleSolid,
       heroCloudArrowUp,
+      heroChartBarSolid,
     }),
     JwtModule.forRoot({
       config: {
