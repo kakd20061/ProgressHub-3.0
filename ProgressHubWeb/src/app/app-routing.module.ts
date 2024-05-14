@@ -10,6 +10,8 @@ import {ChangePasswordComponent} from "./pages/change-password/change-password.c
 import {ChangePasswordGuard} from "./guards/change-password.guard";
 import {MainComponent} from "./pages/main/main.component";
 import {AccountSettingsComponent} from "./pages/account-settings/account-settings.component";
+import {AdministrationPanelComponent} from "./pages/administration-panel/administration-panel.component";
+import {AdminGuard} from "./guards/admin.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: '/main', pathMatch: 'full' },
@@ -20,6 +22,7 @@ const routes: Routes = [
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [ChangePasswordGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'account-settings', component: AccountSettingsComponent, canActivate: [AuthGuard] },
+  { path: 'administration-panel', component: AdministrationPanelComponent, canActivate: [AdminGuard] },
   { path: 'main', component: MainComponent },
 ];
 

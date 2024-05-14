@@ -25,6 +25,12 @@ module.exports = {
         tertiary: "#5F6C74",
         invalid: "#F32424",
         disabled: "#BCBCBC",
+        redprimary: "#d51919",
+        redsecondary: "#FF4D4D",
+        redtertiary: "#FF8080",
+        redlight: "#FFCCCC",
+        redsemilight: "#FFEBEB",
+        redsemidark: "#FF9999",
       },
       borderColor: {
         button: "#5F6C74",

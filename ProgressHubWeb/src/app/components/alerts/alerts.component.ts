@@ -10,6 +10,7 @@ export class AlertsComponent {
   @Input() message: string = '';
   @Input() IsSuccess: boolean = true;
   @Input() Show: boolean = false;
+  @Input() AutoHideTimeInSec: number = 0;
   //todo: show only for 10 sec
   ngOnChanges(changes: SimpleChanges) {
     if (changes['Show']) {
@@ -19,42 +20,34 @@ export class AlertsComponent {
     }
   }
   hideTagMsg(): void {
+    let tagMsg:any;
     if(this.IsSuccess){
-      let tagMsg = document.querySelector('.tagMsgG')!;
-      if(!tagMsg.classList.contains('opacity-0') && !tagMsg.classList.contains('hidden')){
-        tagMsg.classList.add('opacity-0');
+      tagMsg = document.querySelector('.tagMsgG')!;
 
-        setTimeout(() => {
-          tagMsg.classList.add('hidden');
-        }, 300);
-      }
     }
     else{
-      let tagMsg = document.querySelector('.tagMsgE')!;
-      if(!tagMsg.classList.contains('opacity-0') && !tagMsg.classList.contains('hidden')){
-        tagMsg.classList.add('opacity-0');
-
-        setTimeout(() => {
-          tagMsg.classList.add('hidden');
-        }, 300);
-      }
+      tagMsg = document.querySelector('.tagMsgE')!;
+    }
+    if(!tagMsg.classList.contains('opacity-0') && !tagMsg.classList.contains('hidden')){
+      tagMsg.classList.add('opacity-0');
+      setTimeout(() => {tagMsg.classList.add('hidden');}, 300);
     }
   }
 
   showTagMsg(): void {
+    let tagMsg : any;
     if(this.IsSuccess){
-      let tagMsg = document.querySelector('.tagMsgG')!;
-      if(tagMsg && tagMsg.classList.contains('opacity-0') && tagMsg.classList.contains('hidden')){
-        tagMsg.classList.remove('opacity-0');
-        tagMsg.classList.remove('hidden');
-      }
+      tagMsg = document.querySelector('.tagMsgG')!;
     }
     else{
-      let tagMsg = document.querySelector('.tagMsgE')!;
-      if(tagMsg && tagMsg.classList.contains('opacity-0') && tagMsg.classList.contains('hidden')){
-        tagMsg.classList.remove('opacity-0');
-        tagMsg.classList.remove('hidden');
-      }
+      tagMsg = document.querySelector('.tagMsgE')!;
+    }
+    if(tagMsg && tagMsg.classList.contains('opacity-0') && tagMsg.classList.contains('hidden')){
+      tagMsg.classList.remove('opacity-0');
+      tagMsg.classList.remove('hidden');
+    }
+    if(this.AutoHideTimeInSec > 0){
+      setTimeout(() => {this.hideTagMsg()}, this.AutoHideTimeInSec*1000);
     }
   }
 }

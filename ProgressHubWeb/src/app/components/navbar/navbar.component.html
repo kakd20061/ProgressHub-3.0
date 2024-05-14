@@ -11,7 +11,7 @@
     <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#">Home</a></li>
     <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#" *ngIf="isAuthenticated">Dashboard</a></li>
     <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#">About</a></li>
-    <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a></li>
+    <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" [routerLink]="'/administration-panel'" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a></li>
   </ul>
   <div *ngIf="!isAuthenticated" class="hidden lg:flex flex-row">
     <a class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-10 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" [routerLink]="'/login'">Login</a>
@@ -74,7 +74,7 @@
           <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#" *ngIf="isAuthenticated">Dashboard</a>
         </li>
         <li class="mb-1">
-          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a>
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" [routerLink]="'/administration-panel'" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a>
         </li>
         <li class="mb-1">
           <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#">About</a>

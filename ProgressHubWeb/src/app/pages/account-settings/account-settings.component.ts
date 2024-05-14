@@ -53,7 +53,7 @@ export class AccountSettingsComponent implements OnInit{
   selectedChips: any[] = [];
   tagResult:number = 0;
   tagIndicator: boolean = false;
-
+//todo: repair responsive of body params tab
   //change avatar
   avatarResult:number = 0;
   avatarIndicator: boolean = false;
@@ -372,7 +372,6 @@ export class AccountSettingsComponent implements OnInit{
       this.isEnabledPersonalDataButton = false;
     }
   }
-  //todo: downloading image from google server if logged in with google
   changeBodyParameters(): void {
     this.bodyParametersResult = 0;
     this.bodyParametersIndicator = true;

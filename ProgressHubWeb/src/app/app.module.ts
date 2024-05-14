@@ -31,7 +31,7 @@ import {
   heroArrowRightOnRectangle,
   heroCloudArrowUp,
 } from '@ng-icons/heroicons/outline';
-import{heroUsersSolid,heroChartBarSolid,heroPhotoSolid,heroTagSolid,heroLockClosedSolid,heroBars3BottomLeftSolid,heroCheckCircleSolid,heroXCircleSolid} from "@ng-icons/heroicons/solid";
+import{heroUsersSolid,heroChartPieSolid,heroUserGroupSolid,heroChartBarSolid,heroPhotoSolid,heroTagSolid,heroLockClosedSolid,heroBars3BottomLeftSolid,heroCheckCircleSolid,heroXCircleSolid} from "@ng-icons/heroicons/solid";
 import { NgIconsModule } from '@ng-icons/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -47,6 +47,7 @@ import { AccountSettingsComponent } from './pages/account-settings/account-setti
 import {MatChipsModule} from '@angular/material/chips';
 import {PipeFor} from "./pipeFor";
 import { AlertsComponent } from './components/alerts/alerts.component';
+import { AdministrationPanelComponent } from './pages/administration-panel/administration-panel.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -65,7 +66,8 @@ export function tokenGetter() {
     MainComponent,
     AccountSettingsComponent,
     PipeFor,
-    AlertsComponent
+    AlertsComponent,
+    AdministrationPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +100,8 @@ export function tokenGetter() {
       heroCheckCircleSolid,
       heroCloudArrowUp,
       heroChartBarSolid,
+      heroUserGroupSolid,
+      heroChartPieSolid,
     }),
     JwtModule.forRoot({
       config: {
