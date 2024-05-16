@@ -127,8 +127,8 @@ namespace ProgressHubApi.Validators
             switch (model.HeightUnit)
             {
                 case "cm" when (int.Parse(model.Height) < 100 || int.Parse(model.Height) > 250 ||
-                                !Regex.IsMatch(model.Height, @"^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|250)?$")):
-                case "ft in" when !Regex.IsMatch(model.Height, @"^([1-9]|1[0-9])\'([0-9]|1[0-1])""?$"):
+                                !Regex.IsMatch(model.Height, @"^(1[0-9]{2}|2[0-4][0-9]|250)?$")):
+                case "ft in" when !Regex.IsMatch(model.Height,  "^[3-8]{1}\\'([0-9]{1}|0[0-9]{1}|1[0-1]{1})(\")$"):
                     return false;
             }
             return true;

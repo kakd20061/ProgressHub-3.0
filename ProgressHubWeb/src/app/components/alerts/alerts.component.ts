@@ -11,7 +11,6 @@ export class AlertsComponent {
   @Input() IsSuccess: boolean = true;
   @Input() Show: boolean = false;
   @Input() AutoHideTimeInSec: number = 0;
-  //todo: show only for 10 sec
   ngOnChanges(changes: SimpleChanges) {
     if (changes['Show']) {
       if(this.Show){

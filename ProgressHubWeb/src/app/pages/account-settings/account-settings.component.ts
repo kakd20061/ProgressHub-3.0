@@ -101,7 +101,8 @@ export class AccountSettingsComponent implements OnInit{
   userBodyFat: string = '';
   userWeightUnit: string = '';
   userHeightUnit: string = '';
-
+  bodyFatPercentage: string = '';
+  BMI: number = 0;
   constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService) {}
 
   changePersonalData(): void {
@@ -436,11 +437,11 @@ export class AccountSettingsComponent implements OnInit{
     }
 
     if(this.bodyParametersForm.get('heightUnit')?.value == '0'){
-      this.bodyParametersForm.get('height')?.setValidators([Validators.pattern('^([1-9]|1[0-9])\'([0-9]|1[0-1])"?$')]);
+      this.bodyParametersForm.get('height')?.setValidators([Validators.pattern("^[3-8]{1}\\'([0-9]{1}|0[0-9]{1}|1[0-1]{1})(\")$")]);
       this.heightPlaceholder = 'ex. 5’11”';
     }
     else{
-      this.bodyParametersForm.get('height')?.setValidators([Validators.pattern('^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|250)?$')]);
+      this.bodyParametersForm.get('height')?.setValidators([Validators.pattern('^(1[0-9]{2}|2[0-4][0-9]|250)?$')]);
       this.heightPlaceholder = 'ex. 180';
     }
     if(this.bodyParametersForm.get('weightUnit')?.value == '0'){
@@ -455,7 +456,47 @@ export class AccountSettingsComponent implements OnInit{
     this.bodyParametersForm.get('weight')?.updateValueAndValidity({emitEvent:false});
     this.bodyParametersForm.get('height')?.updateValueAndValidity({emitEvent:false});
 
+    if(this.bodyParametersForm.get('weight')?.value! != ""
+      && this.bodyParametersForm.get('height')?.value! != ""
+      && (this.user?.gender == 1|| this.user?.gender == 2)
+      && this.bodyParametersForm.get('weight')?.valid!
+      && this.bodyParametersForm.get('height')?.valid!) {
+      let weightInLbs = this.bodyParametersForm.get('weightUnit')?.value! == '0' ? parseFloat(this.bodyParametersForm.get('weight')?.value!) : parseFloat(this.bodyParametersForm.get('weight')?.value!) * 2.20462;
+      let heightInInches: number = 0;
 
+      if (this.bodyParametersForm.get('heightUnit')?.value! == '0') {
+        let height = this.bodyParametersForm.get('height')?.value!.split('\'')!;
+        heightInInches = parseInt(height[0]) * 12 + parseInt(height[1].substring(0, height[1].length - 1));
+      } else {
+        heightInInches = parseFloat(this.bodyParametersForm.get('height')?.value!) * 0.393701;
+      }
+
+      let bmi = weightInLbs / (heightInInches * heightInInches) * 703;
+      this.BMI = parseFloat(bmi.toFixed(2));
+      if (this.user.dateofbirth != null && this.bodyParametersForm.get('bodyFat')?.value! == "") {
+        let dateOfBirth = new Date(this.user.dateofbirth);
+        let ageDifMs = Date.now() - dateOfBirth.getTime();
+        let ageDate = new Date(ageDifMs);
+        let age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        let estimatedBodyFat = 0;
+
+        estimatedBodyFat = (1.2 * bmi) + (0.23 * age);
+
+        estimatedBodyFat = estimatedBodyFat - (this.user.gender == 1 ? 16.2 : 5.4);
+        if(estimatedBodyFat > 0 && estimatedBodyFat < 80){
+          this.bodyFatPercentage = estimatedBodyFat.toFixed(2);
+        }
+        else{
+          this.bodyFatPercentage = '';
+        }
+      }else{
+        this.bodyFatPercentage = '';
+      }
+    }
+    else{
+      this.bodyFatPercentage = '';
+      this.BMI = 0;
+    }
   }
 
   subscribeToValueChanges(): void {
@@ -533,9 +574,12 @@ export class AccountSettingsComponent implements OnInit{
     this.personalDataResult = 0;
     this.personalDataIndicator = false;
     this.isEnabledPersonalDataButton = false;
+    this.isValidPersonalData = [true, true, true, true, true];
 
     this.bodyParametersResult = 0;
     this.bodyParametersIndicator = false;
+    this.isValidBodyParameters = [true, true, true];
+    this.isEnabledBodyParametersButton = false;
   }
   changePassword(): void {
     this.changePasswordResult = 0;

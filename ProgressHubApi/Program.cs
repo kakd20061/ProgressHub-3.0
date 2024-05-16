@@ -107,6 +107,11 @@ builder.Services.AddTransient<IAccountSettingsProvider, AccountSettingsProvider>
 builder.Services.AddTransient<ISeedRepository, SeedRepository>();
 builder.Services.AddTransient<ISeedService, SeedService>();
 
+builder.Services.AddTransient<IAdministrationRepository, AdministrationRepository>();
+builder.Services.AddTransient<IAdministrationService, AdministrationService>();
+builder.Services.AddTransient<IAdministrationProvider, AdministrationProvider>();
+builder.Services.AddTransient<IAdministrationValidator, AdministrationValidator>();
+
 var app = builder.Build();
 app.UseStaticFiles(new StaticFileOptions
 {

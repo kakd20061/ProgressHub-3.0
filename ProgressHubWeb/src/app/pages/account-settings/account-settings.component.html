@@ -630,6 +630,7 @@
             *ngFor="let tag of tags | objectToArray"
             [selected]="userTagsIds.includes(tag._Id)"
             (click)="changeSelected(tag._Id)"
+            class="font-outfit"
             >{{ tag.name }}</mat-chip-option
           >
         </mat-chip-listbox>
@@ -890,6 +891,13 @@
       >
         Save changes
       </button>
+      <div class="mt-3"></div>
+      <div class="text-tertiary text-sm font-outfit font-medium" *ngIf="bodyFatPercentage != ''">
+        Your estimated body fat percentage is: {{ bodyFatPercentage }}%
+      </div>
+      <div class="text-tertiary text-sm font-outfit font-medium" *ngIf="BMI != 0">
+        Your estimated BMI is: {{ BMI }}
+      </div>
     </div>
   </div>
 </div>

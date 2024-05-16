@@ -317,6 +317,57 @@
           class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
         ></div>
       </div>
+      <div>
+        <div class="overflow-x-auto">
+          <table class="font-outfit" mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="avatar">
+              <th mat-header-cell *matHeaderCellDef> Avatar </th>
+              <td mat-cell *matCellDef="let element">
+                <img [src]="element.avatar !='' ? element.avatar:'./assets/images/user-avatar.png'" class="w-10 h-10 rounded-full" alt="user-avatar" />
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="role">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by role"> Role </th>
+              <td mat-cell *matCellDef="let element">
+                <span *ngIf="element.role == 'User'" class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-4 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300">User</span>
+                <span *ngIf="element.role == 'Admin'" class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Admin</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="nickname">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by nickname"> Nickname </th>
+              <td mat-cell *matCellDef="let element"> {{element.nickname}} </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email"> Email </th>
+              <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name"> Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by last name"> Last name </th>
+              <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="dateOfBirth">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date of birth"> Date of birth </th>
+              <td mat-cell *matCellDef="let element"> {{element.dateOfBirth ?element.dateOfBirth.substring(0, element.dateOfBirth.indexOf('T')):'Not provided'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="gender">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by gender"> Gender </th>
+              <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                         showFirstLastButtons
+                         aria-label="Select page of users">
+          </mat-paginator>
+        </div>
+      </div>
 
 
     </div>
@@ -333,7 +384,32 @@
           class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
         ></div>
       </div>
-
+      <div class=" w-full">
+        <mat-form-field color="warn" class=" w-full">
+<!--          <mat-label >Tags</mat-label>-->
+          <mat-chip-grid #chipGrid aria-label="Enter fruits">
+            <mat-chip-row
+              *ngFor="let tag of tags; let i = index"
+              (removed)="remove(tag)"
+              [editable]="true"
+              (edited)="edit(tag, $event)"
+              color="warn"
+              [aria-description]="'press enter to edit ' + tag.name"
+              class="font-outfit"
+              highlighted>
+            {{tag.name}}
+            <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+            <input placeholder="New tag..."
+                   [matChipInputFor]="chipGrid"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="addOnBlur"
+                   (matChipInputTokenEnd)="add($event)" class="font-outfit"/>
+          </mat-chip-grid>
+        </mat-form-field>
+      </div>
 
     </div>
   </div>

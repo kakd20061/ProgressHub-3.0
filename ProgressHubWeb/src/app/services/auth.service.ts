@@ -8,6 +8,7 @@ import {userModel} from "../models/userModel";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from "@angular/router";
 import {tagModel} from "../models/tagModel";
+import {UserAdministrationModel} from "../models/userAdministrationModel";
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,18 @@ export class AuthService {
 
   sendRequest(url: string, form: any):Observable<any> {
     return this._http.post<any>(`${url}`, form);
+  }
+
+  addTag(url: string, tag: string):Observable<any> {
+    return this._http.post<any>(`${url}?name=${tag}`, null);
+  }
+
+  removeTag(url: string, tag: string):Observable<any> {
+    return this._http.delete<any>(`${url}?name=${tag}`);
+  }
+
+  updateTag(url: string, form:any):Observable<any> {
+    return this._http.put<any>(`${url}`, form);
   }
 
   resendRequest(url: string, email: string):Observable<any> {
@@ -32,6 +45,10 @@ export class AuthService {
 
   getTags(url:string): Observable<any> {
     return this._http.get<any>(url);
+  }
+
+  getAllUsers(url:string): Observable<UserAdministrationModel[]> {
+    return this._http.get<UserAdministrationModel[]>(url);
   }
 
   getUserModelFromJwt(jwt: any): userModel {

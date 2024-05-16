@@ -58,11 +58,76 @@ $secondary: (
     900: #fff,
   )
 );
+
+$red : (
+  50: #FFEBEE,
+  100: #FFCDD2,
+  200: #EF9A9A,
+  300: #E57373,
+  400: #EF5350,
+  500: #cc382e,
+  600: #E53935,
+  700: #D32F2F,
+  800: #C62828,
+  900: #B71C1C,
+  A100: #FF8A80,
+  A200: #FF5252,
+  A400: #FF1744,
+  A700: #D50000,
+  contrast: (
+    50: #000,
+    100: #000,
+    200: #000,
+    300: #000,
+    400: #000,
+    500: #fff,
+    600: #fff,
+    700: #fff,
+    800: #fff,
+    900: #fff,
+    A100: #000,
+    A200: #fff,
+    A400: #fff,
+    A700: #fff,
+  )
+);
+
+$orange: (
+  50: #FFF3E0,
+  100: #FFE0B2,
+  200: #FFCC80,
+  300: #FFB74D,
+  400: #FFA726,
+  500: #FF9800,
+  600: #FB8C00,
+  700: #F57C00,
+  800: #EF6C00,
+  900: #E65100,
+  A100: #FFD180,
+  A200: #FFAB40,
+  A400: #FF9100,
+  A700: #FF6D00,
+  contrast: (
+    50: #000,
+    100: #000,
+    200: #000,
+    300: #000,
+    400: #000,
+    500: #fff,
+    600: #fff,
+    700: #fff,
+    800: #fff,
+    900: #fff,
+    A100: #000,
+    A200: #000,
+    A400: #000,
+    A700: #000,
+  )
+);
 $ProgressHubWeb-primary: mat.define-palette($primary);
 $ProgressHubWeb-accent: mat.define-palette($secondary);
-
+$ProgressHubWeb-warn: mat.define-palette($red);
 // The warn palette is optional (defaults to red).
-$ProgressHubWeb-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -71,6 +136,18 @@ $ProgressHubWeb-theme: mat.define-light-theme((
     primary: $ProgressHubWeb-primary,
     accent: $ProgressHubWeb-accent,
     warn: $ProgressHubWeb-warn,
+  )
+));
+
+
+$admin-red: mat.define-palette($red);
+$admin-orange: mat.define-palette($orange);
+
+$admin-theme: mat.define-dark-theme((
+  color: (
+    primary: $admin-red,
+    accent: $ProgressHubWeb-accent,
+    warn: $admin-orange,
   )
 ));
 

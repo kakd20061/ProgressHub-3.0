@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/home/home.component';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -38,7 +38,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleSigninComponent } from './components/google-signin/google-signin.component';
-import { NgOptimizedImage } from '@angular/common';
+import {AsyncPipe, NgOptimizedImage} from '@angular/common';
 import { VerificationPasswordComponent } from './pages/verification-password/verification-password.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -48,6 +48,12 @@ import {MatChipsModule} from '@angular/material/chips';
 import {PipeFor} from "./pipeFor";
 import { AlertsComponent } from './components/alerts/alerts.component';
 import { AdministrationPanelComponent } from './pages/administration-panel/administration-panel.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSortModule} from '@angular/material/sort';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatIconModule} from "@angular/material/icon";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -113,6 +119,14 @@ export function tokenGetter() {
     BrowserAnimationsModule,
     NgxParticlesModule,
     MatChipsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    AsyncPipe
   ],
   providers: [
     {
