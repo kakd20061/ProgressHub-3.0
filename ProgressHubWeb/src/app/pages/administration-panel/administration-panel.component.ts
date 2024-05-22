@@ -17,6 +17,7 @@ import {catchError, EMPTY, of} from "rxjs";
 import {UserEditDialogComponent} from "../../components/user-edit-dialog/user-edit-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SharedService} from "../../services/shared.service";
+import {Router} from "@angular/router";
 export interface Fruit {
   name: string;
 }
@@ -49,7 +50,7 @@ export class AdministrationPanelComponent {
   //tags management
   tags: tagModel[] = [];
 
-  constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService, public dialog: MatDialog, private sharedService: SharedService) {
+  constructor(private _jwtHelper: JwtHelperService, private _router:Router, private _apiService: AuthService, public dialog: MatDialog, private sharedService: SharedService) {
     this.sharedService.getModalChangedData().subscribe(() => {
       this.GetAllUsers();
       dialog.closeAll();
@@ -90,18 +91,40 @@ export class AdministrationPanelComponent {
 
   GetAllUsers(): void {
     let jwt = localStorage.getItem('jwt');
-    this._apiService.getAllUsers(environment.backend.baseUrl + 'administration/GetAllUsers?token='+jwt).subscribe((data) => {
-      this.users = data;
-      this.dataSource = new MatTableDataSource<UserAdministrationModel>(this.users);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this._apiService.getAllUsers(environment.backend.baseUrl + 'administration/GetAllUsers?token='+jwt).subscribe({
+      next: (data) => {
+        this.users = data;
+        this.dataSource = new MatTableDataSource<UserAdministrationModel>(this.users);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      },
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
+      }
     });
   }
 
   GetAllTags(): void {
     let jwt = localStorage.getItem('jwt');
-    this._apiService.getTags(environment.backend.baseUrl + 'administration/GetAllTags?token='+jwt).subscribe((data) => {
-      this.tags = data;
+    this._apiService.getTags(environment.backend.baseUrl + 'administration/GetAllTags?token='+jwt).subscribe({
+      next: (data) => {
+        this.tags = data;
+      },
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
+      }
     });
   }
 
@@ -109,6 +132,7 @@ export class AdministrationPanelComponent {
   logOut(): void {
     this._apiService.logOut();
     this.isAuthenticated = false;
+    this._router.navigate(['/main']);
   }
 
   //tags
@@ -146,8 +170,19 @@ export class AdministrationPanelComponent {
       name: tag,
       token: jwt
     }
-    this._apiService.sendRequest(environment.backend.baseUrl + 'administration/AddTag', model).subscribe(() => {
-      this.GetAllTags();
+    this._apiService.sendRequest(environment.backend.baseUrl + 'administration/AddTag', model).subscribe({
+      next: () => {
+        this.GetAllTags();
+      },
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
+      }
     });
   }
 
@@ -157,8 +192,19 @@ export class AdministrationPanelComponent {
       name: tag.name,
       token: jwt
     }
-    this._apiService.sendRequest(environment.backend.baseUrl + 'administration/RemoveTag', model).subscribe(() => {
-      this.GetAllTags();
+    this._apiService.sendRequest(environment.backend.baseUrl + 'administration/RemoveTag', model).subscribe({
+      next: () => {
+        this.GetAllTags();
+      },
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
+      }
     });
   }
 
@@ -171,8 +217,19 @@ export class AdministrationPanelComponent {
     }
     this._apiService.sendUpdateRequest(environment.backend.baseUrl + 'administration/UpdateTag', model).pipe(catchError(error => {
       return of(null)
-    })).subscribe(() => {
-      this.GetAllTags();
+    })).subscribe({
+      next: () => {
+        this.GetAllTags();
+      },
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
+      }
     });
   }
 

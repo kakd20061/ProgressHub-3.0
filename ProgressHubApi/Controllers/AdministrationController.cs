@@ -28,6 +28,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(result.Item2),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -41,6 +42,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(result.Item2),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -54,6 +56,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -67,6 +70,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -80,6 +84,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -93,6 +98,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -106,6 +112,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }
@@ -119,6 +126,7 @@ public class AdministrationController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked"),
             _ => Ok()
         };
     }

@@ -4,6 +4,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {environment} from "../../../environments/environment";
 import {SharedService} from "../../services/shared.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user-edit-dialog',
@@ -17,7 +18,7 @@ export class UserEditDialogComponent {
   banUserForm = new FormGroup({
     banDate: new FormControl(''),
   });
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {email:string, role: string, banExpirationDate: string}, public _service:AuthService,private sharedService:SharedService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {email:string, role: string, banExpirationDate: string}, public _service:AuthService,private sharedService:SharedService,private _router:Router) { }
 
   ngOnInit(): void {
     this.changeRoleForm.get('role')?.setValue(this.data.role === 'Admin' ? '0' : '1');
@@ -40,7 +41,13 @@ export class UserEditDialogComponent {
         this.sharedService.sendModalChangedData();
       },
       error: (err) => {
-         console.log(err);
+          try{
+            if(err.error.includes('blocked')){
+              this.logOut();
+            }
+          }catch (e){
+            console.log('error');
+          }
       }
     });
 
@@ -61,7 +68,13 @@ export class UserEditDialogComponent {
         this.sharedService.sendModalChangedData();
       },
       error: (err) => {
-         console.log(err);
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
       }
     });
   }
@@ -77,10 +90,19 @@ export class UserEditDialogComponent {
         this.sharedService.sendModalChangedData();
       },
       error: (err) => {
-         console.log(err);
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
       }
     });
   }
 
-
+  logOut(): void {
+    this._service.logOut();
+    this._router.navigate(['/main']);
+  }
 }

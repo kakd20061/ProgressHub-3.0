@@ -8,6 +8,7 @@ import {tagModel} from "../../models/tagModel";
 import {SaveTagsModel} from "../../models/SaveTagsModel";
 import {AuthenticationResponseModel} from "../../models/authenticationResponseModel";
 import {environment} from "../../../environments/environment";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-account-settings',
@@ -103,7 +104,7 @@ export class AccountSettingsComponent implements OnInit{
   userHeightUnit: string = '';
   bodyFatPercentage: string = '';
   BMI: number = 0;
-  constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService) {}
+  constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService,private _router: Router) {}
 
   changePersonalData(): void {
     this.personalDataResult = 0;
@@ -137,7 +138,13 @@ export class AccountSettingsComponent implements OnInit{
           );
         },
         error: (_) => {
-          console.log('error');
+          try{
+            if(_.error.includes('blocked')){
+              this.logOut();
+            }
+          }catch (e){
+            console.log('error');
+          }
           setTimeout(() => {
               this.personalDataIndicator = false;
 
@@ -151,7 +158,6 @@ export class AccountSettingsComponent implements OnInit{
               }catch (e){
                 this.personalDataErrorMessage = 'Unexpected error occurred. Please try again later.';
               }
-
               this.personalDataResult = 2;
               this.isEnabledPersonalDataButton = false;
             }, 1000
@@ -192,7 +198,14 @@ export class AccountSettingsComponent implements OnInit{
           }, 1000
         )
       },
-      error: (_) => {
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log(e);
+        }
         setTimeout(() => {
             this.avatarIndicator = false;
             this.avatarResult = 2;
@@ -200,6 +213,7 @@ export class AccountSettingsComponent implements OnInit{
             this.source = './assets/images/user-avatar.png';
             this.avatarIsSaved = false;
           }, 1000
+
         )
       },
     });
@@ -253,8 +267,14 @@ export class AccountSettingsComponent implements OnInit{
           }, 1000
         )
       },
-      error: (_) => {
-        console.log('error');
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
         setTimeout(() => {
             this.tagIndicator = false;
             this.tagResult = 2;
@@ -359,8 +379,19 @@ export class AccountSettingsComponent implements OnInit{
     let jwt = localStorage.getItem('jwt');
     let url:string = environment.backend.baseUrl+'settings/account/GetAllTags?token='+jwt;
 
-    this._apiService.getTags(url).subscribe((data) => {
-      this.tags=data;
+    this._apiService.getTags(url).subscribe({
+      next: (data) =>{
+        this.tags=data;
+      },
+      error: (err) => {
+        try{
+          if(err.error.includes('blocked')){
+            this.logOut();
+          }
+        }catch (e){
+          console.log('error');
+        }
+      }
     });
   }
   inputChangedPassword(): void {
@@ -416,8 +447,14 @@ export class AccountSettingsComponent implements OnInit{
             }, 1000
           );
         },
-        error: (_) => {
-          console.log('error');
+        error: (err) => {
+          try{
+            if(err.error.includes('blocked')){
+              this.logOut();
+            }
+          }catch (e){
+            console.log('error');
+          }
           setTimeout(() => {
               this.bodyParametersIndicator = false;
               this.bodyParametersResult = 2;
@@ -628,8 +665,14 @@ export class AccountSettingsComponent implements OnInit{
             }, 1000
           );
         },
-        error: (_) => {
-          console.log('error');
+        error: (err) => {
+          try{
+            if(err.error.includes('blocked')){
+              this.logOut();
+            }
+          }catch (e){
+            console.log('error');
+          }
           setTimeout(() => {
               this.changePasswordIndicator = false;
               this.changePasswordResult = 2;
@@ -654,6 +697,7 @@ export class AccountSettingsComponent implements OnInit{
   logOut(): void {
     this._apiService.logOut();
     this.isAuthenticated = false;
+    this._router.navigate(['/main']);
   }
 
 
@@ -679,7 +723,7 @@ export class AccountSettingsComponent implements OnInit{
                   localStorage.setItem('hasPassword', res.hasPassword.toString());
                   this.ngOnInit();
                 },
-                error: (_) => {
+                error: (err) => {
                   this.isAuthenticated = false;
                 },
               });

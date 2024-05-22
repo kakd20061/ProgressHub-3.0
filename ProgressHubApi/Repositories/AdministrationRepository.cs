@@ -23,7 +23,7 @@ public interface IAdministrationRepository
     
     public Task<BasicResultEnum> BlockUser(BlockUserModel model);
     
-    public Task<BasicResultEnum> UnblockUser(UnblockUserModel model);
+    public Task<BasicResultEnum> UnblockUser(UnblockUserModel modelsa);
 }
 
 public class AdministrationRepository : IAdministrationRepository
@@ -49,7 +49,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateToken(token);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return (BasicResultEnum.Error,null);
+                return (BasicResultEnum.Blocked,null);
             }
             var users = await _accounts.Find(n => true).ToListAsync();
             return (BasicResultEnum.Success, users);
@@ -66,7 +66,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateToken(token);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return (BasicResultEnum.Error, null);
+                return (BasicResultEnum.Blocked, null);
             }
             var tags = await _tags.Find(n => true).ToListAsync();
             return (BasicResultEnum.Success, tags);
@@ -83,7 +83,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateToken(model.Token);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             var tag = new TagModel
             {
@@ -110,7 +110,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateToken(model.Token);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             var result = await _tags.DeleteOneAsync(n => n.Name == model.Name);
             if (result.DeletedCount == 0)
@@ -131,7 +131,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateToken(model.token);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             if(String.IsNullOrWhiteSpace(model.newName))
                 return BasicResultEnum.Error;
@@ -152,7 +152,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateTokenForUserManagement(model.token, model.email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             
             var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
@@ -177,7 +177,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateTokenForUserManagement(model.token, model.email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
             if (user == null)
@@ -207,7 +207,7 @@ public class AdministrationRepository : IAdministrationRepository
             var tokenResult = await _validator.ValidateTokenForUserManagement(model.token, model.email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
             if (user == null)

@@ -34,6 +34,7 @@ public class AccountSettingsController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(result.Item2),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked or unauthorized"),
             _ => Ok()
         };
     }
@@ -47,6 +48,7 @@ public class AccountSettingsController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked or unauthorized"),
             _ => Ok()
         };
     }
@@ -60,6 +62,7 @@ public class AccountSettingsController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked or unauthorized"),
             _ => Ok()
         };
     }
@@ -85,6 +88,7 @@ public class AccountSettingsController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked or unauthorized"),
             _ => Ok()
         };
     }
@@ -99,6 +103,7 @@ public class AccountSettingsController : ControllerBase
             PersonalDataChangeResultEnum.Success => Ok(),
             PersonalDataChangeResultEnum.Error => BadRequest(),
             PersonalDataChangeResultEnum.NicknameExists => BadRequest("Nickname already exists"),
+            PersonalDataChangeResultEnum.Blocked => Unauthorized("User is blocked or unauthorized"),
             _ => Ok()
         };
     }
@@ -112,6 +117,7 @@ public class AccountSettingsController : ControllerBase
         {
             Enums.BasicResultEnum.Success => Ok(),
             Enums.BasicResultEnum.Error => BadRequest(),
+            Enums.BasicResultEnum.Blocked => Unauthorized("User is blocked or unauthorized"),
             _ => Ok()
         };
     }

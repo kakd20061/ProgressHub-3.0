@@ -4,5 +4,6 @@ public enum PersonalDataChangeResultEnum
 {
     Success,
     NicknameExists,
-    Error
+    Error,
+    Blocked
 }

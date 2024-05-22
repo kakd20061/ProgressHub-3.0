@@ -52,7 +52,7 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             var tokenResult = await _validator.ValidateToken(token);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return (BasicResultEnum.Error, null);
+                return (BasicResultEnum.Blocked, null);
             }
             var tags = await _tags.Find(_ => true).ToListAsync();
             return (BasicResultEnum.Success, tags);
@@ -70,7 +70,7 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
@@ -114,7 +114,7 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             var tokenResult = await _validator.ValidateToken(model.Token,model.email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             var findUser = await _accounts.FindAsync(x => x.Email == model.email);
             var user = await findUser.FirstOrDefaultAsync();
@@ -164,7 +164,7 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             
             var randomPhotoName = Guid.NewGuid() + ".jpg";
@@ -235,7 +235,7 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return PersonalDataChangeResultEnum.Error;
+                return PersonalDataChangeResultEnum.Blocked;
             }
             
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
@@ -269,7 +269,7 @@ public class AccountSettingsRepository : IAccountSettingsRepository
             var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
             if (tokenResult != BasicResultEnum.Success)
             {
-                return BasicResultEnum.Error;
+                return BasicResultEnum.Blocked;
             }
             
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
