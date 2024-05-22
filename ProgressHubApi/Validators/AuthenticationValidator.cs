@@ -114,7 +114,12 @@ namespace ProgressHubApi.Validators
             {
                 return LoginResultEnum.InvalidPassword;
             }
-
+            
+            if(userInDb.BanExpirationDate != null && userInDb.BanExpirationDate > DateTime.UtcNow)
+            {
+                return LoginResultEnum.Blocked;
+            }
+            
             return LoginResultEnum.Success;
         }
 

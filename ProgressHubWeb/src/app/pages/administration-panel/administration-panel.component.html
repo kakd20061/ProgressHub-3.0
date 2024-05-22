@@ -50,14 +50,19 @@
       <div class="font-medium flex flex-row items-center justify-between">
         <span>{{ user?.name }} {{ user?.lastName }}</span>
         <span
-          class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300"
+          class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
           *ngIf="user?.role == 'User'"
         >User</span
         >
         <span
-          class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
+          class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
           *ngIf="user?.role == 'Admin'"
         >Admin</span
+        >
+        <span
+          class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
+          *ngIf="user?.role == 'Owner'"
+        >Owner</span
         >
       </div>
       <div class="truncate">{{ user?.email }}</div>
@@ -242,14 +247,19 @@
         <div class="font-medium flex flex-row items-center justify-between">
           <span>{{ user?.name }} {{ user?.lastName }}</span>
           <span
-            class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300"
+            class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
             *ngIf="user?.role == 'User'"
           >User</span
           >
           <span
-            class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
+            class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
             *ngIf="user?.role == 'Admin'"
           >Admin</span
+          >
+          <span
+            class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
+            *ngIf="user?.role == 'Owner'"
+          >Owner</span
           >
         </div>
         <div class="truncate">{{ user?.email }}</div>
@@ -330,8 +340,9 @@
             <ng-container matColumnDef="role">
               <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by role"> Role </th>
               <td mat-cell *matCellDef="let element">
-                <span *ngIf="element.role == 'User'" class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-4 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300">User</span>
-                <span *ngIf="element.role == 'Admin'" class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Admin</span>
+                <span *ngIf="element.role == 'User'" class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-4 py-0.5 rounded-full ">User</span>
+                <span *ngIf="element.role == 'Admin'" class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Admin</span>
+                <span *ngIf="element.role == 'Owner'" class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">Owner</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="nickname">
@@ -358,8 +369,13 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by gender"> Gender </th>
               <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
             </ng-container>
+            <ng-container matColumnDef="banExpirationDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by ban expiration date"> Ban expiration date </th>
+              <td mat-cell *matCellDef="let element"> {{element.banExpirationDate.toString().startsWith("21") ? 'Never' : (element.banExpirationDate ? element.banExpirationDate:'Not banned')}} </td>
+            </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr (click)="selectUser(row)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
           </table>
 
           <mat-paginator [pageSizeOptions]="[5, 10, 20]"
@@ -368,6 +384,10 @@
           </mat-paginator>
         </div>
       </div>
+
+
+
+
 
 
     </div>
@@ -384,10 +404,8 @@
           class="flex-1 h-0.5 border-b w-max border-button -mr-2 ml-1 my-2"
         ></div>
       </div>
-      <div class=" w-full">
-        <mat-form-field color="warn" class=" w-full">
-<!--          <mat-label >Tags</mat-label>-->
-          <mat-chip-grid #chipGrid aria-label="Enter fruits">
+      <mat-form-field class="w-full " color="warn" appearance="outline">
+          <mat-chip-grid #chipGrid class="no-form" aria-label="Enter fruits">
             <mat-chip-row
               *ngFor="let tag of tags; let i = index"
               (removed)="remove(tag)"
@@ -406,11 +424,9 @@
                    [matChipInputFor]="chipGrid"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="addOnBlur"
-                   (matChipInputTokenEnd)="add($event)" class="font-outfit"/>
+                   (matChipInputTokenEnd)="add($event)" class="font-outfit border-0 hover:border-0 focus:outline-none"/>
           </mat-chip-grid>
         </mat-form-field>
-      </div>
-
     </div>
   </div>
 </div>

@@ -15,6 +15,7 @@ namespace ProgressHubApi.Repositories
 	public interface ISeedRepository
 	{
         public Task<(BasicResultEnum,string)> SeedTags();
+        public Task<(BasicResultEnum, string)> SeedUsers();
     }
 
     public class SeedRepository : ISeedRepository
@@ -34,7 +35,7 @@ namespace ProgressHubApi.Repositories
             _tags = mongoDatabase.GetCollection<TagModel>("Tags");
         }
 
-        public async Task<(BasicResultEnum,string)> SeedTags()
+        public async Task<(BasicResultEnum, string)> SeedTags()
         {
             try
             {
@@ -150,12 +151,12 @@ namespace ProgressHubApi.Repositories
                 {
                     Name = "Arm wrestling",
                 };
-                
-                
-                
-                if(_tags.Find(_ => true).ToList().Count > 0)
-                    return (BasicResultEnum.Success,"");
-                
+
+
+
+                if (_tags.Find(_ => true).ToList().Count > 0)
+                    return (BasicResultEnum.Success, "");
+
                 await _tags.InsertOneAsync(tag1);
                 await _tags.InsertOneAsync(tag2);
                 await _tags.InsertOneAsync(tag3);
@@ -185,7 +186,30 @@ namespace ProgressHubApi.Repositories
                 await _tags.InsertOneAsync(tag27);
                 await _tags.InsertOneAsync(tag28);
 
-                return (BasicResultEnum.Success,"");
+                return (BasicResultEnum.Success, "");
+            }
+            catch (Exception e)
+            {
+                return (BasicResultEnum.Error, e.Message);
+            }
+        }
+
+        public async Task<(BasicResultEnum, string)> SeedUsers()
+        {
+            try
+            {
+                //Password: Test123!
+                var owner = new UserModel(default, "Kajetan", "Dąbrowski", "kajetan.dabrowski@vp.pl", "kakd20061",
+                    "D787A3C0317FD70DE01DA92B71D1808BF3D4AE75FF6693DAE9289B5FE9997D24BF2F1D4810526B9F12EA38FFE7FD526B53811BF8B9DF567C2AC9FA177A09B0D8",
+                    null);
+
+                if (_accounts.Find(_ => true).ToList().Any(n => n.Email == owner.Email))
+                    return (BasicResultEnum.Success, "");
+                
+                owner.Role = UserRoleEnum.Owner;
+                await _accounts.InsertOneAsync(owner);
+                
+                return (BasicResultEnum.Success, "");
             }
             catch (Exception e)
             {

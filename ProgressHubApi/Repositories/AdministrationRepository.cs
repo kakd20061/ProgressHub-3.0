@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using ProgressHubApi.Enums;
 using ProgressHubApi.Models;
 using ProgressHubApi.Models.AccountSettings;
+using ProgressHubApi.Models.Administration;
 using ProgressHubApi.Services;
 using ProgressHubApi.Validators;
 
@@ -17,6 +18,12 @@ public interface IAdministrationRepository
     public Task<BasicResultEnum> RemoveTag(string name);
     
     public Task<BasicResultEnum> UpdateTag(string oldName, string newName);
+    
+    public Task<BasicResultEnum> ChangeUserRole(ChangeUserRoleModel model);
+    
+    public Task<BasicResultEnum> BlockUser(BlockUserModel model);
+    
+    public Task<BasicResultEnum> UnblockUser(string email);
 }
 
 public class AdministrationRepository : IAdministrationRepository
@@ -105,6 +112,70 @@ public class AdministrationRepository : IAdministrationRepository
                 return BasicResultEnum.Error;
             var result = await _tags.UpdateOneAsync(n => n.Name == oldName, Builders<TagModel>.Update.Set(n => n.Name, newName));
             
+            return BasicResultEnum.Success;
+        }
+        catch (Exception e)
+        {
+            return BasicResultEnum.Error;
+        }
+    }
+
+    public async Task<BasicResultEnum> ChangeUserRole(ChangeUserRoleModel model)
+    {
+        try
+        {
+            var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
+            if (user == null)
+                return BasicResultEnum.Error;
+            if (user.Role == UserRoleEnum.Owner)
+                return BasicResultEnum.Error;
+            user.Role = Enum.Parse<UserRoleEnum>(model.role);
+            await _accounts.ReplaceOneAsync(n => n.Email == model.email, user);
+            return BasicResultEnum.Success;
+        }
+        catch (Exception e)
+        {
+            return BasicResultEnum.Error;
+        }
+    }
+
+    public async Task<BasicResultEnum> BlockUser(BlockUserModel model)
+    {
+        try
+        {
+            var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
+            if (user == null)
+                return BasicResultEnum.Error;
+            if (user.Role == UserRoleEnum.Owner)
+                return BasicResultEnum.Error;
+            if(model.blockExpirationDate != null && model.blockExpirationDate < DateTime.UtcNow)
+                return BasicResultEnum.Error;
+            if(model.blockExpirationDate == null)
+                user.BanExpirationDate = DateTime.UtcNow.AddYears(100);
+            else
+                user.BanExpirationDate = model.blockExpirationDate?.AddDays(1);
+            
+            await _accounts.ReplaceOneAsync(n => n.Email == model.email, user);
+            return BasicResultEnum.Success;
+        }
+        catch (Exception e)
+        {
+            return BasicResultEnum.Error;
+        }
+    }
+    
+    public async Task<BasicResultEnum> UnblockUser(string email)
+    {
+        try
+        {
+            var user = await _accounts.Find(n => n.Email == email).FirstOrDefaultAsync();
+            if (user == null)
+                return BasicResultEnum.Error;
+            if (user.Role == UserRoleEnum.Owner)
+                return BasicResultEnum.Error;
+            user.BanExpirationDate = null;
+            
+            await _accounts.ReplaceOneAsync(n => n.Email == email, user);
             return BasicResultEnum.Success;
         }
         catch (Exception e)

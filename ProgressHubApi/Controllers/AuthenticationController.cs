@@ -108,6 +108,8 @@ public class AuthenticationController : ControllerBase
                 return BadRequest("Password is invalid");
             case LoginResultEnum.Error:
                 return BadRequest("Unexpected Error");
+            case LoginResultEnum.Blocked:
+                return Forbid("User is blocked");
             default:
                 return Ok();
         }
@@ -136,6 +138,10 @@ public class AuthenticationController : ControllerBase
                 return BadRequest("Unexpected Error");
             case BasicResultEnum.Error:
                 return BadRequest("Unexpected Error");
+            case BasicResultEnum.Forbidden:
+                return Forbid();
+            case BasicResultEnum.Blocked:
+                return Forbid("User is blocked");
             default:
                 return Ok();
         }

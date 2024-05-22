@@ -2,7 +2,7 @@ import {Component, ViewChild, AfterViewInit, inject} from '@angular/core';
 import {userModel} from "../../models/userModel";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {AuthService} from "../../services/auth.service";
-import {Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Flowbite} from "../../flowbiteDecorator";
 import {environment} from "../../../environments/environment";
 import {UserAdministrationModel} from "../../models/userAdministrationModel";
@@ -14,6 +14,9 @@ import {MatChipEditedEvent, MatChipInputEvent} from "@angular/material/chips";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {catchError, EMPTY, of} from "rxjs";
+import {UserEditDialogComponent} from "../../components/user-edit-dialog/user-edit-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {SharedService} from "../../services/shared.service";
 export interface Fruit {
   name: string;
 }
@@ -23,11 +26,11 @@ export interface Fruit {
   styleUrls: ['./administration-panel.component.css']
 })
 @Flowbite()
-export class AdministrationPanelComponent{
+export class AdministrationPanelComponent {
   //user
-  user:userModel|null = {} as userModel;
+  user: userModel | null = {} as userModel;
   isAuthenticated: boolean = false;
-  source:string = {} as string;
+  source: string = {} as string;
 
   users: UserAdministrationModel[] = [];
 
@@ -36,29 +39,38 @@ export class AdministrationPanelComponent{
 
 
   //user management
-  displayedColumns: string[] = ['avatar','role','nickname','email','name', 'lastName','dateOfBirth', 'gender'];
+  displayedColumns: string[] = ['avatar', 'role', 'nickname', 'email', 'name', 'lastName', 'dateOfBirth', 'gender','banExpirationDate'];
   dataSource = {} as MatTableDataSource<UserAdministrationModel>;
-  @ViewChild(MatPaginator) paginator: MatPaginator =  {} as MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator = {} as MatPaginator;
   @ViewChild(MatSort) sort: MatSort = {} as MatSort;
+  selectedUser: UserAdministrationModel = {} as UserAdministrationModel;
 
 
   //tags management
   tags: tagModel[] = [];
-  constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService) {}
+
+  constructor(private _jwtHelper: JwtHelperService, private _apiService: AuthService, public dialog: MatDialog, private sharedService: SharedService) {
+    this.sharedService.getModalChangedData().subscribe(() => {
+      this.GetAllUsers();
+      dialog.closeAll();
+    });
+  }
 
   ngOnInit(): void {
     this.isAuthenticated = this.isUserAuthenticated();
-    if(this.user?.avatar!=""){
-      this.source = ""+this.user?.avatar;
-    }else{
+    if (this.user?.avatar != "") {
+      this.source = "" + this.user?.avatar;
+    } else {
       this.source = './assets/images/user-avatar.png';
     }
+
     this.GetAllUsers();
+    this.GetAllTags();
   }
 
   isUserAuthenticated(): boolean {
     const token = localStorage.getItem('jwt');
-    if(this._apiService.checkIfUserIsAuthenticated()){
+    if (this._apiService.checkIfUserIsAuthenticated()) {
       this.user = this._apiService.getUserModelFromJwt(this._jwtHelper.decodeToken(token!));
       console.log(this.user);
       return true;
@@ -68,16 +80,16 @@ export class AdministrationPanelComponent{
 
   changeTab(tab: number): void {
     this.selectedTab = tab;
-    if(tab==1){
+    if (tab == 1) {
       this.GetAllUsers();
     }
-    if(tab==2){
+    if (tab == 2) {
       this.GetAllTags();
     }
   }
 
   GetAllUsers(): void {
-    this._apiService.getAllUsers(environment.backend.baseUrl+'administration/GetAllUsers').subscribe((data) => {
+    this._apiService.getAllUsers(environment.backend.baseUrl + 'administration/GetAllUsers').subscribe((data) => {
       this.users = data;
       this.dataSource = new MatTableDataSource<UserAdministrationModel>(this.users);
       this.dataSource.paginator = this.paginator;
@@ -86,7 +98,7 @@ export class AdministrationPanelComponent{
   }
 
   GetAllTags(): void {
-    this._apiService.getTags(environment.backend.baseUrl+'administration/GetAllTags').subscribe((data) => {
+    this._apiService.getTags(environment.backend.baseUrl + 'administration/GetAllTags').subscribe((data) => {
       this.tags = data;
     });
   }
@@ -126,25 +138,51 @@ export class AdministrationPanelComponent{
     this.updateTag(tag, value);
   }
 
-  saveTags(task:string): void {
-    this._apiService.addTag(environment.backend.baseUrl+'administration/AddTag', task).subscribe(() => {
+  saveTags(task: string): void {
+    this._apiService.addTag(environment.backend.baseUrl + 'administration/AddTag', task).subscribe(() => {
       this.GetAllTags();
     });
   }
 
   removeTag(tag: tagModel): void {
-    this._apiService.removeTag(environment.backend.baseUrl+'administration/RemoveTag', tag.name).subscribe(() => {
+    this._apiService.removeTag(environment.backend.baseUrl + 'administration/RemoveTag', tag.name).subscribe(() => {
       this.GetAllTags();
     });
   }
 
-  updateTag(tag: tagModel, newName:string): void {
+  updateTag(tag: tagModel, newName: string): void {
     let model = {
       oldName: tag.name,
       newName: newName
     }
-    this._apiService.updateTag(environment.backend.baseUrl+'administration/UpdateTag', model).pipe(catchError(error => {return of(null)})).subscribe(() => {
+    this._apiService.updateTag(environment.backend.baseUrl + 'administration/UpdateTag', model).pipe(catchError(error => {
+      return of(null)
+    })).subscribe(() => {
       this.GetAllTags();
     });
   }
+
+  //users
+  selectUser(user: UserAdministrationModel): void {
+    this.selectedUser = user;
+    if (this.user?.role === 'Owner'){
+      if(this.selectedUser.role !== 'Owner'){
+        this.openDialog('0', '0');
+      }
+    }
+    else{
+      if(this.selectedUser.role !== 'Admin' && this.selectedUser.role !== 'Owner')
+        this.openDialog('0', '0');
+    }
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(UserEditDialogComponent, {
+      width: '550px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {email: this.selectedUser.email, role: this.selectedUser.role, banExpirationDate: this.selectedUser.banExpirationDate},
+    });
+  }
 }
+

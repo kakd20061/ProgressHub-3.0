@@ -56,7 +56,10 @@ namespace ProgressHubApi.Repositories
                 var account = accounts.FirstOrDefault(n => n.Email == email);
                 if (account is null || account.Tokens.RefreshToken != model.RefreshToken || account.Tokens.RefreshTokenExpiryTime <= DateTime.UtcNow)
                     return (null,BasicResultEnum.Forbidden);
-
+                if(account.BanExpirationDate != null && account.BanExpirationDate > DateTime.UtcNow)
+                    return (null, BasicResultEnum.Blocked);
+                if(account.BanExpirationDate != null && account.BanExpirationDate < DateTime.UtcNow)
+                    account.BanExpirationDate = null;
                 account.Tokens.RefreshToken = refreshToken;
 
                 await _accounts.FindOneAndReplaceAsync(x => x.Email.Equals(email), account);

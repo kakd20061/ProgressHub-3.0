@@ -49,6 +49,9 @@ public class UserModel
     
     [BsonElement("bodyParameters")]
     public BodyParameters BodyParameters { get; set; }
+    
+    [BsonElement("banExpirationDate")]
+    public DateTime? BanExpirationDate { get; set; }
 
     public UserModel(string _Id, string Name, string LastName, string Email, string Nickname, string? Password, DateTime? LastLoggedAt, string Avatar = "")
     {
@@ -79,6 +82,7 @@ public class UserModel
             Height = "",
             BodyFatPercentage = ""
         };
+        BanExpirationDate = null;
     }
 
     public UserModel(UserModel model, DateTime lastLoggedAt)
@@ -105,6 +109,7 @@ public class UserModel
             RefreshTokenExpiryTime = DateTime.UtcNow
         };
         BodyParameters = model.BodyParameters;
+        BanExpirationDate = model.BanExpirationDate;
     }
 }
 

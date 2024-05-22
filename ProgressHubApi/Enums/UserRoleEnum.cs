@@ -3,7 +3,8 @@ namespace ProgressHubApi.Enums
     public enum UserRoleEnum
     {
         Admin,
-        User
+        User,
+        Owner
     }
 
     public static class UserRoleEnumExtensions
@@ -14,6 +15,7 @@ namespace ProgressHubApi.Enums
             {
                 UserRoleEnum.Admin => "Admin",
                 UserRoleEnum.User => "User",
+                UserRoleEnum.Owner => "Owner",
                 _ => throw new ArgumentOutOfRangeException(nameof(me), me, null)
             };
         }

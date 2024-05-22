@@ -5,7 +5,8 @@ namespace ProgressHubApi.Enums
 	{
 		Success,
 		Error,
-		Forbidden
+		Forbidden,
+		Blocked
 	}
 }
 

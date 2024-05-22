@@ -54,7 +54,10 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-
+import {MatDialogModule} from '@angular/material/dialog';
+import { UserEditDialogComponent } from './components/user-edit-dialog/user-edit-dialog.component';
+import {MatGridListModule} from "@angular/material/grid-list";
+import {MatInputModule} from "@angular/material/input";
 export function tokenGetter() {
   return localStorage.getItem('jwt');
 }
@@ -73,7 +76,8 @@ export function tokenGetter() {
     AccountSettingsComponent,
     PipeFor,
     AlertsComponent,
-    AdministrationPanelComponent
+    AdministrationPanelComponent,
+    UserEditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -126,7 +130,10 @@ export function tokenGetter() {
     MatFormFieldModule,
     MatIconModule,
     MatAutocompleteModule,
-    AsyncPipe
+    AsyncPipe,
+    MatDialogModule,
+    MatGridListModule,
+    MatInputModule
   ],
   providers: [
     {

@@ -83,4 +83,43 @@ public class AdministrationController : ControllerBase
             _ => Ok()
         };
     }
+    
+    [HttpPost("ChangeUserRole")]
+    public async Task<IActionResult> ChangeUserRole(ChangeUserRoleModel model)
+    {
+        var result = await _service.ChangeUserRole(model);
+
+        return result switch
+        {
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
+    }
+    
+    [HttpPost("BlockUser")]
+    public async Task<IActionResult> BlockUser(BlockUserModel model)
+    {
+        var result = await _service.BlockUser(model);
+
+        return result switch
+        {
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
+    }
+    
+    [HttpPost("UnblockUser")]
+    public async Task<IActionResult> UnblockUser(string email)
+    {
+        var result = await _service.UnblockUser(email);
+
+        return result switch
+        {
+            Enums.BasicResultEnum.Success => Ok(),
+            Enums.BasicResultEnum.Error => BadRequest(),
+            _ => Ok()
+        };
+    }
 }

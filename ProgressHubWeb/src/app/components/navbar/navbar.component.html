@@ -11,7 +11,7 @@
     <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#">Home</a></li>
     <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#" *ngIf="isAuthenticated">Dashboard</a></li>
     <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" href="#">About</a></li>
-    <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" [routerLink]="'/administration-panel'" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a></li>
+    <li><a class="text-lg text-gray-400 hover:text-gray-500 transition duration-200" [routerLink]="'/administration-panel'" *ngIf="isAuthenticated&&(user?.role == 'Admin'||user?.role == 'Owner')">Administration</a></li>
   </ul>
   <div *ngIf="!isAuthenticated" class="hidden lg:flex flex-row">
     <a class="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-10 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200" [routerLink]="'/login'">Login</a>
@@ -33,8 +33,9 @@
     <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
       <div class="font-medium flex flex-row items-center justify-between">
         <span>{{user?.name}} {{user?.lastName}}</span>
-        <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300" *ngIf="user?.role == 'User'">User</span>
-        <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300" *ngIf="user?.role == 'Admin'">Admin</span>
+        <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full" *ngIf="user?.role == 'User'">User</span>
+        <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full" *ngIf="user?.role == 'Admin'">Admin</span>
+        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full" *ngIf="user?.role == 'Owner'">Owner</span>
       </div>
       <div class="truncate">{{user?.email}}</div>
     </div>
@@ -74,7 +75,7 @@
           <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#" *ngIf="isAuthenticated">Dashboard</a>
         </li>
         <li class="mb-1">
-          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" [routerLink]="'/administration-panel'" *ngIf="isAuthenticated&&user?.role == 'Admin'">Administration</a>
+          <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" [routerLink]="'/administration-panel'" *ngIf="isAuthenticated&&(user?.role == 'Admin'||user?.role == 'Owner')">Administration</a>
         </li>
         <li class="mb-1">
           <a class="block p-4 text-sm font-semibold text-gray-400 hover:bg-mtertiary hover:text-white rounded" href="#">About</a>
@@ -102,8 +103,10 @@
         <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
           <div class="font-medium flex flex-row items-center justify-between">
             <span>{{user?.name}} {{user?.lastName}}</span>
-            <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300" *ngIf="user?.role == 'User'">User</span>
-            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300" *ngIf="user?.role == 'Admin'">Admin</span>
+            <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full" *ngIf="user?.role == 'User'">User</span>
+            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full" *ngIf="user?.role == 'Admin'">Admin</span>
+            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full" *ngIf="user?.role == 'Owner'">Owner</span>
+
           </div>
           <div class="truncate">{{user?.email}}</div>
         </div>

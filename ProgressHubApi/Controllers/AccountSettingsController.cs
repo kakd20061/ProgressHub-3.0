@@ -113,7 +113,6 @@ public class AccountSettingsController : ControllerBase
             Enums.BasicResultEnum.Error => BadRequest(),
             _ => Ok()
         };
-        return Ok();
     }
 }
 

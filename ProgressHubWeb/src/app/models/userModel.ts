@@ -11,4 +11,5 @@ export interface userModel {
   weight: string;
   height: string;
   bodyFat: string;
+  banExpirationDate: string;
 }

@@ -1,0 +1,13 @@
+.mat-mdc-row .mat-mdc-cell {
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #e3e3e3;
+}
+
+mat-form-field{
+  --mdc-outlined-text-field-focus-outline-color: #fff !important;
+  --mdc-outlined-text-field-outline-color: #fff !important;
+  --mdc-outlined-text-field-hover-outline-color: #fff !important;
+}

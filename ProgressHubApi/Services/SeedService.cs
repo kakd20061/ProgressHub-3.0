@@ -16,6 +16,8 @@ namespace ProgressHubApi.Services
 	public interface ISeedService
     {
         public Task<(BasicResultEnum,string)> SeedTags();
+        
+        public Task<(BasicResultEnum,string)> SeedUsers();
     }
 
     public class SeedService : ISeedService
@@ -30,6 +32,11 @@ namespace ProgressHubApi.Services
         public Task<(BasicResultEnum,string)> SeedTags()
         {
             return _repository.SeedTags();
+        }
+
+        public Task<(BasicResultEnum, string)> SeedUsers()
+        {
+            return _repository.SeedUsers();
         }
     }
 }

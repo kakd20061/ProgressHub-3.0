@@ -13,6 +13,8 @@ public class UserAdministrationModel
     public DateTime? DateOfBirth { get; set; }
     public string Gender { get; set; }
     public BodyParameters BodyParameters { get; set; }
+    
+    public string? BanExpirationDate { get; set; }
 
     public UserAdministrationModel(UserModel user)
     {
@@ -25,5 +27,7 @@ public class UserAdministrationModel
         this.DateOfBirth = user.DateOfBirth;
         this.Gender = UserGenderEnumExtensions.ToFriendlyString(user.Gender);
         this.BodyParameters = user.BodyParameters;
+        BanExpirationDate = user.BanExpirationDate?.ToString("yyyy-MM-dd") ?? "";
+        
     }
 }

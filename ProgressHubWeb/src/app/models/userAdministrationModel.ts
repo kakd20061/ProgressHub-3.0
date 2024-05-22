@@ -8,6 +8,7 @@ export interface UserAdministrationModel {
   dateOfBirth:Date;
   gender: string;
   bodyParameters: bodyParameters;
+  banExpirationDate: Date;
 }
 
 interface bodyParameters {

@@ -20,10 +20,26 @@ public class SeedController : ControllerBase
         _service = service;
     }
 
-    [HttpPost("seed")]
-    public async Task<IActionResult> Seed()
+    [HttpPost("SeedTags")]
+    public async Task<IActionResult> SeedTags()
     {
         var result = await _service.SeedTags();
+
+        switch (result.Item1)
+        {
+            case Enums.BasicResultEnum.Success:
+                return Ok();
+            case Enums.BasicResultEnum.Error:
+                return BadRequest(result.Item2);
+            default:
+                return Ok();
+        }
+    }
+    
+    [HttpPost("SeedUsers")]
+    public async Task<IActionResult> SeedUsers()
+    {
+        var result = await _service.SeedUsers();
 
         switch (result.Item1)
         {

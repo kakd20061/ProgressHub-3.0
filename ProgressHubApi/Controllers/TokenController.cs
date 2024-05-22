@@ -33,6 +33,8 @@ public class TokenController : ControllerBase
                 return BadRequest("Unexpected error");
             case Enums.BasicResultEnum.Forbidden:
                 return Forbid();
+            case Enums.BasicResultEnum.Blocked:
+                return Forbid("User is blocked");
             default:
                 return Ok();
         }

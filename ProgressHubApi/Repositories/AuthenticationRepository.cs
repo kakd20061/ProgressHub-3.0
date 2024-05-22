@@ -130,6 +130,11 @@ namespace ProgressHubApi.Repositories
             var isValid = _validator.ValidateCheckUserAccount(model,hashedPassword,account);
             if (isValid == LoginResultEnum.Success)
             {
+                if (account.BanExpirationDate != null && account.BanExpirationDate < DateTime.UtcNow)
+                {
+                    account.BanExpirationDate = null;
+                }
+
                 var updatedModel = new UserModel(account, DateTime.UtcNow);
                 await _accounts.FindOneAndReplaceAsync(x => x.Email.Equals(updatedModel.Email), updatedModel);
                 return (updatedModel, isValid);
@@ -147,10 +152,20 @@ namespace ProgressHubApi.Repositories
                 var account = accounts.FirstOrDefault(n => n.Email == payload.Email);
                 if (account != null)
                 {
+                    if (account.BanExpirationDate != null && account.BanExpirationDate > DateTime.UtcNow)
+                    {
+                        return (null, BasicResultEnum.Blocked, false);
+                    }
+
+                    if (account.BanExpirationDate != null && account.BanExpirationDate < DateTime.UtcNow)
+                    {
+                        account.BanExpirationDate = null;
+                    }
                     var updatedModel = new UserModel(account, DateTime.UtcNow);
                     await _accounts.FindOneAndReplaceAsync(x => x.Email.Equals(updatedModel.Email), updatedModel);
                     return (account, BasicResultEnum.Success, updatedModel.Password != null);
                 }
+                
                 payload.FamilyName ??= "";
                 payload.GivenName ??= "";
                 payload.Picture ??= "";

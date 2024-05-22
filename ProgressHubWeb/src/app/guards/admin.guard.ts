@@ -22,12 +22,12 @@ export class AdminGuard {
 
     this.User = this._service.getUserModelFromJwt(this._jwtHelper.decodeToken(token!));
 
-    if (token && !this._jwtHelper.isTokenExpired(token) && this.User.role === 'Admin') {
+    if (token && !this._jwtHelper.isTokenExpired(token) && (this.User.role === 'Admin' || this.User.role === 'Owner')) {
       return true;
     }
 
     const refreshToken: string = localStorage.getItem('refreshToken')!;
-    if (!token || !refreshToken || this.User.role !== 'Admin') {
+    if (!token || !refreshToken || (this.User.role !== 'Admin' && this.User.role !== 'Owner')) {
       await this._router.navigate(['/login']);
       return false;
     }
@@ -49,7 +49,11 @@ export class AdminGuard {
               localStorage.setItem('jwt', res.accessToken);
               localStorage.setItem('refreshToken', res.refreshToken);
               localStorage.setItem('hasPassword', res.hasPassword.toString());
-              return this.User?.role === 'Admin';
+              if (this.User?.role === 'Admin' || this.User?.role === 'Owner') {
+                return true;
+              }
+              this._router.navigate(['/login']);
+              return false;
             },
             error: (_) => {
               this._router.navigate(['/login']);

@@ -5,6 +5,7 @@ namespace ProgressHubApi.Enums.Authentication
         Success,
         Error,
         InvalidEmail,
-        InvalidPassword
+        InvalidPassword,
+        Blocked,
     }
 }
