@@ -20,15 +20,7 @@ export class AuthService {
     return this._http.post<any>(`${url}`, form);
   }
 
-  addTag(url: string, tag: string):Observable<any> {
-    return this._http.post<any>(`${url}?name=${tag}`, null);
-  }
-
-  removeTag(url: string, tag: string):Observable<any> {
-    return this._http.delete<any>(`${url}?name=${tag}`);
-  }
-
-  updateTag(url: string, form:any):Observable<any> {
+  sendUpdateRequest(url: string, form:any):Observable<any> {
     return this._http.put<any>(`${url}`, form);
   }
 

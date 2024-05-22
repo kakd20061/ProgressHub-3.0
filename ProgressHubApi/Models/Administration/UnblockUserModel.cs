@@ -1,10 +1,7 @@
-using ProgressHubApi.Enums;
-
 namespace ProgressHubApi.Models.Administration;
 
-public class ChangeUserRoleModel
+public class UnblockUserModel
 {
     public string email { get; set; }
-    public string role { get; set; }
     public string token { get; set; }
 }

@@ -135,6 +135,48 @@ namespace ProgressHubApi.Services
 
             return tokenString;
         }
+
+        public ClaimsPrincipal? GetPrincipals(string token)
+        {
+            try
+            {
+                TokenValidationParameters tokenValidationParameters;
+                if(Environment.GetEnvironmentVariable("JWTSECRETKEY") != null)
+                {
+                    tokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWTSECRETKEY"))),
+                        ValidateLifetime = false
+                    };
+                }else
+                {
+                    tokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+                        ValidateLifetime = false
+                    };
+                }
+                var tokenHandler = new JwtSecurityTokenHandler();
+                SecurityToken securityToken;
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+                var jwtSecurityToken = securityToken as JwtSecurityToken;
+                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                        StringComparison.InvariantCultureIgnoreCase))
+                    return null;
+                
+                return principal;
+            }   
+            catch(Exception e)
+            {
+                return null;
+            }
+        }
     }
 }
 

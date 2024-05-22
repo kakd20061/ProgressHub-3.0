@@ -15,7 +15,7 @@ namespace ProgressHubApi.Repositories;
 
 public interface IAccountSettingsRepository
 {
-    public Task<(BasicResultEnum,ICollection<TagModel>?)> GetAllTags();
+    public Task<(BasicResultEnum,ICollection<TagModel>?)> GetAllTags(string token);
     public Task<BasicResultEnum> SaveTags(SaveTagsMogel model);
     public Task<BasicResultEnum> ChangePassword(ChangePasswordModelWithCurrentPassword model);
     public Task<BasicResultEnum> ChangeAvatar(ChangeAvatarModel model);
@@ -44,10 +44,16 @@ public class AccountSettingsRepository : IAccountSettingsRepository
 
     }
 
-    public async Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags()
+    public async Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags(string token)
     {
         try
         {
+            
+            var tokenResult = await _validator.ValidateToken(token);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return (BasicResultEnum.Error, null);
+            }
             var tags = await _tags.Find(_ => true).ToListAsync();
             return (BasicResultEnum.Success, tags);
         }
@@ -61,13 +67,19 @@ public class AccountSettingsRepository : IAccountSettingsRepository
     {
         try
         {
+            var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
+            
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
             var user = await findUser.FirstOrDefaultAsync();
             if (user == null)
             {
                 return BasicResultEnum.Error;
             }
-
+            
             if (model.TagsIds.Length == 0 || model.TagsIds == null)
             {
                 user.Tags = new List<TagModel>();
@@ -99,6 +111,11 @@ public class AccountSettingsRepository : IAccountSettingsRepository
     {
         try
         {
+            var tokenResult = await _validator.ValidateToken(model.Token,model.email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
             var findUser = await _accounts.FindAsync(x => x.Email == model.email);
             var user = await findUser.FirstOrDefaultAsync();
             if (user == null)
@@ -144,13 +161,12 @@ public class AccountSettingsRepository : IAccountSettingsRepository
     {
         try
         {
-            //todo: change names of the files to random hash - DONE
-            //todo: validate file is the image - DONE
-            //todo: test this - DONE
-            //todo: change to validator - DONE
-            //todo: google avatars - DONE
-            //todo: change to environment variables - DONE
-            //todo: change design - DONE
+            var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
+            
             var randomPhotoName = Guid.NewGuid() + ".jpg";
 
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
@@ -216,6 +232,12 @@ public class AccountSettingsRepository : IAccountSettingsRepository
     {
         try
         {
+            var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return PersonalDataChangeResultEnum.Error;
+            }
+            
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
             var user = await findUser.FirstOrDefaultAsync();
             if (user == null)
@@ -244,6 +266,12 @@ public class AccountSettingsRepository : IAccountSettingsRepository
     {
         try
         {
+            var tokenResult = await _validator.ValidateToken(model.Token,model.Email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
+            
             var findUser = await _accounts.FindAsync(x => x.Email == model.Email);
             var user = await findUser.FirstOrDefaultAsync();
             if (user == null)

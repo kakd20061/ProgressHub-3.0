@@ -8,4 +8,6 @@ public class BodyParametersChangeModel
     public string HeightUnit { get; set; }
     public string WeightUnit { get; set; }
     public string BodyFatPercentage { get; set; }
+    
+    public string Token { get; set; }
 }

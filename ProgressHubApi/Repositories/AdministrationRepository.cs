@@ -11,19 +11,19 @@ namespace ProgressHubApi.Repositories;
 
 public interface IAdministrationRepository
 {
-    public Task<(BasicResultEnum, ICollection<UserModel>?)> GetAllUsers();
-    public Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags();
-    public Task<BasicResultEnum> AddTag(string name);
+    public Task<(BasicResultEnum, ICollection<UserModel>?)> GetAllUsers(string token);
+    public Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags(string token);
+    public Task<BasicResultEnum> AddTag(AddTagModel model);
     
-    public Task<BasicResultEnum> RemoveTag(string name);
+    public Task<BasicResultEnum> RemoveTag(RemoveTagModel model);
     
-    public Task<BasicResultEnum> UpdateTag(string oldName, string newName);
+    public Task<BasicResultEnum> UpdateTag(UpdateTagModel model);
     
     public Task<BasicResultEnum> ChangeUserRole(ChangeUserRoleModel model);
     
     public Task<BasicResultEnum> BlockUser(BlockUserModel model);
     
-    public Task<BasicResultEnum> UnblockUser(string email);
+    public Task<BasicResultEnum> UnblockUser(UnblockUserModel model);
 }
 
 public class AdministrationRepository : IAdministrationRepository
@@ -42,10 +42,15 @@ public class AdministrationRepository : IAdministrationRepository
         
     }
 
-    public async Task<(BasicResultEnum, ICollection<UserModel>?)> GetAllUsers()
+    public async Task<(BasicResultEnum, ICollection<UserModel>?)> GetAllUsers(string token)
     {
         try
         {
+            var tokenResult = await _validator.ValidateToken(token);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return (BasicResultEnum.Error,null);
+            }
             var users = await _accounts.Find(n => true).ToListAsync();
             return (BasicResultEnum.Success, users);
         }catch(Exception e)
@@ -54,10 +59,15 @@ public class AdministrationRepository : IAdministrationRepository
         }
     }
     
-    public async Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags()
+    public async Task<(BasicResultEnum, ICollection<TagModel>?)> GetAllTags(string token)
     {
         try
         {
+            var tokenResult = await _validator.ValidateToken(token);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return (BasicResultEnum.Error, null);
+            }
             var tags = await _tags.Find(n => true).ToListAsync();
             return (BasicResultEnum.Success, tags);
         }catch(Exception e)
@@ -66,20 +76,25 @@ public class AdministrationRepository : IAdministrationRepository
         }
     }
 
-    public async Task<BasicResultEnum> AddTag(string name)
+    public async Task<BasicResultEnum> AddTag(AddTagModel model)
     {
         try
         {
-            var task = new TagModel
+            var tokenResult = await _validator.ValidateToken(model.Token);
+            if (tokenResult != BasicResultEnum.Success)
             {
-                Name = name
+                return BasicResultEnum.Error;
+            }
+            var tag = new TagModel
+            {
+                Name = model.Name
             };
             
-            var result = await _validator.ValidateTag(task);
+            var result = await _validator.ValidateTag(tag);
             if (result != BasicResultEnum.Success)
                 return result;
             
-            await _tags.InsertOneAsync(task);
+            await _tags.InsertOneAsync(tag);
             return BasicResultEnum.Success;
         }
         catch (Exception e)
@@ -88,11 +103,16 @@ public class AdministrationRepository : IAdministrationRepository
         }
     }
     
-    public async Task<BasicResultEnum> RemoveTag(string name)
+    public async Task<BasicResultEnum> RemoveTag(RemoveTagModel model)
     {
         try
         {
-            var result = await _tags.DeleteOneAsync(n => n.Name == name);
+            var tokenResult = await _validator.ValidateToken(model.Token);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
+            var result = await _tags.DeleteOneAsync(n => n.Name == model.Name);
             if (result.DeletedCount == 0)
                 return BasicResultEnum.Error;
             
@@ -104,13 +124,18 @@ public class AdministrationRepository : IAdministrationRepository
         }
     }
     
-    public async Task<BasicResultEnum> UpdateTag(string oldName, string newName)
+    public async Task<BasicResultEnum> UpdateTag(UpdateTagModel model)
     {
         try
         {
-            if(String.IsNullOrWhiteSpace(newName))
+            var tokenResult = await _validator.ValidateToken(model.token);
+            if (tokenResult != BasicResultEnum.Success)
+            {
                 return BasicResultEnum.Error;
-            var result = await _tags.UpdateOneAsync(n => n.Name == oldName, Builders<TagModel>.Update.Set(n => n.Name, newName));
+            }
+            if(String.IsNullOrWhiteSpace(model.newName))
+                return BasicResultEnum.Error;
+            var result = await _tags.UpdateOneAsync(n => n.Name == model.oldName, Builders<TagModel>.Update.Set(n => n.Name, model.newName));
             
             return BasicResultEnum.Success;
         }
@@ -124,6 +149,12 @@ public class AdministrationRepository : IAdministrationRepository
     {
         try
         {
+            var tokenResult = await _validator.ValidateTokenForUserManagement(model.token, model.email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
+            
             var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
             if (user == null)
                 return BasicResultEnum.Error;
@@ -143,6 +174,11 @@ public class AdministrationRepository : IAdministrationRepository
     {
         try
         {
+            var tokenResult = await _validator.ValidateTokenForUserManagement(model.token, model.email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
             var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
             if (user == null)
                 return BasicResultEnum.Error;
@@ -164,18 +200,23 @@ public class AdministrationRepository : IAdministrationRepository
         }
     }
     
-    public async Task<BasicResultEnum> UnblockUser(string email)
+    public async Task<BasicResultEnum> UnblockUser(UnblockUserModel model)
     {
         try
         {
-            var user = await _accounts.Find(n => n.Email == email).FirstOrDefaultAsync();
+            var tokenResult = await _validator.ValidateTokenForUserManagement(model.token, model.email);
+            if (tokenResult != BasicResultEnum.Success)
+            {
+                return BasicResultEnum.Error;
+            }
+            var user = await _accounts.Find(n => n.Email == model.email).FirstOrDefaultAsync();
             if (user == null)
                 return BasicResultEnum.Error;
             if (user.Role == UserRoleEnum.Owner)
                 return BasicResultEnum.Error;
             user.BanExpirationDate = null;
             
-            await _accounts.ReplaceOneAsync(n => n.Email == email, user);
+            await _accounts.ReplaceOneAsync(n => n.Email == model.email, user);
             return BasicResultEnum.Success;
         }
         catch (Exception e)

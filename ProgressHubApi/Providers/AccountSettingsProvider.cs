@@ -7,7 +7,7 @@ namespace ProgressHubApi.Providers;
 
 public interface IAccountSettingsProvider
 {
-    public Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags();
+    public Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags(string token);
 }
 public class AccountSettingsProvider: IAccountSettingsProvider
 {
@@ -18,9 +18,9 @@ public class AccountSettingsProvider: IAccountSettingsProvider
         _repository = repository;
     }
 
-    public async Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags()
+    public async Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags(string token)
     {
-        var tags = await _repository.GetAllTags();
+        var tags = await _repository.GetAllTags(token);
         if(tags.Item1 == BasicResultEnum.Error)
             return (BasicResultEnum.Error,null);
         

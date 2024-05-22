@@ -122,6 +122,7 @@ export class AccountSettingsComponent implements OnInit{
         nickname: this.personalDataForm.get('nickname')?.value,
         dateOfBirth: this.personalDataForm.get('dateOfBirth')?.value,
         gender: this.personalDataForm.get('gender')?.value,
+        token: localStorage.getItem('jwt'),
       };
       let url:string = environment.backend.baseUrl+'settings/account/ChangePersonalData';
 
@@ -139,12 +140,18 @@ export class AccountSettingsComponent implements OnInit{
           console.log('error');
           setTimeout(() => {
               this.personalDataIndicator = false;
-              if(_.error.includes('Nickname')){
-                this.personalDataErrorMessage = 'This nickname is already taken';
-              }
-              else{
+
+              try {
+                if(_.error && _.error.includes('Nickname')){
+                  this.personalDataErrorMessage = 'This nickname is already taken';
+                }
+                else{
+                  this.personalDataErrorMessage = 'Unexpected error occurred. Please try again later.';
+                }
+              }catch (e){
                 this.personalDataErrorMessage = 'Unexpected error occurred. Please try again later.';
               }
+
               this.personalDataResult = 2;
               this.isEnabledPersonalDataButton = false;
             }, 1000
@@ -164,9 +171,11 @@ export class AccountSettingsComponent implements OnInit{
     if(isDelete){
       formData.append('email', this.user?.email!);
       formData.append('file', '');
+      formData.append('token', localStorage.getItem('jwt')!);
     }else{
       formData.append('email', this.user?.email!);
       formData.append('file', this.file, this.file.name);
+      formData.append('token', localStorage.getItem('jwt')!);
     }
 
 
@@ -231,7 +240,8 @@ export class AccountSettingsComponent implements OnInit{
     let tags= this.selectedChips;
     let model : SaveTagsModel = {
       Email : this.user?.email!,
-      TagsIds : tags
+      TagsIds : tags,
+      Token : localStorage.getItem('jwt')!
     }
     let url:string = environment.backend.baseUrl+'settings/account/SaveTags';
     this._apiService.sendRequest(url, model).subscribe({
@@ -346,7 +356,8 @@ export class AccountSettingsComponent implements OnInit{
   }
 
   getTags(): void {
-    let url:string = environment.backend.baseUrl+'settings/account/GetAllTags';
+    let jwt = localStorage.getItem('jwt');
+    let url:string = environment.backend.baseUrl+'settings/account/GetAllTags?token='+jwt;
 
     this._apiService.getTags(url).subscribe((data) => {
       this.tags=data;
@@ -391,6 +402,7 @@ export class AccountSettingsComponent implements OnInit{
         weightUnit: this.bodyParametersForm.get('weightUnit')?.value == "0" ? 'lbs' : 'kg',
         heightUnit: this.bodyParametersForm.get('heightUnit')?.value == "0" ? 'ft in' : 'cm',
         bodyFatPercentage: this.bodyParametersForm.get('bodyFat')?.value,
+        token: localStorage.getItem('jwt'),
       };
       let url:string = environment.backend.baseUrl+'settings/account/ChangeBodyParameters';
 
@@ -594,6 +606,7 @@ export class AccountSettingsComponent implements OnInit{
           email: this.user?.email,
           password: this.changePasswordForm.get('newpassword')?.value,
           currentPassword: this.changePasswordForm.get('password')?.value,
+          token: localStorage.getItem('jwt'),
         };
       }
       else{
@@ -601,6 +614,7 @@ export class AccountSettingsComponent implements OnInit{
           email: this.user?.email,
           password: this.changePasswordForm.get('newpassword')?.value,
           currentPassword: '',
+          token: localStorage.getItem('jwt')
         };
       }
 

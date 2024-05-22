@@ -7,8 +7,8 @@ namespace ProgressHubApi.Providers;
 
 public interface IAdministrationProvider
 {
-    public Task<(BasicResultEnum, ICollection<UserAdministrationModel>?)> GetAllUsers();
-    public Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags();
+    public Task<(BasicResultEnum, ICollection<UserAdministrationModel>?)> GetAllUsers(string token);
+    public Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags(string token);
 }
 
 public class AdministrationProvider: IAdministrationProvider
@@ -21,9 +21,9 @@ public class AdministrationProvider: IAdministrationProvider
     }
 
 
-    public async Task<(BasicResultEnum, ICollection<UserAdministrationModel>?)> GetAllUsers()
+    public async Task<(BasicResultEnum, ICollection<UserAdministrationModel>?)> GetAllUsers(string token)
     {
-        var result = await _repository.GetAllUsers();
+        var result = await _repository.GetAllUsers(token);
         if(result.Item1 == BasicResultEnum.Error)
             return (BasicResultEnum.Error,null);
         
@@ -31,9 +31,9 @@ public class AdministrationProvider: IAdministrationProvider
         return (BasicResultEnum.Success,dtos);
     }
     
-    public async Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags()
+    public async Task<(BasicResultEnum, ICollection<TagDto>?)> GetAllTags(string token)
     {
-        var tags = await _repository.GetAllTags();
+        var tags = await _repository.GetAllTags(token);
         if(tags.Item1 == BasicResultEnum.Error)
             return (BasicResultEnum.Error,null);
         

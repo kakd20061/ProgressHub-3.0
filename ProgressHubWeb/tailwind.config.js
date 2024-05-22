@@ -25,6 +25,7 @@ module.exports = {
         tertiary: "#5F6C74",
         invalid: "#F32424",
         disabled: "#BCBCBC",
+        reddark: "#B30000",
         redprimary: "#d51919",
         redsecondary: "#FF4D4D",
         redtertiary: "#FF8080",

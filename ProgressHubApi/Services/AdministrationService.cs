@@ -6,16 +6,16 @@ namespace ProgressHubApi.Services;
 
 public interface IAdministrationService
 {
-    public Task<BasicResultEnum> AddTag(string name);
-    public Task<BasicResultEnum> RemoveTag(string name);
+    public Task<BasicResultEnum> AddTag(AddTagModel model);
+    public Task<BasicResultEnum> RemoveTag(RemoveTagModel model);
     
-    public Task<BasicResultEnum> UpdateTag(string oldName, string newName);
+    public Task<BasicResultEnum> UpdateTag(UpdateTagModel model);
     
     public Task<BasicResultEnum> ChangeUserRole(ChangeUserRoleModel model);
     
     public Task<BasicResultEnum> BlockUser(BlockUserModel model);
     
-    public Task<BasicResultEnum> UnblockUser(string email);
+    public Task<BasicResultEnum> UnblockUser(UnblockUserModel model);
 }
 
 public class AdministrationService : IAdministrationService
@@ -26,11 +26,11 @@ public class AdministrationService : IAdministrationService
         _repository = repository;
     }
 
-    public async Task<BasicResultEnum> AddTag(string name)
+    public async Task<BasicResultEnum> AddTag(AddTagModel model)
     {
         try
         {
-            var res = await _repository.AddTag(name);
+            var res = await _repository.AddTag(model);
             return res;
         }
         catch (Exception e)
@@ -39,11 +39,11 @@ public class AdministrationService : IAdministrationService
         }
     }
     
-    public async Task<BasicResultEnum> RemoveTag(string name)
+    public async Task<BasicResultEnum> RemoveTag(RemoveTagModel model)
     {
         try
         {
-            var res = await _repository.RemoveTag(name);
+            var res = await _repository.RemoveTag(model);
             return res;
         }
         catch (Exception e)
@@ -52,11 +52,11 @@ public class AdministrationService : IAdministrationService
         }
     }
 
-    public async Task<BasicResultEnum> UpdateTag(string oldName, string newName)
+    public async Task<BasicResultEnum> UpdateTag(UpdateTagModel model)
     {
         try
         {
-            var res = await _repository.UpdateTag(oldName, newName);
+            var res = await _repository.UpdateTag(model);
             return res;
         }
         catch (Exception e)
@@ -89,11 +89,11 @@ public class AdministrationService : IAdministrationService
         }
     }
 
-    public async Task<BasicResultEnum> UnblockUser(string email)
+    public async Task<BasicResultEnum> UnblockUser(UnblockUserModel model)
     {
         try
         {
-            return await _repository.UnblockUser(email);
+            return await _repository.UnblockUser(model);
         }
         catch (Exception e)
         {

@@ -31,7 +31,8 @@ export class UserEditDialogComponent {
     }
     let model = {
       email: this.data.email,
-      role: this.changeRoleForm.get('role')?.value
+      role: this.changeRoleForm.get('role')?.value,
+      token: localStorage.getItem('jwt')
     };
     let url:string = environment.backend.baseUrl+'administration/ChangeUserRole';
     this._service.sendRequest(url, model).subscribe({
@@ -51,7 +52,8 @@ export class UserEditDialogComponent {
     }
     let model = {
       email: this.data.email,
-      blockExpirationDate: this.banUserForm.get('banDate')?.value == '' ? null : this.banUserForm.get('banDate')?.value
+      blockExpirationDate: this.banUserForm.get('banDate')?.value == '' ? null : this.banUserForm.get('banDate')?.value,
+      token: localStorage.getItem('jwt')
     };
     let url:string = environment.backend.baseUrl+'administration/BlockUser';
     this._service.sendRequest(url, model).subscribe({
@@ -65,8 +67,12 @@ export class UserEditDialogComponent {
   }
 
   unbanUser(): void {
+    let model = {
+      email: this.data.email,
+      token: localStorage.getItem('jwt')
+    }
     let url:string = environment.backend.baseUrl+'administration/UnblockUser';
-    this._service.resendRequest(url,this.data.email).subscribe({
+    this._service.sendRequest(url,model).subscribe({
       next: () => {
         this.sharedService.sendModalChangedData();
       },

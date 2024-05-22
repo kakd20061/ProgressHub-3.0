@@ -9,4 +9,6 @@ public class ChangePasswordModel
 public class ChangePasswordModelWithCurrentPassword : ChangePasswordModel
 {
     public string currentPassword { get; set; }
+    
+    public string Token { get; set; }
 }

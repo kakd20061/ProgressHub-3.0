@@ -89,7 +89,8 @@ export class AdministrationPanelComponent {
   }
 
   GetAllUsers(): void {
-    this._apiService.getAllUsers(environment.backend.baseUrl + 'administration/GetAllUsers').subscribe((data) => {
+    let jwt = localStorage.getItem('jwt');
+    this._apiService.getAllUsers(environment.backend.baseUrl + 'administration/GetAllUsers?token='+jwt).subscribe((data) => {
       this.users = data;
       this.dataSource = new MatTableDataSource<UserAdministrationModel>(this.users);
       this.dataSource.paginator = this.paginator;
@@ -98,7 +99,8 @@ export class AdministrationPanelComponent {
   }
 
   GetAllTags(): void {
-    this._apiService.getTags(environment.backend.baseUrl + 'administration/GetAllTags').subscribe((data) => {
+    let jwt = localStorage.getItem('jwt');
+    this._apiService.getTags(environment.backend.baseUrl + 'administration/GetAllTags?token='+jwt).subscribe((data) => {
       this.tags = data;
     });
   }
@@ -138,24 +140,36 @@ export class AdministrationPanelComponent {
     this.updateTag(tag, value);
   }
 
-  saveTags(task: string): void {
-    this._apiService.addTag(environment.backend.baseUrl + 'administration/AddTag', task).subscribe(() => {
+  saveTags(tag: string): void {
+    let jwt = localStorage.getItem('jwt');
+    let model = {
+      name: tag,
+      token: jwt
+    }
+    this._apiService.sendRequest(environment.backend.baseUrl + 'administration/AddTag', model).subscribe(() => {
       this.GetAllTags();
     });
   }
 
   removeTag(tag: tagModel): void {
-    this._apiService.removeTag(environment.backend.baseUrl + 'administration/RemoveTag', tag.name).subscribe(() => {
+    let jwt = localStorage.getItem('jwt');
+    let model = {
+      name: tag.name,
+      token: jwt
+    }
+    this._apiService.sendRequest(environment.backend.baseUrl + 'administration/RemoveTag', model).subscribe(() => {
       this.GetAllTags();
     });
   }
 
   updateTag(tag: tagModel, newName: string): void {
+    let jwt = localStorage.getItem('jwt');
     let model = {
       oldName: tag.name,
-      newName: newName
+      newName: newName,
+      token: localStorage.getItem('jwt')
     }
-    this._apiService.updateTag(environment.backend.baseUrl + 'administration/UpdateTag', model).pipe(catchError(error => {
+    this._apiService.sendUpdateRequest(environment.backend.baseUrl + 'administration/UpdateTag', model).pipe(catchError(error => {
       return of(null)
     })).subscribe(() => {
       this.GetAllTags();

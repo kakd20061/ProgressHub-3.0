@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using MongoDB.Driver;
 using ProgressHubApi.Enums;
@@ -17,6 +18,8 @@ namespace ProgressHubApi.Validators
         public bool ValidateFileForAvatar(IFormFile filetype);
         public Task<PersonalDataChangeResultEnum> ValidatePersonalData(PersonalDataChangeModel model);
         public bool ValidateBodyParameters(BodyParametersChangeModel model);
+        
+        public Task<BasicResultEnum> ValidateToken(string token, string? email = null);
     }
 
     public class AccountSettingsValidator : IAccountSettingsValidator
@@ -132,6 +135,36 @@ namespace ProgressHubApi.Validators
                     return false;
             }
             return true;
+        }
+
+        public async Task<BasicResultEnum> ValidateToken(string token, string? email = null)
+        {
+            try
+            {
+                    var principals = _commonService.GetPrincipals(token);
+                    if (principals == null)
+                    {
+                        return BasicResultEnum.Error;
+                    }
+                    var principalEmail = principals.Claims.FirstOrDefault(n=>n.Type == ClaimTypes.Email).Value;
+
+                    if(email != null && principalEmail != email)
+                    {
+                        return BasicResultEnum.Error;
+                    }
+                    var user = await _accounts.FindAsync(n => n.Email == principalEmail);
+                    var firstUser = await user.FirstOrDefaultAsync();
+                    if (firstUser == null)
+                    {
+                        return BasicResultEnum.Error;
+                    }
+
+                    return firstUser.BanExpirationDate != null ? BasicResultEnum.Error : BasicResultEnum.Success;
+            }
+            catch(Exception e)
+            {
+                return BasicResultEnum.Error;
+            }
         }
     }
 }

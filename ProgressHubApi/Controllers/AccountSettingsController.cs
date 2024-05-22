@@ -26,9 +26,9 @@ public class AccountSettingsController : ControllerBase
     }
 
     [HttpGet("GetAllTags")]
-    public async Task<IActionResult> GetTags()
+    public async Task<IActionResult> GetTags(string token)
     {
-        var result = await _provider.GetAllTags();
+        var result = await _provider.GetAllTags(token);
 
         return result.Item1 switch
         {
@@ -76,7 +76,8 @@ public class AccountSettingsController : ControllerBase
         var model = new ChangeAvatarModel
         {
             Email = formCollection["email"],
-            File = file
+            File = file,
+            Token = formCollection["token"]
         };
         var result = await _service.ChangeAvatar(model);
 

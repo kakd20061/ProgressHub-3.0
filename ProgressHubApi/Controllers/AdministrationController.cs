@@ -20,9 +20,9 @@ public class AdministrationController : ControllerBase
     }
     
     [HttpGet("GetAllUsers")]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers(string token)
     {
-        var result = await _provider.GetAllUsers();
+        var result = await _provider.GetAllUsers(token);
 
         return result.Item1 switch
         {
@@ -33,9 +33,9 @@ public class AdministrationController : ControllerBase
     }
     
     [HttpGet("GetAllTags")]
-    public async Task<IActionResult> GetAllTags()
+    public async Task<IActionResult> GetAllTags(string token)
     {
-        var result = await _provider.GetAllTags();
+        var result = await _provider.GetAllTags(token);
 
         return result.Item1 switch
         {
@@ -46,9 +46,9 @@ public class AdministrationController : ControllerBase
     }
     
     [HttpPost("AddTag")]
-    public async Task<IActionResult> AddTag(string name)
+    public async Task<IActionResult> AddTag(AddTagModel model)
     {
-        var result = await _service.AddTag(name);
+        var result = await _service.AddTag(model);
 
         return result switch
         {
@@ -58,10 +58,10 @@ public class AdministrationController : ControllerBase
         };
     }
     
-    [HttpDelete("RemoveTag")]
-    public async Task<IActionResult> RemoveTag(string name)
+    [HttpPost("RemoveTag")]
+    public async Task<IActionResult> RemoveTag(RemoveTagModel model)
     {
-        var result = await _service.RemoveTag(name);
+        var result = await _service.RemoveTag(model);
 
         return result switch
         {
@@ -74,7 +74,7 @@ public class AdministrationController : ControllerBase
     [HttpPut("UpdateTag")]
     public async Task<IActionResult> UpdateTag(UpdateTagModel model)
     {
-        var result = await _service.UpdateTag(model.oldName, model.newName);
+        var result = await _service.UpdateTag(model);
 
         return result switch
         {
@@ -111,9 +111,9 @@ public class AdministrationController : ControllerBase
     }
     
     [HttpPost("UnblockUser")]
-    public async Task<IActionResult> UnblockUser(string email)
+    public async Task<IActionResult> UnblockUser(UnblockUserModel model)
     {
-        var result = await _service.UnblockUser(email);
+        var result = await _service.UnblockUser(model);
 
         return result switch
         {
